@@ -6,6 +6,7 @@ import { route } from 'ziggy-js';
 import { Link } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
 import { ClipboardCheck, Wrench } from 'lucide-react';
+import { consultar } from '@/routes/depreciacion';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -13,8 +14,8 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: dashboard().url,
     },
     {
-        title: '',
-        href: '',
+        title: 'Depreciación',
+        href: consultar().url,
     },
 ];
 

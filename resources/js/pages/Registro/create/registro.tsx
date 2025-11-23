@@ -14,13 +14,8 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
-import {
-    Collapsible,
-    CollapsibleContent,
-    CollapsibleTrigger,
-} from '@/components/ui/collapsible';
 import InputError from '@/components/input-error';
-import { FormEventHandler, useState } from 'react';
+import { FormEventHandler, useState, useEffect, useRef } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { route } from 'ziggy-js';
 
@@ -38,6 +33,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 export default function RegistroCreate() {
     const [estadoOperativoOtros, setEstadoOperativoOtros] = useState('');
     const [showOtrosInput, setShowOtrosInput] = useState(false);
+    const [showEstadoDropdown, setShowEstadoDropdown] = useState(false);
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
     const [toastType, setToastType] = useState<'success' | 'error' | 'warning' | 'info'>('success');
@@ -48,7 +44,7 @@ export default function RegistroCreate() {
         ubicacion_actual: '',
         tipo_vehiculo: '',
         tipo_combustible: 'no tiene',
-        marca: '',
+        id_marca: '',
         modelo: 'no tiene',
         ano_fabricacion: '',
         marcaMotor: 'no tiene',
@@ -76,20 +72,48 @@ export default function RegistroCreate() {
         'Otros'
     ];
 
+    const marcas = [
+        { id: 1, nombre: 'Toyota' },
+        { id: 2, nombre: 'Nissan' },
+        { id: 3, nombre: 'Suzuki' },
+        { id: 4, nombre: 'Honda' },
+        { id: 5, nombre: 'Ford' },
+        { id: 6, nombre: 'Otros' }
+    ];
+
+    const dropdownRef = useRef<HTMLDivElement>(null);
+
+    // Cerrar dropdown al hacer click fuera
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setShowEstadoDropdown(false);
+            }
+        };
+
+        if (showEstadoDropdown) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [showEstadoDropdown]);
+
     const toggleEstadoOperativo = (option: string) => {
         const currentEstados = Array.isArray(data.estado_operativo) ? data.estado_operativo : [];
-        
+
         if (currentEstados.includes(option)) {
             const newEstados = currentEstados.filter(item => item !== option);
             setData('estado_operativo', newEstados);
-            
+
             if (option === 'Otros') {
                 setShowOtrosInput(false);
                 setEstadoOperativoOtros('');
             }
         } else {
             setData('estado_operativo', [...currentEstados, option]);
-            
+
             if (option === 'Otros') {
                 setShowOtrosInput(true);
             }
@@ -98,7 +122,7 @@ export default function RegistroCreate() {
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        
+
         // Si se seleccionó "Otros" y hay texto, incluirlo en el array
         let finalEstadoOperativo = Array.isArray(data.estado_operativo) ? [...data.estado_operativo] : [];
         if (showOtrosInput && estadoOperativoOtros.trim()) {
@@ -107,10 +131,10 @@ export default function RegistroCreate() {
                 finalEstadoOperativo[otrosIndex] = `Otros: ${estadoOperativoOtros.trim()}`;
             }
         }
-        
+
         // Actualizar el dato antes de enviar
         data.estado_operativo = finalEstadoOperativo;
-        
+        console.log(data);
         post(route('registro.store'), {
             onSuccess: () => {
                 setToastMessage('✅ Registro de vehículo guardado exitosamente');
@@ -128,7 +152,7 @@ export default function RegistroCreate() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Nueva Evaluación de Vehículo" />
-            
+
             {showToast && (
                 <Toast
                     message={toastMessage}
@@ -138,7 +162,8 @@ export default function RegistroCreate() {
             )}
 
             <div className="h-full w-full">
-                <div className="rounded-lg border border-[#e2e8f0] bg-[#ffffff] p-6 shadow-sm dark:border-[#20384b] dark:bg-[#1a2c3a]">
+                <div className="rounded-lg border border-[#e2e8f0] bg-[#ffffff] p-6 shadow-sm dark:border-[#20384b] 
+                dark:bg-[#1a2c3a]">
                     <div className="mb-6">
                         <h2 className="text-2xl font-bold text-[#1e293b] dark:text-white/90">
                             Registro de Evaluación de Vehículo
@@ -157,7 +182,10 @@ export default function RegistroCreate() {
 
                             <div className="grid gap-4 md:grid-cols-2">
                                 <div className="grid gap-2">
-                                    <Label htmlFor="entidad">Entidad *</Label>
+                                    <Label htmlFor="entidad">
+                                        Entidad
+                                        <span className="text-red-500">*</span>
+                                    </Label>
                                     <Input
                                         id="entidad"
                                         value={data.entidad}
@@ -170,7 +198,10 @@ export default function RegistroCreate() {
                                 </div>
 
                                 <div className="grid gap-2">
-                                    <Label htmlFor="fecha_evaluacion">Fecha de Evaluación *</Label>
+                                    <Label htmlFor="fecha_evaluacion">
+                                        Fecha de Evaluación
+                                        <span className="text-red-500">*</span>
+                                    </Label>
                                     <Input
                                         id="fecha_evaluacion"
                                         type="date"
@@ -183,7 +214,10 @@ export default function RegistroCreate() {
                                 </div>
 
                                 <div className="grid gap-2 md:col-span-2">
-                                    <Label htmlFor="ubicacion_actual">Ubicación Actual *</Label>
+                                    <Label htmlFor="ubicacion_actual">
+                                        Ubicación Actual
+                                        <span className="text-red-500">*</span>
+                                    </Label>
                                     <Input
                                         id="ubicacion_actual"
                                         value={data.ubicacion_actual}
@@ -205,7 +239,10 @@ export default function RegistroCreate() {
 
                             <div className="grid gap-4 md:grid-cols-2">
                                 <div className="grid gap-2">
-                                    <Label htmlFor="tipo_vehiculo">Tipo de Vehículo *</Label>
+                                    <Label htmlFor="tipo_vehiculo">
+                                        Tipo de Vehículo
+                                        <span className="text-red-500">*</span>
+                                    </Label>
                                     <Select
                                         value={data.tipo_vehiculo}
                                         onValueChange={(value) => setData('tipo_vehiculo', value)}
@@ -217,7 +254,7 @@ export default function RegistroCreate() {
                                             <SelectItem value="automovil">Automóvil</SelectItem>
                                             <SelectItem value="camioneta">Camioneta</SelectItem>
                                             <SelectItem value="camion">Camión</SelectItem>
-                                            <SelectItem value="motocicleta">Motocicleta</SelectItem>
+                                            <SelectItem value="motocicleta">Vagoneta</SelectItem>
                                             <SelectItem value="bus">Bus</SelectItem>
                                             <SelectItem value="otro">Otro</SelectItem>
                                         </SelectContent>
@@ -226,9 +263,13 @@ export default function RegistroCreate() {
                                 </div>
 
                                 <div className="grid gap-2">
-                                    <Label htmlFor="tipo_combustible">Tipo de Combustible</Label>
+                                    <Label htmlFor="tipo_combustible">
+                                        Tipo de Combustible
+                                        <span className="text-red-500">*</span>
+                                    </Label>
                                     <Select
                                         value={data.tipo_combustible}
+                                        required
                                         onValueChange={(value) => setData('tipo_combustible', value)}
                                     >
                                         <SelectTrigger id="tipo_combustible" className="border-[#e2e8f0] bg-[#ffffff] text-[#1e293b] focus:border-[#00AEEF] focus:ring-[#00AEEF]/20 dark:border-[#20384b] dark:bg-[#0f1a23] dark:text-white/90 dark:focus:border-[#00AEEF]">
@@ -247,23 +288,39 @@ export default function RegistroCreate() {
                                 </div>
 
                                 <div className="grid gap-2">
-                                    <Label htmlFor="marca">Marca *</Label>
-                                    <Input
-                                        id="marca"
-                                        value={data.marca}
-                                        onChange={(e) => setData('marca', e.target.value)}
+                                    <Label htmlFor="marca">
+                                        Marca
+                                        <span className="text-red-500">*</span>
+                                    </Label>
+                                    <Select
+                                        value={data.id_marca ? data.id_marca.toString() : ''}
                                         required
-                                        placeholder="Marca del vehículo"
-                                        className="border-[#e2e8f0] bg-[#ffffff] text-[#1e293b] placeholder:text-[#94a3b8] focus:border-[#00AEEF] focus:ring-[#00AEEF]/20 dark:border-[#20384b] dark:bg-[#0f1a23] dark:text-white/90 dark:placeholder:text-[#64748b] dark:focus:border-[#00AEEF]"
-                                    />
-                                    <InputError message={errors.marca} />
+                                        onValueChange={(value) => setData('id_marca', value)}
+                                    >
+                                        <SelectTrigger id="marca" className="border-[#e2e8f0] bg-[#ffffff] text-[#1e293b] focus:border-[#00AEEF] focus:ring-[#00AEEF]/20 dark:border-[#20384b] dark:bg-[#0f1a23] dark:text-white/90 dark:focus:border-[#00AEEF]">
+                                            <SelectValue placeholder="Seleccione marca" className="dark:placeholder:text-[#64748b]" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {marcas.map((marca) => (
+                                                <SelectItem key={marca.id} value={marca.id.toString()}>
+                                                    {marca.nombre}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                    <InputError message={errors.id_marca} />
+
                                 </div>
 
                                 <div className="grid gap-2">
-                                    <Label htmlFor="modelo">Modelo</Label>
+                                    <Label htmlFor="modelo">
+                                        Modelo Motor
+                                        <span className="text-red-500">*</span>
+                                    </Label>
                                     <Input
                                         id="modelo"
                                         value={data.modelo}
+                                        required
                                         onChange={(e) => setData('modelo', e.target.value)}
                                         placeholder="Modelo del vehículo"
                                         className="border-[#e2e8f0] bg-[#ffffff] text-[#1e293b] placeholder:text-[#94a3b8] focus:border-[#00AEEF] focus:ring-[#00AEEF]/20 dark:border-[#20384b] dark:bg-[#0f1a23] dark:text-white/90 dark:placeholder:text-[#64748b] dark:focus:border-[#00AEEF]"
@@ -272,7 +329,10 @@ export default function RegistroCreate() {
                                 </div>
 
                                 <div className="grid gap-2">
-                                    <Label htmlFor="ano_fabricacion">Año de Fabricación *</Label>
+                                    <Label htmlFor="ano_fabricacion">
+                                        Año de Fabricación
+                                        <span className="text-red-500">*</span>
+                                    </Label>
                                     <Input
                                         id="ano_fabricacion"
                                         type="number"
@@ -288,7 +348,10 @@ export default function RegistroCreate() {
                                 </div>
 
                                 <div className="grid gap-2">
-                                    <Label htmlFor="color">Color *</Label>
+                                    <Label htmlFor="color">
+                                        Color
+                                        <span className="text-red-500">*</span>
+                                    </Label>
                                     <Input
                                         id="color"
                                         value={data.color}
@@ -310,11 +373,15 @@ export default function RegistroCreate() {
 
                             <div className="grid gap-4 md:grid-cols-2">
                                 <div className="grid gap-2">
-                                    <Label htmlFor="placa">Placa</Label>
+                                    <Label htmlFor="placa">
+                                        Nro Placa
+                                        <span className="text-red-500">*</span>
+                                    </Label>
                                     <Input
                                         id="placa"
                                         value={data.placa}
                                         onChange={(e) => setData('placa', e.target.value)}
+                                        required
                                         placeholder="Número de placa"
                                         className="border-[#e2e8f0] bg-[#ffffff] text-[#1e293b] placeholder:text-[#94a3b8] focus:border-[#00AEEF] focus:ring-[#00AEEF]/20 dark:border-[#20384b] dark:bg-[#0f1a23] dark:text-white/90 dark:placeholder:text-[#64748b] dark:focus:border-[#00AEEF]"
                                     />
@@ -322,11 +389,15 @@ export default function RegistroCreate() {
                                 </div>
 
                                 <div className="grid gap-2">
-                                    <Label htmlFor="chasis">Chasis</Label>
+                                    <Label htmlFor="chasis">
+                                        Nro Chasis
+                                        <span className="text-red-500">*</span>
+                                    </Label>
                                     <Input
                                         id="chasis"
                                         value={data.chasis}
                                         onChange={(e) => setData('chasis', e.target.value)}
+                                        required
                                         placeholder="Número de chasis"
                                         className="border-[#e2e8f0] bg-[#ffffff] text-[#1e293b] placeholder:text-[#94a3b8] focus:border-[#00AEEF] focus:ring-[#00AEEF]/20 dark:border-[#20384b] dark:bg-[#0f1a23] dark:text-white/90 dark:placeholder:text-[#64748b] dark:focus:border-[#00AEEF]"
                                     />
@@ -334,7 +405,10 @@ export default function RegistroCreate() {
                                 </div>
 
                                 <div className="grid gap-2">
-                                    <Label htmlFor="serie_motor">Serie del Motor</Label>
+                                    <Label htmlFor="serie_motor">
+                                        Serie del Motor
+                                        <span className="text-red-500">*</span>
+                                    </Label>
                                     <Input
                                         id="serie_motor"
                                         value={data.serie_motor}
@@ -345,8 +419,11 @@ export default function RegistroCreate() {
                                     <InputError message={errors.serie_motor} />
                                 </div>
 
-                                <div className="grid gap-2">
-                                    <Label htmlFor="marcaMotor">Marca del Motor</Label>
+                                {/* <div className="grid gap-2">
+                                    <Label htmlFor="marcaMotor">
+                                        Marca del Motor
+                                        <span className="text-red-500">*</span>
+                                    </Label>
                                     <Input
                                         id="marcaMotor"
                                         value={data.marcaMotor}
@@ -355,7 +432,7 @@ export default function RegistroCreate() {
                                         className="border-[#e2e8f0] bg-[#ffffff] text-[#1e293b] placeholder:text-[#94a3b8] focus:border-[#00AEEF] focus:ring-[#00AEEF]/20 dark:border-[#20384b] dark:bg-[#0f1a23] dark:text-white/90 dark:placeholder:text-[#64748b] dark:focus:border-[#00AEEF]"
                                     />
                                     <InputError message={errors.marcaMotor} />
-                                </div>
+                                </div> */}
                             </div>
                         </div>
 
@@ -367,7 +444,10 @@ export default function RegistroCreate() {
 
                             <div className="grid gap-4 md:grid-cols-2">
                                 <div className="grid gap-2">
-                                    <Label htmlFor="procedencia">Procedencia *</Label>
+                                    <Label htmlFor="procedencia">
+                                        Procedencia
+                                        <span className="text-red-500">*</span>
+                                    </Label>
                                     <Input
                                         id="procedencia"
                                         value={data.procedencia}
@@ -380,7 +460,10 @@ export default function RegistroCreate() {
                                 </div>
 
                                 <div className="grid gap-2">
-                                    <Label htmlFor="kilometraje">Kilometraje *</Label>
+                                    <Label htmlFor="kilometraje">
+                                        Kilometraje o Millaje
+                                        <span className="text-red-500">*</span>
+                                    </Label>
                                     <Input
                                         id="kilometraje"
                                         value={data.kilometraje}
@@ -393,7 +476,10 @@ export default function RegistroCreate() {
                                 </div>
 
                                 <div className="grid gap-2 md:col-span-2">
-                                    <Label htmlFor="precio_referencial">Precio Referencial *</Label>
+                                    <Label htmlFor="precio_referencial">
+                                        Precio Referencial $
+                                        <span className="text-red-500">*</span>
+                                    </Label>
                                     <Input
                                         id="precio_referencial"
                                         type="number"
@@ -417,24 +503,26 @@ export default function RegistroCreate() {
 
                             <div className="grid gap-4 md:grid-cols-2">
                                 <div className="grid gap-2">
-                                    <Label htmlFor="estado_operativo">Estado Operativo * (Seleccione uno o varios)</Label>
-                                    <Collapsible>
-                                        <CollapsibleTrigger asChild>
-                                            <Button
-                                                type="button"
-                                                variant="outline"
-                                                className="w-full justify-between border-[#e2e8f0] bg-[#ffffff] text-[#1e293b] hover:bg-[#f8fafc] dark:border-[#20384b] dark:bg-[#0f1a23] dark:text-white/90 dark:hover:bg-[#0f1a23]"
-                                            >
-                                                <span className="truncate">
-                                                    {Array.isArray(data.estado_operativo) && data.estado_operativo.length > 0
-                                                        ? `${data.estado_operativo.length} seleccionado(s)`
-                                                        : 'Seleccione estados operativos'}
-                                                </span>
-                                                <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                                            </Button>
-                                        </CollapsibleTrigger>
-                                        <CollapsibleContent className="mt-2">
-                                            <div className="rounded-md border border-[#e2e8f0] bg-[#ffffff] p-4 dark:border-[#20384b] dark:bg-[#0f1a23]">
+                                    <Label htmlFor="estado_operativo">
+                                        Estado Operativo
+                                        <span className="text-red-500">*</span> (Seleccione uno o varios)
+                                    </Label>
+                                    <div className="relative" ref={dropdownRef}>
+                                        <Button
+                                            type="button"
+                                            variant="outline"
+                                            onClick={() => setShowEstadoDropdown(!showEstadoDropdown)}
+                                            className="w-full justify-between border-[#e2e8f0] bg-[#ffffff] text-[#1e293b] hover:bg-[#f8fafc] dark:border-[#20384b] dark:bg-[#0f1a23] dark:text-white/90 dark:hover:bg-[#0f1a23]"
+                                        >
+                                            <span className="truncate text-left">
+                                                {Array.isArray(data.estado_operativo) && data.estado_operativo.length > 0
+                                                    ? data.estado_operativo.join(', ')
+                                                    : 'Seleccione estados operativos'}
+                                            </span>
+                                            <ChevronDown className={`ml-2 h-4 w-4 shrink-0 opacity-50 transition-transform ${showEstadoDropdown ? 'rotate-180' : ''}`} />
+                                        </Button>
+                                        {showEstadoDropdown && (
+                                            <div className="absolute z-50 mt-2 w-full rounded-md border border-[#e2e8f0] bg-[#ffffff] p-4 shadow-lg dark:border-[#20384b] dark:bg-[#0f1a23]">
                                                 <div className="max-h-64 space-y-2 overflow-y-auto">
                                                     {estadoOperativoOptions.map((option) => {
                                                         const isChecked = Array.isArray(data.estado_operativo) && data.estado_operativo.includes(option);
@@ -450,7 +538,7 @@ export default function RegistroCreate() {
                                                                 />
                                                                 <label
                                                                     htmlFor={`estado-${option}`}
-                                                                    className="flex-1 cursor-pointer text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                                                    className="flex-1 cursor-pointer text-sm font-medium leading-none text-[#1e293b] dark:text-white/90 peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                                                 >
                                                                     {option}
                                                                 </label>
@@ -459,8 +547,8 @@ export default function RegistroCreate() {
                                                     })}
                                                 </div>
                                             </div>
-                                        </CollapsibleContent>
-                                    </Collapsible>
+                                        )}
+                                    </div>
                                     {showOtrosInput && (
                                         <Input
                                             id="estado_operativo_otros"
@@ -474,7 +562,10 @@ export default function RegistroCreate() {
                                 </div>
 
                                 <div className="grid gap-2">
-                                    <Label htmlFor="estado_general">Estado General *</Label>
+                                    <Label htmlFor="estado_general">
+                                        Estado General
+                                        <span className="text-red-500">*</span>
+                                    </Label>
                                     <Select
                                         value={data.estado_general}
                                         onValueChange={(value) => setData('estado_general', value)}
@@ -492,7 +583,10 @@ export default function RegistroCreate() {
                                 </div>
 
                                 <div className="grid gap-2 md:col-span-2">
-                                    <Label htmlFor="observaciones">Observaciones *</Label>
+                                    <Label htmlFor="observaciones">
+                                        Observaciones
+                                        <span className="text-red-500">*</span>
+                                    </Label>
                                     <Input
                                         id="observaciones"
                                         type="text"

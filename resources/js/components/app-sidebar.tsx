@@ -12,10 +12,13 @@ import {
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
 import { listado as usuariosListado } from '@/routes/usuarios';
+import { index as reciclajeListado } from '@/routes/reciclaje';
+import { consultar } from '@/routes/depreciacion';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid,Users, } from 'lucide-react';
+import { BookOpen, Folder, LayoutGrid, Users } from 'lucide-react';
 import AppLogo from './app-logo';
+import { RecycleIcon, ChartBarIcon } from '@/components/icons';
 
 import { route } from 'ziggy-js';
 
@@ -29,6 +32,16 @@ const mainNavItems: NavItem[] = [
         title: 'Usuarios',
         href: usuariosListado(),
         icon: Users,
+    },
+    {
+        title: 'Reciclaje',
+        href: reciclajeListado(),
+        icon: RecycleIcon,
+    },
+    {
+        title: 'Depreciación',
+        href: consultar(),
+        icon: ChartBarIcon,
     },
 ];
 

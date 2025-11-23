@@ -8,6 +8,7 @@ use App\Http\Controllers\Registro\InspeccionController;
 use App\Http\Controllers\Registro\MecanicaController;
 use App\Http\Controllers\Registro\ImagenesController;
 use App\Http\Controllers\User\UserRegistroController;
+use App\Http\Controllers\Reciclaje\ResourceReciclajeController;
 
 Route::get('/', function () {
     return Inertia::render('welcome');
@@ -64,6 +65,23 @@ Route::prefix('usuarios')->middleware(['auth', 'verified'])->group(function () {
     
 });
 
+Route::prefix('reciclaje')->middleware(['auth', 'verified'])->group(function () {
+    Route::get('/listado', [ResourceReciclajeController::class, 'index'])->name('reciclaje.index');
+
+    
+});
+
+
+Route::prefix('depreciacion')->middleware(['auth', 'verified'])->group(function () {
+
+    Route::get('/consultar', function () {
+
+        return Inertia::render('Depreciacion/IndexDepreciacion');
+
+    })->name('depreciacion.consultar');
+
+    
+});
 
 
 require __DIR__.'/settings.php';
