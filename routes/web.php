@@ -76,7 +76,7 @@ Route::prefix('depreciacion')->middleware(['auth', 'verified'])->group(function 
 
     Route::get('/consultar', function () {
 
-        return Inertia::render('Depreciacion/IndexDepreciacion');
+        return Inertia::render('Depreciacion/DepreMarcaVehiculo');
 
     })->name('depreciacion.consultar');
 
