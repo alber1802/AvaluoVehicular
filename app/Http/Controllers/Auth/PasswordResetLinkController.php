@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
+use App\Mail\PasswordResetLink;  
+use App\Models\User; 
+use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -31,11 +34,19 @@ class PasswordResetLinkController extends Controller
         $request->validate([
             'email' => 'required|email',
         ]);
-
-        Password::sendResetLink(
-            $request->only('email')
-        );
-
-        return back()->with('status', __('A reset link will be sent if the account exists.'));
+        
+        // Verificar si el usuario existe
+        $user = User::where('email', $request->email)->first();
+        
+        if ($user) {
+            // Crear token de reset
+            $token = Password::createToken($user);
+            
+            // Enviar email
+            Mail::to($request->email)->send(new PasswordResetLink($request->email, $token));
+        }
+        
+        // Siempre retornar el mismo mensaje por seguridad (no revelar si el email existe)
+        return back()->with('status', __('Si el correo existe en nuestro sistema, recibirás un enlace para restablecer tu contraseña.'));
     }
 }

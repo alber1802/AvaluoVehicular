@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -16,12 +17,20 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
 
         User::firstOrCreate(
-            ['email' => 'test@example.com'],
             [
-                'name' => 'Test User',
-                'password' => 'password',
+                'name' => 'Admin',
+                'phone' => '12345678',
+                'email' => 'admin@admin.com',
+                'role' => 'admin',
+                'is_active' => true,
+                'password' => Hash::make('12345678'),
                 'email_verified_at' => now(),
             ]
         );
+
+        // Ejecutar el seeder de avalúo
+        $this->call([
+            AvaluoSeeder::class,
+        ]);
     }
 }

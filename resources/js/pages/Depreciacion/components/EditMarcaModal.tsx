@@ -22,8 +22,8 @@ interface EditMarcaModalProps {
 export function EditMarcaModal({ marca, isOpen, onClose, onConfirm }: EditMarcaModalProps) {
     const [formData, setFormData] = useState({
         marca: '',
-        factor_k: 0.15,
-        valor_residual: 0.10,
+        factor_k: 0.04,
+        valor_residual: 0.107,
     });
     const [errors, setErrors] = useState<{
         marca?: string;
@@ -54,10 +54,10 @@ export function EditMarcaModal({ marca, isOpen, onClose, onConfirm }: EditMarcaM
         }
 
         // Validar factor_k según Ley 843 Art. 60
-        if (formData.factor_k < 0.10) {
-            newErrors.factor_k = 'El Factor K no puede ser menor a 0.10 (Ley 843 Art. 60)';
-        } else if (formData.factor_k > 0.40) {
-            newErrors.factor_k = 'El Factor K no puede ser mayor a 0.40 (Ley 843 Art. 60)';
+        if (formData.factor_k < 0.08) {
+            newErrors.factor_k = 'El Factor K no puede ser menor a 0.08 (Ley 843 Art. 60)';
+        } else if (formData.factor_k > 0.04) {
+            newErrors.factor_k = 'El Factor K no puede ser mayor a 0.04 (Ley 843 Art. 60)';
         }
 
         // Validar valor_residual según Ley 843 Art. 60
@@ -87,8 +87,8 @@ export function EditMarcaModal({ marca, isOpen, onClose, onConfirm }: EditMarcaM
     const handleClose = () => {
         setFormData({
             marca: '',
-            factor_k: 0.15,
-            valor_residual: 0.10,
+            factor_k: 0.04,
+            valor_residual: 0.107,
         });
         setErrors({});
         onClose();
@@ -132,7 +132,7 @@ export function EditMarcaModal({ marca, isOpen, onClose, onConfirm }: EditMarcaM
                                     Restricciones según Ley 843 - Artículo 60
                                 </p>
                                 <ul className="text-xs text-orange-800 dark:text-orange-400 mt-1 space-y-0.5">
-                                    <li>• Factor K: Entre 0.10 y 0.40</li>
+                                    <li>• Factor K: Entre 0.08 y 0.04</li>
                                     <li>• Valor Residual: Entre 0.107 y 0.20</li>
                                 </ul>
                             </div>
@@ -167,8 +167,8 @@ export function EditMarcaModal({ marca, isOpen, onClose, onConfirm }: EditMarcaM
                                 id="edit-factor_k"
                                 type="number"
                                 step="0.01"
-                                min="0.10"
-                                max="0.40"
+                                min="0.04"
+                                max="0.08"
                                 value={formData.factor_k}
                                 onChange={(e) => handleInputChange('factor_k', parseFloat(e.target.value))}
                                 className="bg-white dark:bg-[#0f1a23] border-[#e2e8f0] dark:border-[#20384b] text-[#1e293b] dark:text-white/90"
@@ -177,7 +177,7 @@ export function EditMarcaModal({ marca, isOpen, onClose, onConfirm }: EditMarcaM
                                 <p className="text-sm text-red-600 dark:text-red-400">{errors.factor_k}</p>
                             )}
                             <p className="text-xs text-[#64748b] dark:text-white/60">
-                                Valor decimal entre 0.10 y 0.40
+                                Valor decimal entre 0.04 y 0.08
                             </p>
                         </div>
 
