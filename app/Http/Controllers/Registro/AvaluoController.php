@@ -22,7 +22,8 @@ class AvaluoController extends Controller
     public function index($id)
     {
         $vehiculo = Vehiculo::where('id', $id)->first();
-        $inspeccion = Inspeccion::where('id_vehiculo', $id)->get();
+        $marca = MarcaVehiculo::where('id', $vehiculo->id_marca)->first();
+        $inspeccion = Inspeccion::where('id_vehiculo', $id)->where('tiene', 1)->get();
         $condicionGeneral = CondicionGeneral::where('id_vehiculo', $id)->first();
         $imagenes = VehiculoImagen::where('id_vehiculo', $id)->get();
 
@@ -41,12 +42,15 @@ class AvaluoController extends Controller
 
         $valorFinal = max($valorAvaluo, $valorResidualVehiuculo);
 
+         $añoActual = now()->format('Y');
+
         // dd( 'factor c ==' . $factor_c, 
         // 'factor a ==' . $factor_a, 
         // 'factor b ==' . $factor_b, 
         // 'valor avaluo ==' . $valorAvaluo,
         // 'valor residual ==' . $valorResidualVehiuculo,
-        // 'valor avaluo ==' . $valorFinal);
+        // 'valor avaluo ==' . $valorFinal,
+        // 'año actual ==' . $añoActual);
 
         // $avaluo = Avaluo::create([
         //     'id_vehiculo' => $id,
@@ -69,6 +73,7 @@ class AvaluoController extends Controller
             'factorKilometraje' => $factor_b,
             'factorInspeccion' => $factor_c,
             'valorResidual' => $valorResidualVehiuculo,
+            'marca' => $marca,
         ]);
     }
 
@@ -83,7 +88,8 @@ class AvaluoController extends Controller
             if($item['tiene'] == 1)
                 $suma += $item['valoracion'];
         }
-        return $suma ;
+        $resultado = 1- $suma ;
+        return $resultado ;
     }
     public function DepreciacionModelo($id ){
         

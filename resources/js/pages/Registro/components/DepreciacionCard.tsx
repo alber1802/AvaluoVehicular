@@ -1,4 +1,8 @@
-import { TrendingDown, DollarSign, Calculator } from 'lucide-react';
+import { TrendingDown, DollarSign, Calculator, Info } from 'lucide-react';
+import { useState } from 'react';
+import InspeccionModal from './modals/InspeccionModal';
+import ModeloModal from './modals/ModeloModal';
+import KilometrajeModal from './modals/KilometrajeModal';
 
 interface DepreciacionCardProps {
     factor_reposicion: number;
@@ -8,6 +12,9 @@ interface DepreciacionCardProps {
     depre_modelo: number;
     depre_kilometraje: number;
     depre_inspeccion: number;
+    inspeccion: any;
+    vehiculo: any;
+    marca: any;
 }
 
 export default function DepreciacionCard({
@@ -17,11 +24,22 @@ export default function DepreciacionCard({
     moneda,
     depre_modelo,
     depre_kilometraje,
-    depre_inspeccion
+    depre_inspeccion,
+    inspeccion,
+    vehiculo,
+    marca
 }: DepreciacionCardProps) {
+    // Estados para los modales
+    const [isModeloModalOpen, setIsModeloModalOpen] = useState(false);
+    const [isKilometrajeModalOpen, setIsKilometrajeModalOpen] = useState(false);
+    const [isInspeccionModalOpen, setIsInspeccionModalOpen] = useState(false);
+
     // Formatear porcentaje
+    //console.log(inspeccion)
+
     const formatPercentage = (value: number) => {
-        return `${(value * 100).toFixed(2)}%`;
+        return value.toFixed(3);
+        //`${(value * 100).toFixed(2)}%`
     };
 
     // Obtener símbolo de moneda
@@ -81,37 +99,55 @@ export default function DepreciacionCard({
 
                     <div className="space-y-3">
                         {/* Depreciación por Modelo */}
-                        <div className="flex items-center justify-between rounded-lg border border-[#e2e8f0] bg-[#f8fafc] p-4 dark:border-[#20384b] dark:bg-[#0f1a23]">
+                        <button
+                            onClick={() => setIsModeloModalOpen(true)}
+                            className="w-full flex items-center justify-between rounded-lg border border-[#e2e8f0] bg-[#f8fafc] p-4 dark:border-[#20384b] dark:bg-[#0f1a23] hover:bg-purple-50 dark:hover:bg-purple-900/20 hover:border-purple-300 dark:hover:border-purple-600 transition-all duration-200 cursor-pointer group"
+                        >
                             <div className="flex items-center gap-3">
-                                <div className="h-3 w-3 rounded-full bg-purple-500"></div>
+                                <div className="h-3 w-3 rounded-full bg-purple-500 group-hover:scale-110 transition-transform"></div>
                                 <p className="text-base text-[#1e293b] dark:text-white/90">Depreciación por Modelo</p>
                             </div>
-                            <p className="text-lg font-semibold text-purple-600 dark:text-purple-400">
-                                {formatPercentage(depre_modelo)}
-                            </p>
-                        </div>
+                            <div className="flex items-center gap-2">
+                                <p className="text-lg font-semibold text-purple-600 dark:text-purple-400">
+                                    {formatPercentage(depre_modelo)}
+                                </p>
+                                <Info className="h-4 w-4 text-purple-600 dark:text-purple-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+                            </div>
+                        </button>
 
                         {/* Depreciación por Kilometraje */}
-                        <div className="flex items-center justify-between rounded-lg border border-[#e2e8f0] bg-[#f8fafc] p-4 dark:border-[#20384b] dark:bg-[#0f1a23]">
+                        <button
+                            onClick={() => setIsKilometrajeModalOpen(true)}
+                            className="w-full flex items-center justify-between rounded-lg border border-[#e2e8f0] bg-[#f8fafc] p-4 dark:border-[#20384b] dark:bg-[#0f1a23] hover:bg-orange-50 dark:hover:bg-orange-900/20 hover:border-orange-300 dark:hover:border-orange-600 transition-all duration-200 cursor-pointer group"
+                        >
                             <div className="flex items-center gap-3">
-                                <div className="h-3 w-3 rounded-full bg-orange-500"></div>
+                                <div className="h-3 w-3 rounded-full bg-orange-500 group-hover:scale-110 transition-transform"></div>
                                 <p className="text-base text-[#1e293b] dark:text-white/90">Depreciación por Kilometraje</p>
                             </div>
-                            <p className="text-lg font-semibold text-orange-600 dark:text-orange-400">
-                                {formatPercentage(depre_kilometraje)}
-                            </p>
-                        </div>
+                            <div className="flex items-center gap-2">
+                                <p className="text-lg font-semibold text-orange-600 dark:text-orange-400">
+                                    {formatPercentage(depre_kilometraje)}
+                                </p>
+                                <Info className="h-4 w-4 text-orange-600 dark:text-orange-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+                            </div>
+                        </button>
 
                         {/* Depreciación por Inspección */}
-                        <div className="flex items-center justify-between rounded-lg border border-[#e2e8f0] bg-[#f8fafc] p-4 dark:border-[#20384b] dark:bg-[#0f1a23]">
+                        <button
+                            onClick={() => setIsInspeccionModalOpen(true)}
+                            className="w-full flex items-center justify-between rounded-lg border border-[#e2e8f0] bg-[#f8fafc] p-4 dark:border-[#20384b] dark:bg-[#0f1a23] hover:bg-red-50 dark:hover:bg-red-900/20 hover:border-red-300 dark:hover:border-red-600 transition-all duration-200 cursor-pointer group"
+                        >
                             <div className="flex items-center gap-3">
-                                <div className="h-3 w-3 rounded-full bg-red-500"></div>
+                                <div className="h-3 w-3 rounded-full bg-red-500 group-hover:scale-110 transition-transform"></div>
                                 <p className="text-base text-[#1e293b] dark:text-white/90">Depreciación por Inspección</p>
                             </div>
-                            <p className="text-lg font-semibold text-red-600 dark:text-red-400">
-                                {formatPercentage(depre_inspeccion)}
-                            </p>
-                        </div>
+                            <div className="flex items-center gap-2">
+                                <p className="text-lg font-semibold text-red-600 dark:text-red-400">
+                                    {formatPercentage(depre_inspeccion)}
+                                </p>
+                                <Info className="h-4 w-4 text-red-600 dark:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+                            </div>
+                        </button>
                     </div>
                 </div>
 
@@ -133,6 +169,29 @@ export default function DepreciacionCard({
                     </p>
                 </div>
             </div>
+
+            {/* Modales */}
+            <ModeloModal
+                isOpen={isModeloModalOpen}
+                onClose={() => setIsModeloModalOpen(false)}
+                depre_modelo={depre_modelo}
+                vehiculo={vehiculo}
+                marca={marca}
+            />
+
+            <KilometrajeModal
+                isOpen={isKilometrajeModalOpen}
+                onClose={() => setIsKilometrajeModalOpen(false)}
+                depre_kilometraje={depre_kilometraje}
+                vehiculo={vehiculo}
+            />
+
+            <InspeccionModal
+                isOpen={isInspeccionModalOpen}
+                onClose={() => setIsInspeccionModalOpen(false)}
+                inspeccion={inspeccion}
+                depre_inspeccion={depre_inspeccion}
+            />
         </div>
     );
 }

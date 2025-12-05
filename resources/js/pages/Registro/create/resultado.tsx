@@ -69,6 +69,13 @@ interface VehiculoImagen {
     descripcion?: string;
     fecha?: string;
 }
+interface Marca {
+    id: number;
+    nombre: string;
+    tasa_k: number;
+    valor_residual: number;
+    fecha: string;
+}
 
 interface ResultadoProps {
     vehiculo: Vehiculo;
@@ -81,6 +88,7 @@ interface ResultadoProps {
     factorKilometraje: number;
     factorInspeccion: number;
     valorResidual: number;
+    marca: Marca;
 }
 
 export default function Resultado({
@@ -93,20 +101,15 @@ export default function Resultado({
     factorModelo,
     factorKilometraje,
     factorInspeccion,
-    valorResidual
+    valorResidual,
+    marca
 }: ResultadoProps) {
 
     const handlePrint = () => {
         //window.print();
     };
 
-    console.log(valorFinal
-        , factorReposicion
-        , factorModelo
-        , factorKilometraje
-        , factorInspeccion
-        , valorResidual, vehiculo,
-    );
+
     const handleVolver = () => {
         window.location.href = '/dashboard';
     };
@@ -150,7 +153,7 @@ export default function Resultado({
                         <VehicleInfoCard
                             tipo_vehiculo={vehiculo.tipo_vehiculo}
                             tipo_combustible={vehiculo.tipo_combustible}
-                            marca={vehiculo.id_marca.toString()}
+                            marca={marca.nombre}
                             modelo={vehiculo.modelo}
                             ano_fabricacion={vehiculo.año_fabricacion.toString()}
                             color={vehiculo.color}
@@ -183,6 +186,9 @@ export default function Resultado({
                             depre_modelo={factorModelo}
                             depre_kilometraje={factorKilometraje}
                             depre_inspeccion={factorInspeccion}
+                            inspeccion={inspeccion}
+                            vehiculo={vehiculo}
+                            marca={marca}
                         />
                     </div>
 
