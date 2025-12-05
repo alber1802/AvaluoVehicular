@@ -41,45 +41,46 @@ export default function ConditionsCard({
                 </h3>
             </div>
 
-            <div className="space-y-4">
-                {/* Estado Operativo */}
-                <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                        <Activity className="h-5 w-5 text-[#64748b] dark:text-white/60" />
-                        <p className="text-sm font-medium text-[#64748b] dark:text-white/60">Estado Operativo</p>
+            <div className="grid gap-4 md:grid-cols-2">
+                {/* Left Column */}
+                <div className="space-y-4">
+                    {/* Estado Operativo */}
+                    <div className="space-y-2">
+                        <div className="flex items-center gap-2">
+                            <Activity className="h-5 w-5 text-[#64748b] dark:text-white/60" />
+                            <p className="text-sm font-medium text-[#64748b] dark:text-white/60">Estado Operativo</p>
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                            {Array.isArray(estado_operativo) && estado_operativo.length > 0 ? (
+                                estado_operativo.map((estado, index) => (
+                                    <span
+                                        key={index}
+                                        className="inline-flex items-center rounded-full bg-blue-100 px-4 py-1.5 text-sm font-medium text-blue-700 dark:bg-blue-900/30 dark:text-blue-300"
+                                    >
+                                        {estado}
+                                    </span>
+                                ))
+                            ) : (
+                                <span className="text-base text-[#64748b] dark:text-white/60">No especificado</span>
+                            )}
+                        </div>
                     </div>
-                    <div className="flex flex-wrap gap-2">
-                        {Array.isArray(estado_operativo) && estado_operativo.length > 0 ? (
-                            estado_operativo.map((estado, index) => (
-                                <span
-                                    key={index}
-                                    className="inline-flex items-center rounded-full bg-blue-100 px-4 py-1.5 text-sm font-medium text-blue-700 dark:bg-blue-900/30 dark:text-blue-300"
-                                >
-                                    {estado}
-                                </span>
-                            ))
-                        ) : (
-                            <span className="text-base text-[#64748b] dark:text-white/60">No especificado</span>
-                        )}
-                    </div>
-                </div>
 
-                {/* Estado General */}
-                <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                        <AlertCircle className="h-5 w-5 text-[#64748b] dark:text-white/60" />
-                        <p className="text-sm font-medium text-[#64748b] dark:text-white/60">Estado General</p>
+                    {/* Estado General */}
+                    <div className="space-y-2">
+                        <div className="flex items-center gap-2">
+                            <AlertCircle className="h-5 w-5 text-[#64748b] dark:text-white/60" />
+                            <p className="text-sm font-medium text-[#64748b] dark:text-white/60">Estado General</p>
+                        </div>
+                        <div className="inline-flex items-center">
+                            <span
+                                className={`rounded-full px-5 py-2 text-base font-semibold ${getEstadoGeneralColor(estado_general)}`}
+                            >
+                                {estado_general}
+                            </span>
+                        </div>
                     </div>
-                    <div className="inline-flex items-center">
-                        <span
-                            className={`rounded-full px-5 py-2 text-base font-semibold ${getEstadoGeneralColor(estado_general)}`}
-                        >
-                            {estado_general}
-                        </span>
-                    </div>
-                </div>
 
-                <div className="grid gap-4 md:grid-cols-2">
                     {/* Procedencia */}
                     <div className="space-y-2">
                         <div className="flex items-center gap-2">
@@ -88,7 +89,10 @@ export default function ConditionsCard({
                         </div>
                         <p className="text-base font-semibold text-[#1e293b] dark:text-white/90">{procedencia}</p>
                     </div>
+                </div>
 
+                {/* Right Column */}
+                <div className="space-y-4">
                     {/* Kilometraje */}
                     <div className="space-y-2">
                         <div className="flex items-center gap-2">
@@ -101,7 +105,7 @@ export default function ConditionsCard({
                     </div>
 
                     {/* Precio Referencial */}
-                    <div className="space-y-2 md:col-span-2">
+                    <div className="space-y-2">
                         <div className="flex items-center gap-2">
                             <DollarSign className="h-5 w-5 text-[#64748b] dark:text-white/60" />
                             <p className="text-sm font-medium text-[#64748b] dark:text-white/60">Precio Referencial</p>
@@ -111,15 +115,17 @@ export default function ConditionsCard({
                         </p>
                     </div>
                 </div>
+            </div>
 
-                {/* Observaciones */}
-                <div className="space-y-2 border-t border-[#e2e8f0] pt-4 dark:border-[#20384b]">
-                    <div className="flex items-center gap-2">
-                        <FileText className="h-5 w-5 text-[#64748b] dark:text-white/60" />
-                        <p className="text-sm font-medium text-[#64748b] dark:text-white/60">Observaciones</p>
-                    </div>
-                    <p className="text-base text-[#1e293b] dark:text-white/90">{observaciones}</p>
+            {/* Observaciones (full width at the bottom) */}
+            <div className="space-y-2 border-t border-[#e2e8f0] pt-4 dark:border-[#20384b] mt-4">
+                <div className="flex items-center gap-2">
+                    <FileText className="h-5 w-5 text-[#64748b] dark:text-white/60" />
+                    <p className="text-sm font-medium text-[#64748b] dark:text-white/60">Observaciones</p>
                 </div>
+                <p className="text-base text-[#1e293b] dark:text-white/90">
+                    {observaciones ? observaciones : 'No hay ninguna observación'}
+                </p>
             </div>
         </div>
     );

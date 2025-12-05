@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('nombre_sistema', 50); // Ej: Motor, Dirección, Suspensión
             $table->string('componente', 100); // Ej: Alternador, Tablero, Amortiguadores
             $table->string('estado', 5)->nullable(); // B, R, RC, RR, RRe
-            $table->text('observaciones');
+            $table->text('observaciones')->nullable();
             $table->timestamps();
         });
     }

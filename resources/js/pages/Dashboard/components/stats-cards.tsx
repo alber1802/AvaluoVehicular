@@ -2,37 +2,42 @@ import { Calendar, ClipboardList, DollarSign, TrendingUp, AlertTriangle } from '
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 
-const stats = [
-    {
-        title: 'Vehículos Evaluados Hoy',
-        value: '12',
-        icon: Calendar,
-        trend: '+5% desde ayer',
-        trendUp: true,
-        iconColor: 'text-blue-500',
-        iconBg: 'bg-blue-500/10',
-    },
-    {
-        title: 'Informes Pendientes',
-        value: '3',
-        icon: ClipboardList,
-        trend: 'Atención requerida',
-        trendUp: false,
-        iconColor: 'text-orange-500',
-        iconBg: 'bg-orange-500/10',
-        alert: true,
-    },
-    {
-        title: 'Valoración Promedio',
-        value: '$25,480',
-        icon: DollarSign,
-        trend: 'Basado en las últimas 50 evaluaciones',
-        iconColor: 'text-cyan-500',
-        iconBg: 'bg-cyan-500/10',
-    },
-];
 
-export function StatsCards() {
+
+export function StatsCards({ vehiculosHoy, pendientes, valoracionPromedio, comparacionAyer, avaluos }: any) {
+
+    const calculoHoyAyer = (comparacionAyer / vehiculosHoy) * 100 || 0;
+
+    const stats = [
+        {
+            title: 'Vehículos Evaluados Hoy',
+            value: vehiculosHoy,
+            icon: Calendar,
+            trend: '+' + calculoHoyAyer + '% desde ayer',
+            trendUp: true,
+            iconColor: 'text-blue-500',
+            iconBg: 'bg-blue-500/10',
+        },
+        {
+            title: 'Informes Pendientes',
+            value: pendientes,
+            icon: ClipboardList,
+            trend: 'Atención requerida',
+            trendUp: false,
+            iconColor: 'text-orange-500',
+            iconBg: 'bg-orange-500/10',
+            alert: true,
+        },
+        {
+            title: 'Valoración Promedio',
+            value: '$' + valoracionPromedio,
+            icon: DollarSign,
+            trend: 'Basado en las últimas ' + avaluos + ' evaluaciones',
+            iconColor: 'text-cyan-500',
+            iconBg: 'bg-cyan-500/10',
+        },
+    ];
+
     return (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {stats.map((stat, index) => (
@@ -59,7 +64,7 @@ export function StatsCards() {
                                     <span className="text-green-600 dark:text-green-400" style={{ fontSize: '15 px' }}>{stat.trend}</span>
                                 </>
                             ) : (
-                                <span className="text-[#64748b] dark:text-white/70" style={{ fontSize: '15 px' }}>{stat.trend}</span>
+                                <span className="text-[#64748b] dark:text-white/70" style={{ fontSize: '28 px' }}>{stat.trend}</span>
                             )}
                         </div>
                     </CardContent>

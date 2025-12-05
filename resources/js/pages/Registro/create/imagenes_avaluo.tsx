@@ -14,42 +14,40 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: dashboard().url,
     },
     {
-        title: 'Elección Avalúo',
-        href: '/registro/seleccionar',
-    },
-    {
         title: 'Imágenes del Vehículo',
         href: '#',
     },
 ];
 
-export default function ImagenesAvaluo() {
+export default function ImagenesAvaluo({ id }: { id: number }) {
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
     const [toastType, setToastType] = useState<'success' | 'error' | 'warning' | 'info'>('success');
 
     const handleSubmit = (imagenes: any) => {
-        console.log('Imágenes a enviar:', imagenes);
-        
+
+
         // Simulación del envío al backend
         const formData = new FormData();
-        
+
         imagenes.forEach((imagen: any, index: number) => {
             formData.append(`imagenes[${index}][file]`, imagen.file);
             formData.append(`imagenes[${index}][ubicacion]`, imagen.ubicacion);
             formData.append(`imagenes[${index}][descripcion]`, imagen.descripcion);
         });
 
+        console.log(formData);
         // Aquí iría la petición al backend
-        router.post(route('imagenes.vehiculo.store'), formData, {
+        router.post(route('imagenes.vehiculo.store', id), formData, {
             forceFormData: true,
+
             onSuccess: () => {
                 setToastMessage(`✅ ${imagenes.length} imágenes subidas correctamente`);
                 setToastType('success');
                 setShowToast(true);
-                setTimeout(() => {
-                    router.visit(route('resultados.avaluo'));
-                }, 2000);
+                // setTimeout(() => {
+                //     router.visit(route('resultados.avaluo'));
+                // }, 2000);
             },
             onError: () => {
                 setToastMessage('❌ Error al subir las imágenes. Inténtelo nuevamente');
@@ -69,7 +67,7 @@ export default function ImagenesAvaluo() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Imágenes del Vehículo - Avalúo" />
-            
+
             {showToast && (
                 <Toast
                     message={toastMessage}
@@ -99,10 +97,11 @@ export default function ImagenesAvaluo() {
                         <Info className="h-5 w-5 shrink-0 text-[#3b82f6]" />
                         <div className="space-y-1">
                             <p className="text-sm font-medium text-[#1e293b] dark:text-white/90">
-                                📸 Esta sección es opcional
+                                📸 Esta sección es importante para el reporte de pdf , si no se agregan imágenes
+                                se generara un reporte. hasta que las agregues
                             </p>
                             <p className="text-xs text-[#64748b] dark:text-white/70">
-                                Puedes agregar fotografías del vehículo para complementar la evaluación. 
+                                Puedes agregar fotografías del vehículo para complementar la evaluación.
                                 Se recomienda incluir imágenes de todos los ángulos y cualquier daño visible.
                             </p>
                         </div>

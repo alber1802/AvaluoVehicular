@@ -24,7 +24,7 @@ class AvaluoSeeder extends Seeder
         // 1. Crear marca de vehículo Toyota
         $marcaToyota = MarcaVehiculo::create([
             'nombre' => 'Toyota',
-            'tasa_k' => 0.05,
+            'tasa_k' => 0.04,
             'valor_residual' => 0.10,
         ]);
 
@@ -37,13 +37,13 @@ class AvaluoSeeder extends Seeder
             'tipo_combustible' => 'Gasolina',
             'id_marca' => $marcaToyota->id,
             'modelo' => 'Hiace',
-            'año_fabricacion' => 1984,
+            'año_fabricacion' => 2020,
             'placa' => '681 - USE',
             'serie_motor' => 'M - VHSV - JDE',
             'chasis' => 'YH50V - 0017247',
             'color' => 'BLANCO',
             'procedencia' => 'Japon',
-            'kilometraje' => 'ALTERADO',
+            'kilometraje' => '235977',
             'precio_referencial' => 8000.00,
             'id_evaluador' => 1, // Asumimos que existe un usuario con id=1
         ]);
@@ -51,7 +51,7 @@ class AvaluoSeeder extends Seeder
         // 3. Insertar el avalúo
         Avaluo::create([
             'id_vehiculo' => $vehiculo->id,
-            'factor_reposicion' => 8000.00,
+            'factor_reposicion' => 1.2,
             'final_estimacion' => 8000.00,
             'moneda' => '$us',
             'depre_modelo' => 0.15,
@@ -130,29 +130,29 @@ class AvaluoSeeder extends Seeder
             ]);
         }
 
-        // 7. Insertar los 'accesorios'
-        $accesorios = [
-            ['nombre_accesorio' => 'Aire acondicionado', 'tiene' => false, 'observacion' => ''],
-            ['nombre_accesorio' => 'Calefacción', 'tiene' => false, 'observacion' => 'Requiere revisión'],
-            ['nombre_accesorio' => 'Herramientas Mtto.', 'tiene' => false, 'observacion' => ''],
-            ['nombre_accesorio' => 'Llave de ruedas y barrote', 'tiene' => false, 'observacion' => ''],
-            ['nombre_accesorio' => 'Gata/triangulo', 'tiene' => false, 'observacion' => ''],
-        ];
+        // // 7. Insertar los 'accesorios'
+        // $accesorios = [
+        //     ['nombre_accesorio' => 'Aire acondicionado', 'tiene' => false, 'observacion' => ''],
+        //     ['nombre_accesorio' => 'Calefacción', 'tiene' => false, 'observacion' => 'Requiere revisión'],
+        //     ['nombre_accesorio' => 'Herramientas Mtto.', 'tiene' => false, 'observacion' => ''],
+        //     ['nombre_accesorio' => 'Llave de ruedas y barrote', 'tiene' => false, 'observacion' => ''],
+        //     ['nombre_accesorio' => 'Gata/triangulo', 'tiene' => false, 'observacion' => ''],
+        // ];
 
-        foreach ($accesorios as $accesorio) {
-            Accesorio::create([
-                'id_vehiculo' => $vehiculo->id,
-                'nombre_accesorio' => $accesorio['nombre_accesorio'],
-                'tiene' => $accesorio['tiene'],
-                'observacion' => $accesorio['observacion'],
-            ]);
-        }
+        // foreach ($accesorios as $accesorio) {
+        //     Accesorio::create([
+        //         'id_vehiculo' => $vehiculo->id,
+        //         'nombre_accesorio' => $accesorio['nombre_accesorio'],
+        //         'tiene' => $accesorio['tiene'],
+        //         'observacion' => $accesorio['observacion'],
+        //     ]);
+        // }
 
         // 8. Insertar todos los factores de depreciación en la tabla 'inspeccion'
         $inspecciones = [
             ['nombre' => 'MOTOR ENCENDIDO', 'caracteristica' => 'Falla de encendido inicial', 'tiene' => false, 'valoracion' => 0.025],
             ['nombre' => 'MOTOR ENCENDIDO', 'caracteristica' => 'Bujía partida', 'tiene' => false, 'valoracion' => 0.025],
-            ['nombre' => 'MOTOR ENCENDIDO', 'caracteristica' => 'Bobina partida', 'tiene' => false, 'valoracion' => 0.025],
+            ['nombre' => 'MOTOR ENCENDIDO', 'caracteristica' => 'Bobina partida', 'tiene' => true, 'valoracion' => 0.025],
             ['nombre' => 'MOTOR ENCENDIDO', 'caracteristica' => 'Se suelta el acelerador', 'tiene' => false, 'valoracion' => 0.025],
             ['nombre' => 'MOTOR ENCENDIDO', 'caracteristica' => 'Falla de aceleración', 'tiene' => false, 'valoracion' => 0.025],
             ['nombre' => 'MOTOR CONDUCCION', 'caracteristica' => 'Encendido adelantado/atrasado', 'tiene' => false, 'valoracion' => 0.02],
@@ -161,20 +161,20 @@ class AvaluoSeeder extends Seeder
             ['nombre' => 'MARCHA EN VACIO', 'caracteristica' => 'Embrague defectuoso', 'tiene' => false, 'valoracion' => 0.02],
             ['nombre' => 'MARCHA EN VACIO', 'caracteristica' => 'Marcha en vacío anormal', 'tiene' => false, 'valoracion' => 0.02],
             ['nombre' => 'MARCHA EN VACIO', 'caracteristica' => 'Marcha en vacío inestable', 'tiene' => false, 'valoracion' => 0.02],
-            ['nombre' => 'MARCHA EN VACIO', 'caracteristica' => 'Oscilaciones', 'tiene' => false, 'valoracion' => 0.02],
+            ['nombre' => 'MARCHA EN VACIO', 'caracteristica' => 'Oscilaciones', 'tiene' => true, 'valoracion' => 0.02],
             ['nombre' => 'Indicador CHECK ENGINE en el tablero', 'caracteristica' => 'Siempre encendida', 'tiene' => false, 'valoracion' => 0.02],
             ['nombre' => 'Indicador CHECK ENGINE en el tablero', 'caracteristica' => 'Ocasionalmente encendida', 'tiene' => false, 'valoracion' => 0.02],
             ['nombre' => 'Indicador CHECK ENGINE en el tablero', 'caracteristica' => 'Apagada', 'tiene' => false, 'valoracion' => 0.015],
-            ['nombre' => 'TRANSMISIÓN', 'caracteristica' => 'Patina el embrague', 'tiene' => false, 'valoracion' => 0.015],
-            ['nombre' => 'TRANSMISIÓN', 'caracteristica' => 'Pedal de embrague atascado', 'tiene' => false, 'valoracion' => 0.015],
-            ['nombre' => 'TRANSMISIÓN', 'caracteristica' => 'Vibración al partir', 'tiene' => false, 'valoracion' => 0.015],
-            ['nombre' => 'TRANSMISIÓN', 'caracteristica' => 'No entra los cambios', 'tiene' => false, 'valoracion' => 0.015],
-            ['nombre' => 'TRANSMISIÓN', 'caracteristica' => 'Se suelta la marcha', 'tiene' => false, 'valoracion' => 0.015],
-            ['nombre' => 'TRANSMISIÓN', 'caracteristica' => 'Sonidos en los cambios', 'tiene' => false, 'valoracion' => 0.015],
-            ['nombre' => 'TRANSMISIÓN', 'caracteristica' => 'Sonidos en el diferencial', 'tiene' => false, 'valoracion' => 0.015],
-            ['nombre' => 'TRANSMISIÓN', 'caracteristica' => 'Sonidos en las ruedas al curvar', 'tiene' => false, 'valoracion' => 0.015],
+            ['nombre' => 'TRANSMISIÓN', 'caracteristica' => 'Patina el embrague', 'tiene' => true, 'valoracion' => 0.015],
+            ['nombre' => 'TRANSMISIÓN', 'caracteristica' => 'Pedal de embrague atascado', 'tiene' => true, 'valoracion' => 0.015],
+            ['nombre' => 'TRANSMISIÓN', 'caracteristica' => 'Vibración al partir', 'tiene' => true, 'valoracion' => 0.015],
+            ['nombre' => 'TRANSMISIÓN', 'caracteristica' => 'No entra los cambios', 'tiene' => true, 'valoracion' => 0.015],
+            ['nombre' => 'TRANSMISIÓN', 'caracteristica' => 'Se suelta la marcha', 'tiene' => true, 'valoracion' => 0.015],
+            ['nombre' => 'TRANSMISIÓN', 'caracteristica' => 'Sonidos en los cambios', 'tiene' => true, 'valoracion' => 0.015],
+            ['nombre' => 'TRANSMISIÓN', 'caracteristica' => 'Sonidos en el diferencial', 'tiene' => true, 'valoracion' => 0.015],
+            ['nombre' => 'TRANSMISIÓN', 'caracteristica' => 'Sonidos en las ruedas al curvar', 'tiene' => true, 'valoracion' => 0.015],
             ['nombre' => 'TRANSMISIÓN', 'caracteristica' => 'Fugas de aceite', 'tiene' => false, 'valoracion' => 0.015],
-            ['nombre' => 'FRENOS', 'caracteristica' => 'Sonidos al frenar', 'tiene' => false, 'valoracion' => 0.025],
+            ['nombre' => 'FRENOS', 'caracteristica' => 'Sonidos al frenar', 'tiene' => true, 'valoracion' => 0.025],
             ['nombre' => 'FRENOS', 'caracteristica' => 'Frenos defectuosos', 'tiene' => false, 'valoracion' => 0.025],
             ['nombre' => 'FRENOS', 'caracteristica' => 'No funciona freno de mano', 'tiene' => false, 'valoracion' => 0.025],
             ['nombre' => 'FRENOS', 'caracteristica' => 'Fugas de líquido', 'tiene' => false, 'valoracion' => 0.025],
@@ -186,22 +186,22 @@ class AvaluoSeeder extends Seeder
             ['nombre' => 'DIRECCIÓN', 'caracteristica' => 'No responde efectivamente', 'tiene' => false, 'valoracion' => 0.0225],
             ['nombre' => 'DIRECCIÓN', 'caracteristica' => 'Mala distribución', 'tiene' => false, 'valoracion' => 0.0225],
             ['nombre' => 'DIRECCIÓN', 'caracteristica' => 'Fugas de aceite', 'tiene' => false, 'valoracion' => 0.0225],
-            ['nombre' => 'ELECTRICIDAD', 'caracteristica' => 'Fallan luces delanteras', 'tiene' => false, 'valoracion' => 0.01],
-            ['nombre' => 'ELECTRICIDAD', 'caracteristica' => 'Fallan luces direccionales', 'tiene' => false, 'valoracion' => 0.01],
-            ['nombre' => 'ELECTRICIDAD', 'caracteristica' => 'Fallan luces de freno', 'tiene' => false, 'valoracion' => 0.01],
-            ['nombre' => 'ELECTRICIDAD', 'caracteristica' => 'Fallan luces de retro', 'tiene' => false, 'valoracion' => 0.01],
-            ['nombre' => 'ELECTRICIDAD', 'caracteristica' => 'Fallan luces de salón', 'tiene' => false, 'valoracion' => 0.01],
-            ['nombre' => 'ELECTRICIDAD', 'caracteristica' => 'Fallan luces de tablero', 'tiene' => false, 'valoracion' => 0.01],
-            ['nombre' => 'ELECTRICIDAD', 'caracteristica' => 'Falla instrumentos del tablero', 'tiene' => false, 'valoracion' => 0.01],
-            ['nombre' => 'ELECTRICIDAD', 'caracteristica' => 'Descarga de batería', 'tiene' => false, 'valoracion' => 0.01],
-            ['nombre' => 'ELECTRICIDAD', 'caracteristica' => 'Falla bocina', 'tiene' => false, 'valoracion' => 0.01],
+            ['nombre' => 'ELECTRICIDAD', 'caracteristica' => 'Fallan luces delanteras', 'tiene' => true, 'valoracion' => 0.01],
+            ['nombre' => 'ELECTRICIDAD', 'caracteristica' => 'Fallan luces direccionales', 'tiene' => true, 'valoracion' => 0.01],
+            ['nombre' => 'ELECTRICIDAD', 'caracteristica' => 'Fallan luces de freno', 'tiene' => true, 'valoracion' => 0.01],
+            ['nombre' => 'ELECTRICIDAD', 'caracteristica' => 'Fallan luces de retro', 'tiene' => true, 'valoracion' => 0.01],
+            ['nombre' => 'ELECTRICIDAD', 'caracteristica' => 'Fallan luces de salón', 'tiene' => true, 'valoracion' => 0.01],
+            ['nombre' => 'ELECTRICIDAD', 'caracteristica' => 'Fallan luces de tablero', 'tiene' => true, 'valoracion' => 0.01],
+            ['nombre' => 'ELECTRICIDAD', 'caracteristica' => 'Falla instrumentos del tablero', 'tiene' => true, 'valoracion' => 0.01],
+            ['nombre' => 'ELECTRICIDAD', 'caracteristica' => 'Descarga de batería', 'tiene' => true, 'valoracion' => 0.01],
+            ['nombre' => 'ELECTRICIDAD', 'caracteristica' => 'Falla bocina', 'tiene' => true, 'valoracion' => 0.01],
             ['nombre' => 'ELECTRICIDAD', 'caracteristica' => 'Falla limpiaparabrisas', 'tiene' => false, 'valoracion' => 0.01],
-            ['nombre' => 'APARIENCIA INTERIOR EXTERIOR', 'caracteristica' => 'Tablero', 'tiene' => false, 'valoracion' => 0.015],
-            ['nombre' => 'APARIENCIA INTERIOR EXTERIOR', 'caracteristica' => 'Motor', 'tiene' => false, 'valoracion' => 0.015],
-            ['nombre' => 'APARIENCIA INTERIOR EXTERIOR', 'caracteristica' => 'Caja de cambios', 'tiene' => false, 'valoracion' => 0.015],
-            ['nombre' => 'APARIENCIA INTERIOR EXTERIOR', 'caracteristica' => 'Diferencial', 'tiene' => false, 'valoracion' => 0.015],
-            ['nombre' => 'APARIENCIA INTERIOR EXTERIOR', 'caracteristica' => 'Engrasado', 'tiene' => false, 'valoracion' => 0.015],
-            ['nombre' => 'APARIENCIA INTERIOR EXTERIOR', 'caracteristica' => 'Lavado', 'tiene' => false, 'valoracion' => 0.015],
+            ['nombre' => 'APARIENCIA INTERIOR EXTERIOR', 'caracteristica' => 'Tablero', 'tiene' => true, 'valoracion' => 0.015],
+            ['nombre' => 'APARIENCIA INTERIOR EXTERIOR', 'caracteristica' => 'Motor', 'tiene' => true, 'valoracion' => 0.015],
+            ['nombre' => 'APARIENCIA INTERIOR EXTERIOR', 'caracteristica' => 'Caja de cambios', 'tiene' => true, 'valoracion' => 0.015],
+            ['nombre' => 'APARIENCIA INTERIOR EXTERIOR', 'caracteristica' => 'Diferencial', 'tiene' => true, 'valoracion' => 0.015],
+            ['nombre' => 'APARIENCIA INTERIOR EXTERIOR', 'caracteristica' => 'Engrasado', 'tiene' => true, 'valoracion' => 0.015],
+            ['nombre' => 'APARIENCIA INTERIOR EXTERIOR', 'caracteristica' => 'Lavado', 'tiene' => true, 'valoracion' => 0.015],
             ['nombre' => 'ACCESORIOS Y ADICIONALES', 'caracteristica' => 'Llave de ruedas', 'tiene' => false, 'valoracion' => 0.005],
             ['nombre' => 'ACCESORIOS Y ADICIONALES', 'caracteristica' => 'Retrovisores', 'tiene' => false, 'valoracion' => 0.005],
             ['nombre' => 'ACCESORIOS Y ADICIONALES', 'caracteristica' => 'Llanta de emergencia', 'tiene' => false, 'valoracion' => 0.005],
@@ -214,10 +214,10 @@ class AvaluoSeeder extends Seeder
             ['nombre' => 'ACCESORIOS Y ADICIONALES', 'caracteristica' => 'Radio', 'tiene' => false, 'valoracion' => 0.005],
             ['nombre' => 'ACCESORIOS Y ADICIONALES', 'caracteristica' => 'Encendedor', 'tiene' => false, 'valoracion' => 0.005],
             ['nombre' => 'ACCESORIOS Y ADICIONALES', 'caracteristica' => 'Ceniceros', 'tiene' => false, 'valoracion' => 0.005],
-            ['nombre' => 'ACCESORIOS Y ADICIONALES', 'caracteristica' => 'Extintor', 'tiene' => false, 'valoracion' => 0.005],
-            ['nombre' => 'ACCESORIOS Y ADICIONALES', 'caracteristica' => 'Herramientas', 'tiene' => false, 'valoracion' => 0.005],
-            ['nombre' => 'ACCESORIOS Y ADICIONALES', 'caracteristica' => 'Tapa cubos', 'tiene' => false, 'valoracion' => 0.005],
-            ['nombre' => 'ACCESORIOS Y ADICIONALES', 'caracteristica' => 'Parabrisas', 'tiene' => false, 'valoracion' => 0.005],
+            ['nombre' => 'ACCESORIOS Y ADICIONALES', 'caracteristica' => 'Extintor', 'tiene' => true, 'valoracion' => 0.005],
+            ['nombre' => 'ACCESORIOS Y ADICIONALES', 'caracteristica' => 'Herramientas', 'tiene' => true, 'valoracion' => 0.005],
+            ['nombre' => 'ACCESORIOS Y ADICIONALES', 'caracteristica' => 'Tapa cubos', 'tiene' => true, 'valoracion' => 0.005],
+            ['nombre' => 'ACCESORIOS Y ADICIONALES', 'caracteristica' => 'Parabrisas', 'tiene' => true, 'valoracion' => 0.005],
         ];
 
         foreach ($inspecciones as $inspeccion) {

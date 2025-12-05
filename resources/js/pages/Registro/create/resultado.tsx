@@ -25,17 +25,16 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-interface RegistroData {
-    // Datos de vehículo
+interface Vehiculo {
+    id: number;
     entidad: string;
     fecha_evaluacion: string;
     ubicacion_actual: string;
     tipo_vehiculo: string;
     tipo_combustible: string;
-    marca: string;
+    id_marca: number;
     modelo: string;
-    ano_fabricacion: string;
-    marcaMotor?: string;
+    año_fabricacion: number;
     placa?: string;
     serie_motor?: string;
     chasis?: string;
@@ -43,66 +42,71 @@ interface RegistroData {
     procedencia: string;
     kilometraje: string;
     precio_referencial: string;
-    
-    // Datos de condición general
-    estado_operativo: string[];
+}
+
+interface CondicionGeneral {
+    id: number;
+    id_vehiculo: number;
+    estado_operativo: string;
     estado_general: string;
-    observaciones: string;
-    
-    // Datos de avalúo (vienen del backend)
-    factor_reposicion: number;
-    final_estimacion: number;
-    moneda: string;
-    depre_modelo: number;
-    depre_kilometraje: number;
-    depre_inspeccion: number;
+    observaciones?: string;
+}
+
+interface Inspeccion {
+    id: number;
+    id_vehiculo: number;
+    nombre: string;
+    caracteristica: string;
+    tiene: number;
+    valoracion: number;
+}
+
+interface VehiculoImagen {
+    id: number;
+    id_vehiculo: number;
+    lado: string;
+    url: string;
+    descripcion?: string;
+    fecha?: string;
 }
 
 interface ResultadoProps {
-    registro?: RegistroData;
+    vehiculo: Vehiculo;
+    condicionGeneral: CondicionGeneral;
+    inspeccion: Inspeccion[];
+    imagenes: VehiculoImagen[];
+    valorFinal: number;
+    factorReposicion: number;
+    factorModelo: number;
+    factorKilometraje: number;
+    factorInspeccion: number;
+    valorResidual: number;
 }
 
-// Datos simulados para pruebas
-const registroSimulado: RegistroData = {
-    // Datos de vehículo
-    entidad: 'Banco Nacional de Bolivia',
-    fecha_evaluacion: '2024-10-20',
-    ubicacion_actual: 'Av. Arce #2345, La Paz, Bolivia',
-    tipo_vehiculo: 'camioneta',
-    tipo_combustible: 'diesel',
-    marca: 'Toyota',
-    modelo: 'Hilux 4x4',
-    ano_fabricacion: '2018',
-    marcaMotor: 'Toyota',
-    placa: 'ABC-1234',
-    serie_motor: 'TY45678901234',
-    chasis: 'JTEBH3FJ50K123456',
-    color: 'Blanco',
-    procedencia: 'Japón',
-    kilometraje: '85000',
-    precio_referencial: '28500.00',
-    
-    // Datos de condición general
-    estado_operativo: ['Operable', 'En reparación'],
-    estado_general: 'Bueno',
-    observaciones: 'Vehículo en buenas condiciones generales. Requiere cambio de neumáticos delanteros y mantenimiento preventivo del sistema de frenos. La carrocería presenta algunos rayones menores en la puerta lateral derecha. El motor funciona correctamente sin fugas aparentes.',
-    
-    // Datos de avalúo (simulados como si vinieran del backend)
-    factor_reposicion: 1.2,
-    final_estimacion: 32580.50,
-    moneda: '$US',
-    depre_modelo: 0.30,
-    depre_kilometraje: 0.15,
-    depre_inspeccion: 0.05
-};
-
-export default function Resultado({ registro = registroSimulado }: ResultadoProps) {
-    // Todos los datos vienen del backend, no hay cálculos en el frontend
+export default function Resultado({
+    vehiculo,
+    condicionGeneral,
+    inspeccion,
+    imagenes,
+    valorFinal,
+    factorReposicion,
+    factorModelo,
+    factorKilometraje,
+    factorInspeccion,
+    valorResidual
+}: ResultadoProps) {
 
     const handlePrint = () => {
         //window.print();
     };
 
+    console.log(valorFinal
+        , factorReposicion
+        , factorModelo
+        , factorKilometraje
+        , factorInspeccion
+        , valorResidual, vehiculo,
+    );
     const handleVolver = () => {
         window.location.href = '/dashboard';
     };
@@ -115,9 +119,9 @@ export default function Resultado({ registro = registroSimulado }: ResultadoProp
                 <div className="rounded-lg border border-[#e2e8f0] bg-[#ffffff] p-6 shadow-sm dark:border-[#20384b] dark:bg-[#1a2c3a]">
                     {/* Header */}
                     <ResultadoHeader
-                        entidad={registro.entidad}
-                        fecha_evaluacion={registro.fecha_evaluacion}
-                        ubicacion_actual={registro.ubicacion_actual}
+                        entidad={vehiculo.entidad}
+                        fecha_evaluacion={vehiculo.fecha_evaluacion}
+                        ubicacion_actual={vehiculo.ubicacion_actual}
                     />
 
                     {/* Botones de acción */}
@@ -130,12 +134,12 @@ export default function Resultado({ registro = registroSimulado }: ResultadoProp
                             <ArrowLeft className="h-4 w-4" />
                             Volver a Evaluaciones
                         </Button>
-                        
+
                         <Button
                             onClick={handlePrint}
                             className="flex items-center gap-2 bg-[#00AEEF] hover:bg-[#00AEEF]/90"
                         >
-                            
+
                             Imprimir Reporte
                         </Button>
                     </div>
@@ -144,41 +148,41 @@ export default function Resultado({ registro = registroSimulado }: ResultadoProp
                     <div className="space-y-6">
                         {/* Información del Vehículo */}
                         <VehicleInfoCard
-                            tipo_vehiculo={registro.tipo_vehiculo}
-                            tipo_combustible={registro.tipo_combustible}
-                            marca={registro.marca}
-                            modelo={registro.modelo}
-                            ano_fabricacion={registro.ano_fabricacion}
-                            color={registro.color}
+                            tipo_vehiculo={vehiculo.tipo_vehiculo}
+                            tipo_combustible={vehiculo.tipo_combustible}
+                            marca={vehiculo.id_marca.toString()}
+                            modelo={vehiculo.modelo}
+                            ano_fabricacion={vehiculo.año_fabricacion.toString()}
+                            color={vehiculo.color}
                         />
 
                         {/* Identificación del Vehículo */}
                         <VehicleIdentificationCard
-                            placa={registro.placa}
-                            chasis={registro.chasis}
-                            serie_motor={registro.serie_motor}
-                            marcaMotor={registro.marcaMotor}
+                            placa={vehiculo.placa}
+                            chasis={vehiculo.chasis}
+                            serie_motor={vehiculo.serie_motor}
+                            marcaMotor={vehiculo.id_marca.toString()}
                         />
 
                         {/* Condiciones y Evaluación */}
                         <ConditionsCard
-                            estado_operativo={registro.estado_operativo}
-                            estado_general={registro.estado_general}
-                            procedencia={registro.procedencia}
-                            kilometraje={registro.kilometraje}
-                            precio_referencial={registro.precio_referencial}
-                            observaciones={registro.observaciones}
+                            estado_operativo={condicionGeneral.estado_operativo ? [condicionGeneral.estado_operativo] : []}
+                            estado_general={condicionGeneral.estado_general}
+                            procedencia={vehiculo.procedencia}
+                            kilometraje={vehiculo.kilometraje}
+                            precio_referencial={vehiculo.precio_referencial}
+                            observaciones={condicionGeneral.observaciones || ''}
                         />
 
                         {/* Depreciación y Valoración */}
                         <DepreciacionCard
-                            factor_reposicion={registro.factor_reposicion}
-                            final_estimacion={registro.final_estimacion}
-                            precio_referencial={parseFloat(registro.precio_referencial)}
-                            moneda={registro.moneda}
-                            depre_modelo={registro.depre_modelo}
-                            depre_kilometraje={registro.depre_kilometraje}
-                            depre_inspeccion={registro.depre_inspeccion}
+                            factor_reposicion={factorReposicion}
+                            final_estimacion={valorFinal}
+                            precio_referencial={parseFloat(vehiculo.precio_referencial)}
+                            moneda="$US"
+                            depre_modelo={factorModelo}
+                            depre_kilometraje={factorKilometraje}
+                            depre_inspeccion={factorInspeccion}
                         />
                     </div>
 

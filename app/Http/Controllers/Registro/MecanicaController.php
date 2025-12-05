@@ -3,9 +3,14 @@
 namespace App\Http\Controllers\Registro;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Registro\MecanicaRequest;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
+
+use App\Models\Sistema;
+use App\Models\Vehiculo;
+
 
 
 class MecanicaController extends Controller
@@ -13,10 +18,15 @@ class MecanicaController extends Controller
      /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index($id)
     {
-       
-         return Inertia::render('Registro/create/evaluacion_mecanica');
+        if(Sistema::where('id_vehiculo', $id)->exists() || !Vehiculo::where('id', $id)->exists()) {
+            return redirect()->route('resultados.avaluo.continuar', $id)->with('success', 'Ya se ha realizado la evaluación mecánica para este vehículo.');
+        } else {    
+            return Inertia::render('Registro/create/evaluacion_mecanica', [
+                'id' => $id,
+            ]);
+        }
     }
 
     /**
@@ -30,69 +40,41 @@ class MecanicaController extends Controller
     /**
      * Ruta para la evaluacion mecanica 
      */
-    public function store(Request $request)
+    public function store(MecanicaRequest $request, $id)
     {
-        // Obtener todos los datos
-        $datosInspeccion = $request->all();
-        
-        // Validar que venga al menos un componente
-        if (empty($datosInspeccion)) {
-            return back()->withErrors(['error' => 'Debe completar al menos un componente de la inspección.']);
+
+        if(Sistema::where('id_vehiculo', $id)->exists() || !Vehiculo::where('id', $id)->exists()){
+            return redirect()->route('resultados.avaluo.continuar', $id)->with('success', 'Ya se ha realizado la evaluación mecánica para este vehículo.');
         }
+        // Los datos ya vienen validados por MecanicaRequest
+        $datosValidados = $request->validated();
 
-       
-        // Array para almacenar los datos validados
-        $sistemasValidados = [];
-        $errores = [];
-
-        // Iterar sobre cada componente recibido
-        foreach ($datosInspeccion as $nombreComponente => $datos) {
-            // Validar que el estado no esté vacío (campo obligatorio)
-            if (empty($datos['estado'])) {
-                $errores[] = "El componente '{$nombreComponente}' debe tener un estado seleccionado.";
-               
-                continue;
+        //dd($datosValidados);
+        
+        // Array para almacenar todos los registros a insertar
+        $registrosMecanica = [];
+        
+        // Procesar cada sistema
+        foreach ($datosValidados['sistemas'] as $sistema) {
+            $nombreSistema = $sistema['nombre_sistema'];
+            
+            // Procesar cada componente del sistema
+            foreach ($sistema['componentes'] as $componente) {
+                $registrosMecanica[] = [
+                    'id_vehiculo' => $id,
+                    'nombre_sistema' => $nombreSistema,
+                    'componente' => $componente['componente'],
+                    'estado' => $componente['estado'] ?? null,
+                    'observaciones' => $componente['observaciones'] ?? null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
             }
-
-           
-
-            // Preparar datos para inserción
-            $sistemasValidados[] = [
-                'nombre_sistema' => $datos['nombre_sistema'] ?? null,
-                'componente' => $datos['componente'] ?? $nombreComponente,
-                'estado' => $datos['estado'],
-                'observaciones' => $datos['observaciones'] ?? null,
-                // 'id_vehiculo' => $idVehiculo, // Aquí irá el ID del vehículo cuando lo tengas
-                'created_at' => now(),
-                'updated_at' => now(),
-            ];
         }
-        // dd([
-        //     'mensaje' => 'Datos validados correctamente',
-        //     'total_componentes' => count($sistemasValidados),
-        //     'datos' => $sistemasValidados
-        // ]);
-
-        // Si hay errores, regresar con los mensajes
         
-        if (!empty($errores)) {
-            return back()->withErrors(['validacion' => $errores])->withInput();
-           
-        }
+        Sistema::insert($registrosMecanica);
 
-        // Si no hay datos validados, retornar error
-        if (empty($sistemasValidados)) {
-            return back()->withErrors(['error' => 'No se pudo validar ningún componente.']);
-        }
-
-        // Simulación: Aquí iría la inserción masiva a la base de datos
-        // DB::table('sistemas')->insert($sistemasValidados);
-        // O con el modelo: Sistema::insert($sistemasValidados);
-
-        // Por ahora, mostrar los datos validados para verificar
-       
-        // Cuando esté listo, redirigir con mensaje de éxito
-        // return redirect()->route('registro.success')->with('success', 'Evaluación mecánica guardada correctamente.');
+        return redirect()->route('resultados.avaluo.continuar', $id)->with('success', 'Evaluación mecánica guardada correctamente.');
     }
 
     /**

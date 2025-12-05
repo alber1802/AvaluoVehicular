@@ -30,7 +30,9 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function RegistroCreate() {
+export default function RegistroCreate(datos: any) {
+
+
     const [estadoOperativoOtros, setEstadoOperativoOtros] = useState('');
     const [showOtrosInput, setShowOtrosInput] = useState(false);
     const [showEstadoDropdown, setShowEstadoDropdown] = useState(false);
@@ -43,14 +45,13 @@ export default function RegistroCreate() {
         fecha_evaluacion: '',
         ubicacion_actual: '',
         tipo_vehiculo: '',
-        tipo_combustible: 'no tiene',
+        tipo_combustible: '',
         id_marca: '',
-        modelo: 'no tiene',
+        modelo: '',
         ano_fabricacion: '',
-        marcaMotor: 'no tiene',
-        placa: 'no tiene',
-        serie_motor: 'no tiene',
-        chasis: 'no tiene',
+        placa: '',
+        serie_motor: '',
+        chasis: '',
         color: '',
         procedencia: '',
         kilometraje: '',
@@ -72,14 +73,9 @@ export default function RegistroCreate() {
         'Otros'
     ];
 
-    const marcas = [
-        { id: 1, nombre: 'Toyota' },
-        { id: 2, nombre: 'Nissan' },
-        { id: 3, nombre: 'Suzuki' },
-        { id: 4, nombre: 'Honda' },
-        { id: 5, nombre: 'Ford' },
-        { id: 6, nombre: 'Otros' }
-    ];
+    const marcas = datos.marcas.map((marca: any) => ({ id: marca.id, nombre: marca.nombre }));
+
+
 
     const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -123,6 +119,43 @@ export default function RegistroCreate() {
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
 
+        // Validar que los selects no estén vacíos
+        if (!data.tipo_vehiculo) {
+            setToastMessage('⚠️ Por favor seleccione el tipo de vehículo');
+            setToastType('warning');
+            setShowToast(true);
+            return;
+        }
+
+        if (!data.tipo_combustible) {
+            setToastMessage('⚠️ Por favor seleccione el tipo de combustible');
+            setToastType('warning');
+            setShowToast(true);
+            return;
+        }
+
+        if (!data.id_marca) {
+            setToastMessage('⚠️ Por favor seleccione la marca del vehículo');
+            setToastType('warning');
+            setShowToast(true);
+            return;
+        }
+
+        if (!data.estado_general) {
+            setToastMessage('⚠️ Por favor seleccione el estado general');
+            setToastType('warning');
+            setShowToast(true);
+            return;
+        }
+
+        // Validar que se haya seleccionado al menos un estado operativo
+        if (!Array.isArray(data.estado_operativo) || data.estado_operativo.length === 0) {
+            setToastMessage('⚠️ Por favor seleccione al menos un en el campo "Estado Operativo"');
+            setToastType('warning');
+            setShowToast(true);
+            return;
+        }
+
         // Si se seleccionó "Otros" y hay texto, incluirlo en el array
         let finalEstadoOperativo = Array.isArray(data.estado_operativo) ? [...data.estado_operativo] : [];
         if (showOtrosInput && estadoOperativoOtros.trim()) {
@@ -130,11 +163,17 @@ export default function RegistroCreate() {
             if (otrosIndex !== -1) {
                 finalEstadoOperativo[otrosIndex] = `Otros: ${estadoOperativoOtros.trim()}`;
             }
+        } else if (showOtrosInput && !estadoOperativoOtros.trim()) {
+            // Si seleccionó "Otros" pero no escribió nada
+            setToastMessage('⚠️ Por favor especifique el estado operativo en "Otros"');
+            setToastType('warning');
+            setShowToast(true);
+            return;
         }
 
         // Actualizar el dato antes de enviar
         data.estado_operativo = finalEstadoOperativo;
-        console.log(data);
+
         post(route('registro.store'), {
             onSuccess: () => {
                 setToastMessage('✅ Registro de vehículo guardado exitosamente');
@@ -301,7 +340,7 @@ export default function RegistroCreate() {
                                             <SelectValue placeholder="Seleccione marca" className="dark:placeholder:text-[#64748b]" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            {marcas.map((marca) => (
+                                            {marcas.map((marca: any) => (
                                                 <SelectItem key={marca.id} value={marca.id.toString()}>
                                                     {marca.nombre}
                                                 </SelectItem>
@@ -419,20 +458,7 @@ export default function RegistroCreate() {
                                     <InputError message={errors.serie_motor} />
                                 </div>
 
-                                {/* <div className="grid gap-2">
-                                    <Label htmlFor="marcaMotor">
-                                        Marca del Motor
-                                        <span className="text-red-500">*</span>
-                                    </Label>
-                                    <Input
-                                        id="marcaMotor"
-                                        value={data.marcaMotor}
-                                        onChange={(e) => setData('marcaMotor', e.target.value)}
-                                        placeholder="Marca del motor"
-                                        className="border-[#e2e8f0] bg-[#ffffff] text-[#1e293b] placeholder:text-[#94a3b8] focus:border-[#00AEEF] focus:ring-[#00AEEF]/20 dark:border-[#20384b] dark:bg-[#0f1a23] dark:text-white/90 dark:placeholder:text-[#64748b] dark:focus:border-[#00AEEF]"
-                                    />
-                                    <InputError message={errors.marcaMotor} />
-                                </div> */}
+
                             </div>
                         </div>
 
@@ -511,6 +537,7 @@ export default function RegistroCreate() {
                                         <Button
                                             type="button"
                                             variant="outline"
+
                                             onClick={() => setShowEstadoDropdown(!showEstadoDropdown)}
                                             className="w-full justify-between border-[#e2e8f0] bg-[#ffffff] text-[#1e293b] hover:bg-[#f8fafc] dark:border-[#20384b] dark:bg-[#0f1a23] dark:text-white/90 dark:hover:bg-[#0f1a23]"
                                         >

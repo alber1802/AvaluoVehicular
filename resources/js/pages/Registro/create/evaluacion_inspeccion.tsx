@@ -22,15 +22,14 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function EvaluacionInspeccion() {
+export default function EvaluacionInspeccion({ id }: { id: number }) {
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
     const [toastType, setToastType] = useState<'success' | 'error' | 'warning' | 'info'>('success');
 
     const handleSubmit = (data: any) => {
-        console.log('Datos de fallas:', data);
         // Aquí puedes enviar los datos al backend
-        router.post(route('evaluacion.inspeccion.store'), { fallas: data }, {
+        router.post(route('evaluacion.inspeccion.store', { id }), { data }, {
             onSuccess: () => {
                 setToastMessage('✅ Evaluación por inspección registrada exitosamente');
                 setToastType('success');
@@ -51,7 +50,7 @@ export default function EvaluacionInspeccion() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Evaluación por Inspección" />
-            
+
             {showToast && (
                 <Toast
                     message={toastMessage}

@@ -18,7 +18,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function CondicionesGenerales() {
+export default function CondicionesGenerales({ id }: { id: number }) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Elección de Método de Evaluación" />
@@ -38,7 +38,7 @@ export default function CondicionesGenerales() {
                     {/* Botones de selección */}
                     <div className="grid gap-6 md:grid-cols-2">
                         {/* Evaluación por Inspección */}
-                        <Link href={route('evaluacion.inspeccion')}>
+                        <Link href={route('evaluacion.inspeccion', { id })}>
                             <div className="group cursor-pointer rounded-lg border-2 border-[#e2e8f0] bg-[#ffffff] p-8 shadow-sm transition-all duration-300 hover:border-[#00AEEF] hover:shadow-lg dark:border-[#20384b] dark:bg-[#1a2c3a] dark:hover:border-[#00AEEF]">
                                 <div className="flex flex-col items-center space-y-4 text-center">
                                     <div className="rounded-full bg-[#00AEEF]/10 p-6 transition-all duration-300 group-hover:bg-[#00AEEF]/20">
@@ -58,7 +58,7 @@ export default function CondicionesGenerales() {
                         </Link>
 
                         {/* Evaluación por Condiciones Mecánicas */}
-                        <Link href={route('evaluacion.mecanica')}>
+                        <Link href={route('evaluacion.mecanica', { id })}>
                             <div className="group cursor-pointer rounded-lg border-2 border-[#e2e8f0] bg-[#ffffff] p-8 shadow-sm transition-all duration-300 hover:border-[#00AEEF] hover:shadow-lg dark:border-[#20384b] dark:bg-[#1a2c3a] dark:hover:border-[#00AEEF]">
                                 <div className="flex flex-col items-center space-y-4 text-center">
                                     <div className="rounded-full bg-[#00AEEF]/10 p-6 transition-all duration-300 group-hover:bg-[#00AEEF]/20">

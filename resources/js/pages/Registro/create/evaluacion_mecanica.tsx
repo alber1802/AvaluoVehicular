@@ -22,15 +22,14 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function EvaluacionMecanica() {
+export default function EvaluacionMecanica({ id }: { id: string }) {
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
     const [toastType, setToastType] = useState<'success' | 'error' | 'warning' | 'info'>('success');
 
     const handleSubmit = (data: any) => {
-        console.log('Datos de inspección:', data);
         // Aquí puedes enviar los datos al backend
-        router.post(route('evaluacion.mecanica.store'), data, {
+        router.post(route('evaluacion.mecanica.store', { id }), data, {
             onSuccess: () => {
                 setToastMessage('✅ Evaluación mecánica guardada correctamente');
                 setToastType('success');
@@ -51,7 +50,7 @@ export default function EvaluacionMecanica() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Evaluación por Condiciones Mecánicas Generales" />
-            
+
             {showToast && (
                 <Toast
                     message={toastMessage}
@@ -65,14 +64,14 @@ export default function EvaluacionMecanica() {
                     <h1 className="text-3xl font-bold text-[#1e293b] dark:text-white/90">
                         Evaluación por Condiciones Mecánicas Generales
                     </h1>
-                    <p className="mt-3 text-sm text-[#475569] dark:text-white/80">
+                    <p className="mt-3 text-sl text-[#475569] dark:text-white/80">
                         Complete la inspección técnica del vehículo seleccionando el estado de cada componente
                     </p>
                     <div className="mt-6 rounded-lg border border-[#e2e8f0] bg-[#f8fafc] p-6 dark:border-[#20384b] dark:bg-[#0f1a23]">
-                        <p className="text-sm font-medium text-[#1e293b] dark:text-white/90 mb-3">
+                        <p className="text-sl font-medium text-[#1e293b] dark:text-white/90 mb-3">
                             Leyenda de estados:
                         </p>
-                        <div className="flex flex-wrap justify-center gap-4 text-xs">
+                        <div className="flex flex-wrap justify-center gap-4 text-sm">
                             <span className="text-[#475569] dark:text-white/80">
                                 <strong>B:</strong> Bueno
                             </span>

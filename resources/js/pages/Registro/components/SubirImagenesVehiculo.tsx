@@ -10,6 +10,8 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { Upload, X, Image as ImageIcon, CheckCircle2 } from 'lucide-react';
+import { Link } from '@inertiajs/react';
+import { route } from 'ziggy-js';
 
 interface ImagenVehiculo {
     id: string;
@@ -60,11 +62,11 @@ export default function SubirImagenesVehiculo({ onSubmit, onCancel }: SubirImage
     const handleDrop = (e: React.DragEvent) => {
         e.preventDefault();
         setIsDragging(false);
-        
-        const files = Array.from(e.dataTransfer.files).filter(file => 
+
+        const files = Array.from(e.dataTransfer.files).filter(file =>
             file.type.startsWith('image/')
         );
-        
+
         agregarImagenes(files);
     };
 
@@ -111,10 +113,10 @@ export default function SubirImagenesVehiculo({ onSubmit, onCancel }: SubirImage
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        
+
         // Validar que todas las imágenes tengan ubicación
         const imagenesSinUbicacion = imagenes.filter(img => !img.ubicacion);
-        
+
         if (imagenesSinUbicacion.length > 0) {
             alert('Por favor, especifica la ubicación para todas las imágenes.');
             return;
@@ -137,16 +139,15 @@ export default function SubirImagenesVehiculo({ onSubmit, onCancel }: SubirImage
                         <Label className="mb-2 block text-sm font-medium text-[#1e293b] dark:text-white/90">
                             Cargar Imágenes del Vehículo
                         </Label>
-                        
+
                         <div
                             onDragOver={handleDragOver}
                             onDragLeave={handleDragLeave}
                             onDrop={handleDrop}
-                            className={`relative rounded-lg border-2 border-dashed p-8 text-center transition-all ${
-                                isDragging
-                                    ? 'border-[#00AEEF] bg-[#00AEEF]/5'
-                                    : 'border-[#e2e8f0] bg-[#f8fafc] dark:border-[#20384b] dark:bg-[#0f1a23]'
-                            }`}
+                            className={`relative rounded-lg border-2 border-dashed p-8 text-center transition-all ${isDragging
+                                ? 'border-[#00AEEF] bg-[#00AEEF]/5'
+                                : 'border-[#e2e8f0] bg-[#f8fafc] dark:border-[#20384b] dark:bg-[#0f1a23]'
+                                }`}
                         >
                             <input
                                 type="file"
@@ -156,12 +157,12 @@ export default function SubirImagenesVehiculo({ onSubmit, onCancel }: SubirImage
                                 onChange={handleFileInput}
                                 className="hidden"
                             />
-                            
+
                             <div className="flex flex-col items-center justify-center space-y-3">
                                 <div className="rounded-full bg-[#00AEEF]/10 p-3">
                                     <Upload className="h-8 w-8 text-[#00AEEF]" />
                                 </div>
-                                
+
                                 <div className="space-y-1">
                                     <p className="text-sm font-medium text-[#1e293b] dark:text-white/90">
                                         Arrastra y suelta tus imágenes aquí
@@ -227,7 +228,7 @@ export default function SubirImagenesVehiculo({ onSubmit, onCancel }: SubirImage
                                                 <button
                                                     type="button"
                                                     onClick={() => eliminarImagen(imagen.id)}
-                                                    className="absolute -right-2 -top-2 rounded-full bg-red-500 p-1 text-white shadow-md transition-transform hover:scale-110 hover:bg-red-600"
+                                                    className="absolute right-0 top-0 rounded-full bg-red-500 p-1 text-white shadow-md transition-transform hover:scale-110 hover:bg-red-600"
                                                 >
                                                     <X className="h-4 w-4" />
                                                 </button>
@@ -244,11 +245,10 @@ export default function SubirImagenesVehiculo({ onSubmit, onCancel }: SubirImage
                                                         onValueChange={(value) => actualizarUbicacion(imagen.id, value)}
                                                     >
                                                         <SelectTrigger
-                                                            className={`h-9 text-sm ${
-                                                                !imagen.ubicacion
-                                                                    ? 'border-red-300 dark:border-red-700'
-                                                                    : ''
-                                                            }`}
+                                                            className={`h-9 text-sm ${!imagen.ubicacion
+                                                                ? 'border-red-300 dark:border-red-700'
+                                                                : ''
+                                                                }`}
                                                         >
                                                             <SelectValue placeholder="Seleccionar ubicación" />
                                                         </SelectTrigger>
@@ -289,15 +289,17 @@ export default function SubirImagenesVehiculo({ onSubmit, onCancel }: SubirImage
 
                     {/* Botones de acción */}
                     <div className="flex items-center justify-end gap-4 border-t border-[#e2e8f0] pt-6 dark:border-[#20384b]">
-                        <Button
-                            type="button"
-                            variant="outline"
-                            onClick={onCancel || (() => window.history.back())}
-                            className="border-[#e2e8f0] text-[#1e293b] hover:bg-[#f8fafc] dark:border-[#20384b] dark:text-white/90 dark:hover:bg-[#0f1a23]"
-                        >
-                            {imagenes.length > 0 ? 'Omitir' : 'Cancelar'}
-                        </Button>
-                        
+                        <Link href={route('dashboard')}>
+                            <Button
+                                type="button"
+                                variant="outline"
+
+                                className="border-[#e2e8f0] text-[#1e293b] hover:bg-[#f8fafc] dark:border-[#20384b] dark:text-white/90 dark:hover:bg-[#0f1a23]"
+                            >
+                                {imagenes.length > 0 ? 'Omitir' : 'Cancelar'}
+                            </Button>
+                        </Link>
+
                         {imagenes.length > 0 && (
                             <Button
                                 type="submit"

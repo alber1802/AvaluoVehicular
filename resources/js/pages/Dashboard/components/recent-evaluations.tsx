@@ -1,52 +1,51 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Eye, Pencil } from 'lucide-react';
+import { Eye, Pencil, ArrowRight } from 'lucide-react';
 import { Pagination } from './pagination';
 import { useState } from 'react';
 import { route } from 'ziggy-js';
+import { Link } from '@inertiajs/react';
 import { Head, router } from '@inertiajs/react';
 
-const evaluations = [
-    {
-        id: 1,
-        vehicle: 'Mazda CX-5',
-        year: '2023',
-        plate: 'ABC-123',
-        date: '15/07/2024',
-        value: '$32,000',
-        image: '/placeholder-car.png',
-    },
-    {
-        id: 2,
-        vehicle: 'Ford Mustang',
-        year: '2022',
-        plate: 'XYZ-789',
-        date: '14/07/2024',
-        value: '$45,500',
-        image: '/placeholder-car.png',
-    },
-    {
-        id: 3,
-        vehicle: 'Toyota RAV4',
-        year: '2024',
-        plate: 'PQR-456',
-        date: '14/07/2024',
-        value: '$28,900',
-        image: '/placeholder-car.png',
-    },
-];
 
 
-export function RecentEvaluations() {
-    const [currentPage, setCurrentPage] = useState(1);
-    const totalPages = 5;
+export function RecentEvaluations({ vehiculos }: any) {
 
-    const ViewVehiculo = () => {
-        router.get(route('resultados.avaluo.viewResultados'));
+    // Acceder a los datos paginados correctamente
+    const evaluations = vehiculos.data.map((vehiculo: any) => {
+        return {
+            id: vehiculo.id,
+            vehicle: vehiculo.marca.nombre + ' ' + vehiculo.modelo,
+            year: vehiculo.año_fabricacion,
+            plate: vehiculo.placa,
+            date: vehiculo.fecha_evaluacion,
+            value: vehiculo.avaluo?.final_estimacion ? '$' + vehiculo.avaluo.final_estimacion : 'No evaluado',
+            image: vehiculo.imagenes && vehiculo.imagenes.length > 0 ? vehiculo.imagenes[0].url : '/placeholder-car.png',
+        };
+    });
+
+    // Usar la página actual y total de páginas de Laravel
+    const currentPage = vehiculos.current_page;
+    const totalPages = vehiculos.last_page;
+
+    const ViewVehiculo = (id: number) => {
+        router.get(route('resultados.avaluo', { id }));
     };
 
-    const EditVehiculo = () => {
-        router.get(route('resultados.avaluo.editResultados'));
+    const EditVehiculo = (id: number) => {
+        router.get(route('resultados.avaluo.editResultados', { id }));
+    };
+
+    const ContinueEvaluation = (id: number) => {
+        router.get(route('resultados.avaluo.continuar', { id }));
+    };
+
+    // Función para cambiar de página
+    const handlePageChange = (page: number) => {
+        router.get(route('dashboard'), { page }, {
+            preserveState: true,
+            preserveScroll: true,
+        });
     };
 
 
@@ -68,7 +67,7 @@ export function RecentEvaluations() {
                             </tr>
                         </thead>
                         <tbody>
-                            {evaluations.map((evaluation) => (
+                            {evaluations.map((evaluation: any) => (
                                 <tr
                                     key={evaluation.id}
                                     className="border-b border-[#e2e8f0] transition-colors hover:bg-[#f8fafc] last:border-0 dark:border-[#20384b] dark:hover:bg-[#20384b]/30"
@@ -95,7 +94,7 @@ export function RecentEvaluations() {
                                         {evaluation.plate}
                                     </td>
                                     <td className="hidden py-4 text-[#64748b] dark:text-white/70 md:table-cell">
-                                        {evaluation.date}
+                                        {new Intl.DateTimeFormat('es-ES', { day: '2-digit', month: 'short', year: 'numeric' }).format(new Date(evaluation.date))}
                                     </td>
                                     <td className="py-4">
                                         <span className="font-semibold text-[#00AEEF]">
@@ -103,24 +102,38 @@ export function RecentEvaluations() {
                                         </span>
                                     </td>
                                     <td className="py-4">
-                                        <div className="flex gap-2">
+                                        {evaluation.value === 'No evaluado' ? (
                                             <Button
                                                 variant="ghost"
-                                                size="icon"
-                                                onClick={ViewVehiculo}
-                                                className="h-8 w-8 text-[#64748b] hover:bg-[#00AEEF]/10 hover:text-[#00AEEF] dark:text-white/70 dark:hover:bg-[#00AEEF]/20 dark:hover:text-[#00AEEF]"
+                                                onClick={() => ContinueEvaluation(evaluation.id)}
+                                                size="sm"
+                                                className="bg-[#00AEEF] text-white hover:bg-[#00AEEF]/90 dark:bg-[#00AEEF] 
+                                                dark:hover:bg-[#00AEEF]/90"
                                             >
-                                                <Eye className="h-4 w-4" />
+                                                Continuar
+                                                <ArrowRight className="ml-1 h-4 w-4" />
                                             </Button>
-                                            <Button
-                                                variant="ghost"
-                                                onClick={EditVehiculo}
-                                                size="icon"
-                                                className="h-8 w-8 text-[#64748b] hover:bg-[#00AEEF]/10 hover:text-[#00AEEF] dark:text-white/70 dark:hover:bg-[#00AEEF]/20 dark:hover:text-[#00AEEF]"
-                                            >
-                                                <Pencil className="h-4 w-4" />
-                                            </Button>
-                                        </div>
+                                        ) : (
+                                            <div className="flex gap-2">
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    onClick={() => ViewVehiculo(evaluation.id)}
+                                                    className="h-8 w-8 text-[#64748b] hover:bg-[#00AEEF]/10 hover:text-[#00AEEF] 
+                                                    dark:text-white/70 dark:hover:bg-[#00AEEF]/20 dark:hover:text-[#00AEEF]"
+                                                >
+                                                    <Eye className="h-4 w-4" />
+                                                </Button>
+                                                <Button
+                                                    variant="ghost"
+                                                    onClick={() => EditVehiculo(evaluation.id)}
+                                                    size="icon"
+                                                    className="h-8 w-8 text-[#64748b] hover:bg-[#00AEEF]/10 hover:text-[#00AEEF] dark:text-white/70 dark:hover:bg-[#00AEEF]/20 dark:hover:text-[#00AEEF]"
+                                                >
+                                                    <Pencil className="h-4 w-4" />
+                                                </Button>
+                                            </div>
+                                        )}
                                     </td>
                                 </tr>
                             ))}
@@ -131,7 +144,7 @@ export function RecentEvaluations() {
                 <Pagination
                     currentPage={currentPage}
                     totalPages={totalPages}
-                    onPageChange={setCurrentPage}
+                    onPageChange={handlePageChange}
                     className="pt-4"
                 />
             </CardContent>

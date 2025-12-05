@@ -3,6 +3,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ChevronDown, Check } from 'lucide-react';
+import { Link } from '@inertiajs/react';
+import { route } from 'ziggy-js';
+
 
 interface FallaItem {
     caracteristica: string;
@@ -29,74 +32,75 @@ interface InspeccionFallasProps {
 
 const seccionesFallas: SeccionFallas[] = [
     {
-        titulo: 'MOTOR ENCENDIDO',
+        titulo: 'Motor Encendido',
         items: [
-            { caracteristica: 'Falla de encendido inicial', valoracion: 0.025 },
-            { caracteristica: 'Mala partida', valoracion: 0.025 },
-            { caracteristica: 'Demora partida', valoracion: 0.025 },
-            { caracteristica: 'El motor se detiene al encender', valoracion: 0.025 },
-            { caracteristica: 'Se suelta el acelerador', valoracion: 0.025 },
+            { caracteristica: 'Falla de encendido inicial', valoracion: 0.0250 },
+            { caracteristica: 'Mala partida', valoracion: 0.0250 },
+            { caracteristica: 'Demora partida', valoracion: 0.0250 },
+            { caracteristica: 'El motor se detiene al encender', valoracion: 0.0250 },
+            { caracteristica: 'Se suelta el acelerador', valoracion: 0.0250 },
         ],
     },
     {
-        titulo: 'MOTOR CONDUCCION',
+        titulo: 'Motor Conducción',
         items: [
-            { caracteristica: 'Falla al acelerar', valoracion: 0.02 },
-            { caracteristica: 'Encendido adelantado/atrasado', valoracion: 0.02 },
-            { caracteristica: 'Pérdida de potencia', valoracion: 0.02 },
-            { caracteristica: 'Humo negro', valoracion: 0.02 },
-            { caracteristica: 'Embrague defectuoso', valoracion: 0.02 },
+            { caracteristica: 'Falla al acelerar', valoracion: 0.0200 },
+            { caracteristica: 'Encendido adelantado/atrasado', valoracion: 0.0200 },
+            { caracteristica: 'Pérdida de potencia', valoracion: 0.0200 },
+            { caracteristica: 'Humo negro', valoracion: 0.0200 },
+            { caracteristica: 'Embrague defectuoso', valoracion: 0.0200 },
         ],
     },
     {
-        titulo: 'MARCHA EN VACIO',
+        titulo: 'Marcha en Vacío',
         items: [
-            { caracteristica: 'Marcha en vacio anormal', valoracion: 0.02 },
-            { caracteristica: 'Marcha en vacio inestable', valoracion: 0.02 },
+            { caracteristica: 'Marcha en vacío anormal', valoracion: 0.0200 },
+            { caracteristica: 'Marcha en vacío inestable', valoracion: 0.0200 },
+            { caracteristica: 'Oscilaciónes', valoracion: 0.0200 },
         ],
     },
     {
         titulo: 'Indicador CHECK ENGINE en el tablero',
         items: [
-            { caracteristica: 'No se enciende', valoracion: 0.02 },
-            { caracteristica: 'Siempre encendida', valoracion: 0.02 },
-            { caracteristica: 'Ocasionalmente encendida', valoracion: 0.02 },
+            { caracteristica: 'No se enciende', valoracion: 0.0200 },
+            { caracteristica: 'Siempre encendida', valoracion: 0.0200 },
+            { caracteristica: 'Ocasionalmente encendida', valoracion: 0.0200 },
         ],
     },
     {
-        titulo: 'TRANSMISIÓN',
+        titulo: 'Transmisión',
         items: [
-            { caracteristica: 'Resbala', valoracion: 0.015 },
-            { caracteristica: 'Patina el embrague', valoracion: 0.015 },
-            { caracteristica: 'Pedal de embrague atascado', valoracion: 0.015 },
-            { caracteristica: 'Vibración al partir', valoracion: 0.015 },
-            { caracteristica: 'No entra los cambios', valoracion: 0.015 },
-            { caracteristica: 'Se suelta la marcha', valoracion: 0.015 },
-            { caracteristica: 'Sonidos en los cambios', valoracion: 0.015 },
-            { caracteristica: 'Sonido en el diferencial', valoracion: 0.015 },
+            { caracteristica: 'Patina el embrague', valoracion: 0.0150 },
+            { caracteristica: 'Pedal de embrague atascado', valoracion: 0.0150 },
+            { caracteristica: 'Vibración al partir', valoracion: 0.0150 },
+            { caracteristica: 'No entra los cambios', valoracion: 0.0150 },
+            { caracteristica: 'Se suelta la marcha', valoracion: 0.0150 },
+            { caracteristica: 'Sonidos en los cambios', valoracion: 0.0150 },
+            { caracteristica: 'Sonido en el diferencial', valoracion: 0.0150 },
+            { caracteristica: 'Fugas de aceite', valoracion: 0.0150 },
+            { caracteristica: 'Sonidos en las ruedas al curvar', valoracion: 0.0150 },
         ],
     },
     {
-        titulo: 'FRENOS',
+        titulo: 'Frenos',
         items: [
-            { caracteristica: 'Sonidos en las ruedas al curvar', valoracion: 0.015 },
-            { caracteristica: 'Fugas de aceite', valoracion: 0.015 },
-            { caracteristica: 'Sonidos al frenar', valoracion: 0.015 },
-            { caracteristica: 'Frenos defectuosos', valoracion: 0.025 },
-            { caracteristica: 'No funciona freno de mano', valoracion: 0.025 },
+
+            { caracteristica: 'Sonidos al frenar', valoracion: 0.0250 },
+            { caracteristica: 'Frenos defectuosos', valoracion: 0.0250 },
+            { caracteristica: 'No funciona freno de mano', valoracion: 0.0250 },
+            { caracteristica: 'Fuga de líquido', valoracion: 0.0250 },
         ],
     },
     {
-        titulo: 'SUSPENSIÓN Y CARROCERIA',
+        titulo: 'Suspensión y Carrocería',
         items: [
-            { caracteristica: 'Fugas de liquido', valoracion: 0.025 },
-            { caracteristica: 'Sonidos o golpeteo', valoracion: 0.02 },
-            { caracteristica: 'Rebotes', valoracion: 0.02 },
-            { caracteristica: 'Suspensión floja', valoracion: 0.02 },
+            { caracteristica: 'Sonidos o golpeteo', valoracion: 0.0200 },
+            { caracteristica: 'Rebotes', valoracion: 0.0200 },
+            { caracteristica: 'Suspensión floja', valoracion: 0.0200 },
         ],
     },
     {
-        titulo: 'DIRECCIÓN',
+        titulo: 'Dirección',
         items: [
             { caracteristica: 'Tiende a ir al lado', valoracion: 0.0225 },
             { caracteristica: 'Suena al curvar', valoracion: 0.0225 },
@@ -105,50 +109,50 @@ const seccionesFallas: SeccionFallas[] = [
         ],
     },
     {
-        titulo: 'ELECTRICIDAD',
+        titulo: 'Electricidad',
         items: [
-            { caracteristica: 'Fallan luces delanteras', valoracion: 0.01 },
-            { caracteristica: 'Fallan luces direccionales', valoracion: 0.01 },
-            { caracteristica: 'Fallan luces de freno', valoracion: 0.01 },
-            { caracteristica: 'Fallan luces de retro', valoracion: 0.01 },
-            { caracteristica: 'Fallan luces de salón', valoracion: 0.01 },
-            { caracteristica: 'Fallan luces de tablero', valoracion: 0.01 },
-            { caracteristica: 'Fallan instrumentos del tablero', valoracion: 0.01 },
-            { caracteristica: 'Descarga de batería', valoracion: 0.01 },
-            { caracteristica: 'Falla bocina', valoracion: 0.01 },
-            { caracteristica: 'Fallan limpiaparabrisas', valoracion: 0.01 },
+            { caracteristica: 'Fallan luces delanteras', valoracion: 0.0100 },
+            { caracteristica: 'Fallan luces direccionales', valoracion: 0.0100 },
+            { caracteristica: 'Fallan luces de freno', valoracion: 0.0100 },
+            { caracteristica: 'Fallan luces de retro', valoracion: 0.0100 },
+            { caracteristica: 'Fallan luces de salón', valoracion: 0.0100 },
+            { caracteristica: 'Fallan luces de tablero', valoracion: 0.0100 },
+            { caracteristica: 'Fallan instrumentos del tablero', valoracion: 0.0100 },
+            { caracteristica: 'Descarga de batería', valoracion: 0.0100 },
+            { caracteristica: 'Falla bocina', valoracion: 0.0100 },
+            { caracteristica: 'Fallan limpiaparabrisas', valoracion: 0.0100 },
         ],
     },
     {
-        titulo: 'APARIENCIA INTERIOR Y EXTERIOR',
+        titulo: 'Apariencia Interior y Exterior',
         items: [
-            { caracteristica: 'Tablero', valoracion: 0.015 },
-            { caracteristica: 'Motor', valoracion: 0.015 },
-            { caracteristica: 'Caja de cambios', valoracion: 0.015 },
-            { caracteristica: 'Diferencial', valoracion: 0.015 },
-            { caracteristica: 'Engrasado', valoracion: 0.015 },
-            { caracteristica: 'Lavado', valoracion: 0.015 },
+            { caracteristica: 'Tablero', valoracion: 0.0150 },
+            { caracteristica: 'Motor', valoracion: 0.0150 },
+            { caracteristica: 'Caja de cambios', valoracion: 0.0150 },
+            { caracteristica: 'Diferencial', valoracion: 0.0150 },
+            { caracteristica: 'Engrasado', valoracion: 0.0150 },
+            { caracteristica: 'Lavado', valoracion: 0.0150 },
         ],
     },
     {
-        titulo: 'ACCESORIOS Y ADICIONALES',
+        titulo: 'Accesorios Adicionales',
         items: [
-            { caracteristica: 'Llave de ruedas', valoracion: 0.005 },
-            { caracteristica: 'Retrovisores', valoracion: 0.005 },
-            { caracteristica: 'Alarma de emergencia', valoracion: 0.005 },
-            { caracteristica: 'Espejos', valoracion: 0.005 },
-            { caracteristica: 'Antena', valoracion: 0.005 },
-            { caracteristica: 'Parrillas radio', valoracion: 0.005 },
-            { caracteristica: 'Tapa de gasolina', valoracion: 0.005 },
-            { caracteristica: 'Gata', valoracion: 0.005 },
-            { caracteristica: 'Rayones', valoracion: 0.005 },
-            { caracteristica: 'Radio', valoracion: 0.005 },
-            { caracteristica: 'Encendedor', valoracion: 0.005 },
-            { caracteristica: 'Tapacubos', valoracion: 0.005 },
-            { caracteristica: 'Extintor', valoracion: 0.005 },
-            { caracteristica: 'Herramientas', valoracion: 0.005 },
-            { caracteristica: 'Alfombras', valoracion: 0.005 },
-            { caracteristica: 'Parabrisas', valoracion: 0.005 },
+            { caracteristica: 'Llave de ruedas', valoracion: 0.0050 },
+            { caracteristica: 'Retrovisores', valoracion: 0.0050 },
+            { caracteristica: 'Alarma de emergencia', valoracion: 0.0050 },
+            { caracteristica: 'Espejos', valoracion: 0.0050 },
+            { caracteristica: 'Antena', valoracion: 0.0050 },
+            { caracteristica: 'Perillas radio', valoracion: 0.0050 },
+            { caracteristica: 'Tapa de gasolina', valoracion: 0.0050 },
+            { caracteristica: 'Gata', valoracion: 0.0050 },
+            { caracteristica: 'Rayones', valoracion: 0.0050 },
+            { caracteristica: 'Radio', valoracion: 0.0050 },
+            { caracteristica: 'Encendedor', valoracion: 0.0050 },
+            { caracteristica: 'Tapacubos', valoracion: 0.0050 },
+            { caracteristica: 'Extintor', valoracion: 0.0050 },
+            { caracteristica: 'Herramientas', valoracion: 0.0050 },
+            { caracteristica: 'Abolladuras', valoracion: 0.0050 },
+            { caracteristica: 'Parabrisas', valoracion: 0.0050 },
         ],
     },
 ];
@@ -196,15 +200,15 @@ export default function InspeccionFallas({ onSubmit, onCancel }: InspeccionFalla
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        
+
         // Construir array de datos para enviar al backend
         const fallasData: FallaData[] = [];
-        
+
         seccionesFallas.forEach((seccion) => {
             seccion.items.forEach((item) => {
                 const key = getItemKey(seccion.titulo, item.caracteristica);
                 const datos = datosFallas[key];
-                
+
                 // Solo incluir items que tienen el checkbox marcado o tienen observaciones
                 if (datos?.tiene || datos?.observaciones) {
                     fallasData.push({
@@ -218,8 +222,8 @@ export default function InspeccionFallas({ onSubmit, onCancel }: InspeccionFalla
             });
         });
 
-        console.log('Datos de fallas a enviar:', fallasData);
-        
+        //console.log('Datos de fallas a enviar:', fallasData);
+
         if (onSubmit) {
             onSubmit(fallasData);
         }
@@ -244,25 +248,23 @@ export default function InspeccionFallas({ onSubmit, onCancel }: InspeccionFalla
                                     {seccion.titulo}
                                 </h3>
                                 <ChevronDown
-                                    className={`h-5 w-5 text-[#64748b] transition-transform duration-300 dark:text-white/70 ${
-                                        seccionesAbiertas[seccion.titulo] ? 'rotate-180' : ''
-                                    }`}
+                                    className={`h-5 w-5 text-[#64748b] transition-transform duration-300 dark:text-white/70 ${seccionesAbiertas[seccion.titulo] ? 'rotate-180' : ''
+                                        }`}
                                 />
                             </button>
 
                             {/* Contenido de la sección */}
                             <div
-                                className={`overflow-hidden transition-all duration-300 ${
-                                    seccionesAbiertas[seccion.titulo]
-                                        ? 'mt-4 max-h-[5000px] border-t border-[#e2e8f0] pt-4 dark:border-[#20384b]'
-                                        : 'max-h-0'
-                                }`}
+                                className={`overflow-hidden transition-all duration-300 ${seccionesAbiertas[seccion.titulo]
+                                    ? 'mt-4 max-h-[5000px] border-t border-[#e2e8f0] pt-4 dark:border-[#20384b]'
+                                    : 'max-h-0'
+                                    }`}
                             >
                                 <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
                                     {seccion.items.map((item) => {
                                         const key = getItemKey(seccion.titulo, item.caracteristica);
                                         const isChecked = datosFallas[key]?.tiene || false;
-                                        
+
                                         return (
                                             <div
                                                 key={item.caracteristica}
@@ -285,11 +287,10 @@ export default function InspeccionFallas({ onSubmit, onCancel }: InspeccionFalla
                                                             className="peer sr-only"
                                                         />
                                                         <div
-                                                            className={`h-6 w-6 rounded-md border-2 transition-all duration-200 ${
-                                                                isChecked
-                                                                    ? 'border-[#00AEEF] bg-[#00AEEF]'
-                                                                    : 'border-[#94a3b8] bg-transparent dark:border-[#64748b]'
-                                                            }`}
+                                                            className={`h-6 w-6 rounded-md border-2 transition-all duration-200 ${isChecked
+                                                                ? 'border-[#00AEEF] bg-[#00AEEF]'
+                                                                : 'border-[#94a3b8] bg-transparent dark:border-[#64748b]'
+                                                                }`}
                                                         >
                                                             {isChecked && (
                                                                 <Check className="h-full w-full p-0.5 text-white" />
@@ -329,14 +330,16 @@ export default function InspeccionFallas({ onSubmit, onCancel }: InspeccionFalla
 
                     {/* Botones de acción */}
                     <div className="flex items-center justify-end gap-4 border-t border-[#e2e8f0] pt-6 dark:border-[#20384b]">
-                        <Button
-                            type="button"
-                            variant="outline"
-                            onClick={onCancel || (() => window.history.back())}
-                            className="border-[#e2e8f0] text-[#1e293b] hover:bg-[#f8fafc] dark:border-[#20384b] dark:text-white/90 dark:hover:bg-[#0f1a23]"
-                        >
-                            Cancelar
-                        </Button>
+                        <Link href={route('dashboard')}>
+                            <Button
+                                type="button"
+                                variant="outline"
+                                className="border-[#e2e8f0] text-[#1e293b] hover:bg-[#f8fafc] dark:border-[#20384b] dark:text-white/90 dark:hover:bg-[#0f1a23]"
+                            >
+                                Cancelar
+                            </Button>
+                        </Link>
+
                         <Button type="submit" className="bg-[#00AEEF] hover:bg-[#00AEEF]/90">
                             Guardar Registro de Fallas
                         </Button>
