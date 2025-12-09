@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\Registro\ImagenesRequest;
 use Illuminate\Support\Facades\Storage;
+
 use Inertia\Inertia;
 use App\Models\VehiculoImagen;
 use App\Models\Vehiculo;
@@ -67,6 +68,19 @@ class ImagenesController extends Controller
 
         return redirect()->route('resultados.avaluo' , $id)->with('success', 'Imágenes guardadas correctamente.');
     }
+
+    public function descargarImagen($id)
+    {
+        $imagen = VehiculoImagen::find($id);
+        $path = $imagen->url; // ej: 'vehiculos/vehiculo_1_....png'
+
+        if (!Storage::disk('public')->exists($path)) {
+            abort(404, 'Archivo no encontrado');
+        }
+    
+        return Storage::disk('public')->download($path);
+    }
+
 
    
 

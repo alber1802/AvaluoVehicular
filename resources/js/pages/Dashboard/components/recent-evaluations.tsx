@@ -33,7 +33,7 @@ export function RecentEvaluations({ vehiculos }: any) {
     };
 
     const EditVehiculo = (id: number) => {
-        router.get(route('resultados.avaluo.editResultados', { id }));
+        router.get(route('resultados.avaluo.seleccionarEditar', { id: id }));
     };
 
     const ContinueEvaluation = (id: number) => {

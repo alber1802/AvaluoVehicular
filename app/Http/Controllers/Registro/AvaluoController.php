@@ -21,6 +21,7 @@ class AvaluoController extends Controller
      */
     public function index($id)
     {
+    
         $vehiculo = Vehiculo::where('id', $id)->first();
         $marca = MarcaVehiculo::where('id', $vehiculo->id_marca)->first();
         $inspeccion = Inspeccion::where('id_vehiculo', $id)->where('tiene', 1)->get();
@@ -42,25 +43,20 @@ class AvaluoController extends Controller
 
         $valorFinal = max($valorAvaluo, $valorResidualVehiuculo);
 
-         $añoActual = now()->format('Y');
+        
 
-        // dd( 'factor c ==' . $factor_c, 
-        // 'factor a ==' . $factor_a, 
-        // 'factor b ==' . $factor_b, 
-        // 'valor avaluo ==' . $valorAvaluo,
-        // 'valor residual ==' . $valorResidualVehiuculo,
-        // 'valor avaluo ==' . $valorFinal,
-        // 'año actual ==' . $añoActual);
 
-        // $avaluo = Avaluo::create([
-        //     'id_vehiculo' => $id,
-        //     'factor_reposicion' => $factorReposicion,
-        //     'final_estimacion' => $valorFinal,
-        //     'moneda' => '$us',
-        //     'depre_modelo' => $factor_a,
-        //     'depre_kilometraje' => $factor_b,
-        //     'depre_inspeccion' => $factor_c,
-        // ]);
+        $avaluo = Avaluo::updateOrCreate(
+            ['id_vehiculo' => $id],
+            [
+                'factor_reposicion' => $factorReposicion,
+                'final_estimacion' => $valorFinal,
+                'moneda' => '$us',
+                'depre_modelo' => $factor_a,
+                'depre_kilometraje' => $factor_b,
+                'depre_inspeccion' => $factor_c,
+            ]
+        );
 
         return Inertia::render('Registro/create/resultado', [
             'vehiculo' => $vehiculo,
@@ -122,12 +118,6 @@ class AvaluoController extends Controller
         return $depreciacionKilometraje;
     }
     
-
-
-
-
-
-
     /**
      * Show the form for creating a new resource.
      */

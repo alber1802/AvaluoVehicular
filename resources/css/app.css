@@ -215,3 +215,25 @@
 .animate-slideUp {
     animation: slideUp 0.3s ease-out;
 }
+
+/* Custom Scrollbar */
+.scrollbar-thin {
+    scrollbar-width: thin;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+    height: 8px;
+}
+
+.scrollbar-thumb-\[#00AEEF\]::-webkit-scrollbar-thumb {
+    background-color: #00AEEF;
+    border-radius: 4px;
+}
+
+.scrollbar-track-\[#e2e8f0\]::-webkit-scrollbar-track {
+    background-color: #e2e8f0;
+}
+
+.dark .scrollbar-track-\[#20384b\]::-webkit-scrollbar-track {
+    background-color: #20384b;
+}

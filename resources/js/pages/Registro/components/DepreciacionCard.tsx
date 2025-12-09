@@ -47,6 +47,10 @@ export default function DepreciacionCard({
         return currency === 'Bs' ? 'Bs' : '$US';
     };
 
+    const porcetajeDepreciacion = () => {
+        return (100 - (final_estimacion / precio_referencial) * 100);
+    };
+
     return (
         <div className="rounded-lg border border-[#e2e8f0] bg-[#ffffff] p-6 shadow-sm dark:border-[#20384b] dark:bg-[#1a2c3a]">
             <div className="mb-4 flex items-center gap-3">
@@ -165,7 +169,7 @@ export default function DepreciacionCard({
                         </div>
                     </div>
                     <p className="mt-3 text-sm text-[#64748b] dark:text-white/60">
-                        Valor calculado considerando el factor de reposición y depreciaciones
+                        Valor calculado considerando el factor de reposición y depreciaciones se  ha llegado a una depreciacion del {porcetajeDepreciacion().toFixed(2)}% respecto al precio referencial
                     </p>
                 </div>
             </div>

@@ -46,17 +46,26 @@ Route::prefix('registro')->middleware(['auth', 'verified'])->group(function () {
     Route::get('/imagenes/vehiculo/{id}', [ImagenesController::class, 'index'])->name('imagenes.vehiculo');
     Route::post('/imagenes/vehiculo/store/{id}', [ImagenesController::class, 'store'])->name('imagenes.vehiculo.store');
 
+    //decargar la imagen 
+    Route::get('/imagenes/vehiculo/download/{id}', [ImagenesController::class, 'descargarImagen'])->name('imagenes.vehiculo.download');
+
     //resultados 
     Route::get('/resultado/avaluo/{id}', [AvaluoController::class, 'index'])->name('resultados.avaluo');
 
     //view resultados de
      //QUITAR ESTA RUTA Y MOVERLO
-    Route::get('/resultados/avaluo/view', [AvaluoController::class, 'show'])->name('resultados.avaluo');
+    //Route::get('/resultados/avaluo/view', [AvaluoController::class, 'show'])->name('resultados.avaluo');
 
     //para seleccionar al editar  "editResultados" 
 
    
-    Route::get('/resultados/avaluo/edit', [CreateRegistroController::class, 'editResultados'])->name('resultados.avaluo.editResultados');
+    Route::get('/resultados/avaluo/edit/{id}', [CreateRegistroController::class, 'seleccionarEditar'])->name('resultados.avaluo.seleccionarEditar');
+
+    //MANDAR DATOS PAR EDITAR A VISTA 
+    Route::get('/avaluo/editDatosVehiculo/{id}', [CreateRegistroController::class, 'edit'])->name('avaluo.editDatosVehiculo');
+
+    //  PARA EDITAR LOS DATOS       
+    Route::post('/avaluo/editDatosVehiculo/update/{id}', [CreateRegistroController::class, 'update'])->name('avaluo.editDatosVehiculo.update');
 
 
     //ruta para continuar avaluo 

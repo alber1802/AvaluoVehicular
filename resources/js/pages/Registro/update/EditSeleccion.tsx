@@ -18,7 +18,9 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function EditSeleccion() {
+export default function EditSeleccion({ id }: { id: number }) {
+
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Actualizar Información del Avalúo" />
@@ -38,7 +40,7 @@ export default function EditSeleccion() {
                     {/* Grid de opciones */}
                     <div className="grid gap-6 md:grid-cols-2">
                         {/* Actualizar Datos del Vehículo */}
-                        <Link href={route('registro.index')}>
+                        <Link href={route('avaluo.editDatosVehiculo', { id })}>
                             <div className="group cursor-pointer rounded-lg border-2 border-[#e2e8f0] bg-[#ffffff] p-8 shadow-sm transition-all duration-300 hover:border-[#00AEEF] hover:shadow-lg dark:border-[#20384b] dark:bg-[#1a2c3a] dark:hover:border-[#00AEEF]">
                                 <div className="flex flex-col items-center space-y-4 text-center">
                                     <div className="rounded-full bg-[#00AEEF]/10 p-6 transition-all duration-300 group-hover:bg-[#00AEEF]/20">
@@ -58,7 +60,7 @@ export default function EditSeleccion() {
                         </Link>
 
                         {/* Actualizar Imágenes del Vehículo */}
-                        <Link href={route('imagenes.vehiculo')}>
+                        <Link href={route('imagenes.vehiculo', { id })}>
                             <div className="group cursor-pointer rounded-lg border-2 border-[#e2e8f0] bg-[#ffffff] p-8 shadow-sm transition-all duration-300 hover:border-[#00AEEF] hover:shadow-lg dark:border-[#20384b] dark:bg-[#1a2c3a] dark:hover:border-[#00AEEF]">
                                 <div className="flex flex-col items-center space-y-4 text-center">
                                     <div className="rounded-full bg-[#00AEEF]/10 p-6 transition-all duration-300 group-hover:bg-[#00AEEF]/20">
@@ -78,7 +80,7 @@ export default function EditSeleccion() {
                         </Link>
 
                         {/* Actualizar Evaluación por Inspección */}
-                        <Link href={route('evaluacion.inspeccion')}>
+                        <Link href={route('evaluacion.inspeccion', { id })}>
                             <div className="group cursor-pointer rounded-lg border-2 border-[#e2e8f0] bg-[#ffffff] p-8 shadow-sm transition-all duration-300 hover:border-[#00AEEF] hover:shadow-lg dark:border-[#20384b] dark:bg-[#1a2c3a] dark:hover:border-[#00AEEF]">
                                 <div className="flex flex-col items-center space-y-4 text-center">
                                     <div className="rounded-full bg-[#00AEEF]/10 p-6 transition-all duration-300 group-hover:bg-[#00AEEF]/20">
@@ -98,7 +100,7 @@ export default function EditSeleccion() {
                         </Link>
 
                         {/* Actualizar Evaluación por Condiciones Mecánicas */}
-                        <Link href={route('evaluacion.mecanica')}>
+                        <Link href={route('evaluacion.mecanica', { id })}>
                             <div className="group cursor-pointer rounded-lg border-2 border-[#e2e8f0] bg-[#ffffff] p-8 shadow-sm transition-all duration-300 hover:border-[#00AEEF] hover:shadow-lg dark:border-[#20384b] dark:bg-[#1a2c3a] dark:hover:border-[#00AEEF]">
                                 <div className="flex flex-col items-center space-y-4 text-center">
                                     <div className="rounded-full bg-[#00AEEF]/10 p-6 transition-all duration-300 group-hover:bg-[#00AEEF]/20">

@@ -3,21 +3,19 @@ import { dashboard } from '@/routes';
 import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, ImageIcon } from 'lucide-react';
+import { useState } from 'react';
 import ResultadoHeader from '../components/ResultadoHeader';
 import VehicleInfoCard from '../components/VehicleInfoCard';
 import VehicleIdentificationCard from '../components/VehicleIdentificationCard';
 import ConditionsCard from '../components/ConditionsCard';
 import DepreciacionCard from '../components/DepreciacionCard';
+import ImagenesModal from '../components/modals/ImagenesModal';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Dashboard',
         href: dashboard().url,
-    },
-    {
-        title: 'Evaluaciones',
-        href: '#',
     },
     {
         title: 'Resultado',
@@ -104,6 +102,7 @@ export default function Resultado({
     valorResidual,
     marca
 }: ResultadoProps) {
+    const [isImagenesModalOpen, setIsImagenesModalOpen] = useState(false);
 
     const handlePrint = () => {
         //window.print();
@@ -112,6 +111,10 @@ export default function Resultado({
 
     const handleVolver = () => {
         window.location.href = '/dashboard';
+    };
+
+    const handleImagenes = () => {
+        setIsImagenesModalOpen(true);
     };
 
     return (
@@ -128,23 +131,35 @@ export default function Resultado({
                     />
 
                     {/* Botones de acción */}
-                    <div className="mb-6 flex items-center justify-between border-b border-[#e2e8f0] pb-4 print:hidden dark:border-[#20384b]">
+                    <div className="mb-6 flex flex-col items-center gap-4 border-b border-[#e2e8f0] pb-4 print:hidden dark:border-[#20384b] md:flex-row md:justify-between">
                         <Button
                             variant="outline"
                             onClick={handleVolver}
-                            className="flex items-center gap-2 border-[#e2e8f0] text-[#1e293b] hover:bg-[#f8fafc] dark:border-[#20384b] dark:text-white/90 dark:hover:bg-[#0f1a23]"
+                            className="w-full flex-shrink-0 flex-grow-0 items-center gap-2 border-[#e2e8f0] text-[#1e293b] hover:bg-[#f8fafc] dark:border-[#20384b] dark:text-white/90 dark:hover:bg-[#0f1a23] md:order-1 md:w-auto"
                         >
                             <ArrowLeft className="h-4 w-4" />
-                            Volver a Evaluaciones
+                            Volver al Dashboard
                         </Button>
 
-                        <Button
-                            onClick={handlePrint}
-                            className="flex items-center gap-2 bg-[#00AEEF] hover:bg-[#00AEEF]/90"
-                        >
+                        {imagenes.length > 0 && (
+                            <Button
+                                variant="outline"
+                                onClick={handleImagenes}
+                                className="w-full flex-shrink-0 flex-grow-0 items-center gap-2 border-[#e2e8f0] text-[#1e293b] hover:bg-[#f8fafc] dark:border-[#20384b] dark:text-white/90 dark:hover:bg-[#0f1a23] md:order-2 md:w-auto"
+                            >
+                                <ImageIcon className="h-4 w-4" />
+                                Ver Imagenes
+                            </Button>
+                        )}
 
-                            Imprimir Reporte
-                        </Button>
+                        {imagenes.length > 0 && (
+                            <Button
+                                onClick={handlePrint}
+                                className="w-full flex-shrink-0 flex-grow-0 items-center gap-2 bg-[#00AEEF] hover:bg-[#00AEEF]/90 md:order-3 md:w-auto"
+                            >
+                                Imprimir Reporte
+                            </Button>
+                        )}
                     </div>
 
                     {/* Grid de información */}
@@ -193,19 +208,34 @@ export default function Resultado({
                     </div>
 
                     {/* Footer */}
-                    <div className="mt-8 border-t border-[#e2e8f0] pt-6 text-center print:hidden dark:border-[#20384b]">
-                        <p className="text-sm text-[#64748b] dark:text-white/60">
-                            Reporte generado el {new Date().toLocaleDateString('es-ES', {
-                                day: '2-digit',
-                                month: 'long',
-                                year: 'numeric',
-                                hour: '2-digit',
-                                minute: '2-digit'
-                            })}
-                        </p>
-                    </div>
+                    {imagenes.length > 0 ? (
+                        <div className="mt-8 border-t border-[#e2e8f0] pt-6 text-center print:hidden dark:border-[#20384b]">
+                            <p className="text-sm text-[#64748b] dark:text-white/60">
+                                Reporte generado el {new Date().toLocaleDateString('es-ES', {
+                                    day: '2-digit',
+                                    month: 'long',
+                                    year: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                })}
+                            </p>
+                        </div>
+                    ) : (
+                        <div className="mt-8 border-t border-[#e2e8f0] pt-6 text-center print:hidden dark:border-[#20384b]">
+                            <p className="text-sm text-[#64748b] dark:text-white/60">
+                                No se pudo generar el reporte por falta de imágenes
+                            </p>
+                        </div>
+                    )}
                 </div>
             </div>
+
+            {/* Modal de Imágenes */}
+            <ImagenesModal
+                isOpen={isImagenesModalOpen}
+                onClose={() => setIsImagenesModalOpen(false)}
+                imagenes={imagenes}
+            />
         </AppLayout>
     );
 }

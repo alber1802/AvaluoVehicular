@@ -12,10 +12,12 @@ use App\Models\Inspeccion;
 use App\Models\Sistema;
 use App\Models\Avaluo;
 use App\Models\VehiculoImagen;
+use App\Models\CondicionGeneral;
 
 use Inertia\Response;
 
 use App\Http\Requests\Registro\CreateRequest;
+use App\Http\Requests\Registro\UpdateVehiculoRequest;
 
 class CreateRegistroController extends Controller
 {
@@ -60,14 +62,20 @@ class CreateRegistroController extends Controller
             'procedencia' => $request->procedencia,
             'kilometraje' => $request->kilometraje,
             'precio_referencial' => $request->precio_referencial,
-            'estado_operativo' => $estadoOperativo,
-            'estado_general' => $request->estado_general,
             'observaciones' => $request->observaciones,
             'id_evaluador' => Auth::user()->id,
         ];
 
         $vehiculo = Vehiculo::create($vehiculo);
 
+        $condicionGeneral = [
+            'id_vehiculo' => $vehiculo->id,
+            'estado_operativo' => $estadoOperativo,
+            'estado_general' => $request->estado_general,
+            'observaciones' => $request->observaciones,
+        ];
+
+        CondicionGeneral::create($condicionGeneral);
 
 
         return redirect()->route('registro.seleccionar', $vehiculo->id);
@@ -108,28 +116,95 @@ class CreateRegistroController extends Controller
         }
         
     }
+    public function seleccionarEditar($id){
+
+        return  Inertia::render('Registro/update/EditSeleccion', [
+            'id' => $id,
+        ]);
+
+    }
 
     /**
      * Muestra el formulario para editar el recurso especificado.
      */
-    public function edit(string $id)
+    public function edit($id)
     {
-         return Inertia::render('Registro/update/EditSeleccion');
+        $vehiculo = Vehiculo::where('id', $id)->with('marca')->first();
+        $condicionGeneral = CondicionGeneral::where('id_vehiculo', $vehiculo->id)->first();
+        $marcas = MarcaVehiculo::all();
+        if(!$vehiculo){
+            return redirect()->route('dashboard');
+        }
+         return Inertia::render('Registro/update/EditDatosVehiculo', [
+            'vehiculo' => $vehiculo,
+            'condicionGeneral' => $condicionGeneral,
+            'marcas' => $marcas,
+         ]);
     }
 
     /**
      * Actualiza el recurso especificado en el almacenamiento.
      */ 
-    public function update(Request $request, string $id)
+    public function update(UpdateVehiculoRequest $request, string $id)
     {
-        //
+        $vehiculo = Vehiculo::find($id);
+
+        if (!$vehiculo) {
+            return redirect()->route('dashboard');
+        }
+
+        // Prepare estado_operativo as comma-separated string
+        $estadoOperativo = is_array($request->estado_operativo) 
+            ? implode(',', $request->estado_operativo) 
+            : $request->estado_operativo;
+
+        // Update vehicle data
+        $vehiculo->update([
+            'entidad' => $request->entidad,
+            'fecha_evaluacion' => $request->fecha_evaluacion,
+            'ubicacion_actual' => $request->ubicacion_actual,
+            'tipo_vehiculo' => $request->tipo_vehiculo,
+            'tipo_combustible' => $request->tipo_combustible,
+            'id_marca' => (int) $request->id_marca,
+            'modelo' => $request->modelo,
+            'año_fabricacion' => $request->ano_fabricacion,
+            'placa' => $request->placa,
+            'serie_motor' => $request->serie_motor,
+            'chasis' => $request->chasis,
+            'color' => $request->color,
+            'procedencia' => $request->procedencia,
+            'kilometraje' => $request->kilometraje,
+            'precio_referencial' => $request->precio_referencial,
+        ]);
+
+        // Update general condition
+        $condicionGeneral = CondicionGeneral::where('id_vehiculo', $vehiculo->id)->first();
+        
+        if ($condicionGeneral) {
+            $condicionGeneral->update([
+                'estado_operativo' => $estadoOperativo,
+                'estado_general' => $request->estado_general,
+                'observaciones' => $request->observaciones,
+            ]);
+        }
+
+        return redirect()->route('dashboard')->with('success', 'Vehículo actualizado correctamente');
     }
 
     /**
      * Elimina el recurso especificado del almacenamiento.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        $condicionGeneral = CondicionGeneral::find($id);
+        $vehiculo = Vehiculo::find($id);
+        
+        // if ($vehiculo) {
+        //     $vehiculo->Insepdelete();
+        // }
+        // if ($condicionGeneral) {
+        //     $condicionGeneral->delete();
+        // }
+        return redirect()->route('dashboard')->with('success', 'Vehículo eliminado correctamente');
     }
 }

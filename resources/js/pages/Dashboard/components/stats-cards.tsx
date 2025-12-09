@@ -30,7 +30,7 @@ export function StatsCards({ vehiculosHoy, pendientes, valoracionPromedio, compa
         },
         {
             title: 'Valoración Promedio',
-            value: '$' + valoracionPromedio,
+            value: '$' + valoracionPromedio.toFixed(2),
             icon: DollarSign,
             trend: 'Basado en las últimas ' + avaluos + ' evaluaciones',
             iconColor: 'text-cyan-500',

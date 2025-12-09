@@ -16,6 +16,7 @@ class VehiculoImagen extends Model
         'id_vehiculo',
         'lado',
         'url',
+        'descripcion',
         'fecha',
     ];
 
