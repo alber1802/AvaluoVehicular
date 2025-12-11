@@ -77,25 +77,66 @@ class InspeccionController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($id)
     {
-        //
+        
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit($id)
     {
-        //
+
+        $inspecciones = Inspeccion::where('id_vehiculo', $id)->get();
+
+        if($inspecciones){
+              return Inertia::render('Registro/update/EditInspeccion', [
+                'id' => $id,
+                'inspecciones' => $inspecciones,
+            ]);
+        }
+        return redirect()->route('resultados.avaluo.continuar', $id)->with('error', 'No se ha realizado la evaluación por Inspección para este vehículo.');
+      
     }
 
     /**
      * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    */
+    public function update(InspeccionRequest $request, $id)
     {
-        //
+        $data = $request->input('data');
+
+        foreach ($data as $item) {
+      
+            $inspeccion = Inspeccion::where('nombre', $item['nombre'])
+                                    ->where('caracteristica', $item['caracteristica'])
+                                    ->first();
+
+            if ($inspeccion) {
+                $inspeccion->update([
+                    'nombre'        => $item['nombre'],
+                    'caracteristica'=> $item['caracteristica'],
+                    'tiene'         => $item['tiene'],
+                    'valoracion'    => $item['valoracion'],
+                    'observaciones' => $item['observaciones'],
+                    'updated_at'    => now(),
+                ]);
+            } else {
+                Inspeccion::create([
+                    'id_vehiculo'   => $id,
+                    'nombre'        => $item['nombre'],
+                    'caracteristica'=> $item['caracteristica'],
+                    'tiene'         => $item['tiene'],
+                    'valoracion'    => $item['valoracion'],
+                    'observaciones' => $item['observaciones'],
+                    'created_at'    => now(),
+                    'updated_at'    => now(),
+                ]);
+            }
+        }
+
+        return back()->with('success','Se ha actualizado la evaluación por Inspección para este vehículo.');
     }
 
     /**

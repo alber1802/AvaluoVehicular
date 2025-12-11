@@ -30,16 +30,28 @@ Route::prefix('registro')->middleware(['auth', 'verified'])->group(function () {
     Route::post('/avaluo', [CreateRegistroController::class, 'store'])->name('registro.store');
 
     //ruta para seleccionar avaluo 
-     Route::get('/seleccionar/{id}', [CreateRegistroController::class, 'seleccionar'])->name('registro.seleccionar');
-    //rutas para elegir 
-    Route::get('/evaluacion/mecanica/{id}', [MecanicaController::class, 'index'])->name('evaluacion.mecanica');
-    Route::get('/evaluacion/inspeccion/{id}', [InspeccionController::class, 'index'])->name('evaluacion.inspeccion');
+    Route::get('/seleccionar/{id}', [CreateRegistroController::class, 'seleccionar'])->name('registro.seleccionar');
+    
+   
 
     //ruta para evaluacion mecanica 
     Route::post('/evaluacion/mecanica/store/{id}', [MecanicaController::class, 'store'])->name('evaluacion.mecanica.store');
 
+    //rutas para elegir 
+    Route::get('/evaluacion/mecanica/{id}', [MecanicaController::class, 'index'])->name('evaluacion.mecanica');
+    Route::get('/evaluacion/mecanica/edit/{id}', [MecanicaController::class, 'edit'])->name('evaluacion.mecanica.edit');
+    Route::post('/evaluacion/mecanica/update/{id}', [MecanicaController::class, 'update'])->name('evaluacion.mecanica.update');
+
+
+
+
+    Route::get('/evaluacion/inspeccion/{id}', [InspeccionController::class, 'index'])->name('evaluacion.inspeccion');
     //ruta para evaluacion inspeccion
     Route::post('/evaluacion/inspeccion/store/{id}', [InspeccionController::class, 'store'])->name('evaluacion.inspeccion.store');
+
+    //ruta para editar evaluacion inspeccion
+    Route::get('/evaluacion/inspeccion/edit/{id}', [InspeccionController::class, 'edit'])->name('evaluacion.inspeccion.edit');
+    Route::post('/evaluacion/inspeccion/update/{id}', [InspeccionController::class, 'update'])->name('evaluacion.inspeccion.update');
 
     //ruta para imagenes del vehiculo
 
@@ -48,6 +60,8 @@ Route::prefix('registro')->middleware(['auth', 'verified'])->group(function () {
 
     //decargar la imagen 
     Route::get('/imagenes/vehiculo/download/{id}', [ImagenesController::class, 'descargarImagen'])->name('imagenes.vehiculo.download');
+    Route::get('/imagenes/vehiculo/edit/{id}', [ImagenesController::class, 'edit'])->name('imagenes.vehiculo.edit');
+    Route::post('/imagenes/vehiculo/update/{id}', [ImagenesController::class, 'update'])->name('imagenes.vehiculo.update');
 
     //resultados 
     Route::get('/resultado/avaluo/{id}', [AvaluoController::class, 'index'])->name('resultados.avaluo');

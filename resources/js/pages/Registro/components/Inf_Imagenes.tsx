@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -15,15 +15,18 @@ import { route } from 'ziggy-js';
 
 interface ImagenVehiculo {
     id: string;
-    file: File;
+    file?: File; // Opcional para imágenes existentes
     preview: string;
     ubicacion: string;
     descripcion: string;
+    path?: string; // Para imágenes existentes del servidor
+    isExisting?: boolean; // Para distinguir entre nuevas y existentes
 }
 
-interface SubirImagenesVehiculoProps {
+interface Inf_ImagenesProps {
     onSubmit?: (imagenes: ImagenVehiculo[]) => void;
     onCancel?: () => void;
+    imagenesUpdate?: ImagenVehiculo[];
 }
 
 const ubicacionesVehiculo = [
@@ -45,11 +48,25 @@ const ubicacionesVehiculo = [
     { value: 'otro', label: 'Otro' },
 ];
 
-export default function SubirImagenesVehiculo({ onSubmit, onCancel }: SubirImagenesVehiculoProps) {
+export default function Inf_Imagenes({ onSubmit, onCancel, imagenesUpdate }: Inf_ImagenesProps) {
     const [imagenes, setImagenes] = useState<ImagenVehiculo[]>([]);
     const [isDragging, setIsDragging] = useState(false);
 
+    // Inicializar con imágenes existentes si las hay
+    useEffect(() => {
+        if (imagenesUpdate && Array.isArray(imagenesUpdate) && imagenesUpdate.length > 0) {
+            const imagenesExistentes: ImagenVehiculo[] = imagenesUpdate.map((img: any) => ({
+                id: img.id?.toString() || `existing-${Date.now()}-${Math.random()}`,
+                preview: `/storage/${img.url}`, // Ruta completa a la imagen en el servidor
+                ubicacion: img.lado || '',
+                descripcion: img.descripcion || '',
+                path: img.url,
+                isExisting: true,
+            }));
 
+            setImagenes(imagenesExistentes);
+        }
+    }, [imagenesUpdate]);
 
     const handleDragOver = (e: React.DragEvent) => {
         e.preventDefault();
@@ -94,7 +111,8 @@ export default function SubirImagenesVehiculo({ onSubmit, onCancel }: SubirImage
     const eliminarImagen = (id: string) => {
         setImagenes(prev => {
             const imagen = prev.find(img => img.id === id);
-            if (imagen) {
+            // Solo revocar URLs de blob para imágenes nuevas, no para existentes
+            if (imagen && !imagen.isExisting && imagen.preview.startsWith('blob:')) {
                 URL.revokeObjectURL(imagen.preview);
             }
             return prev.filter(img => img.id !== id);

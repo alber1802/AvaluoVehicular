@@ -92,13 +92,19 @@ class CreateRegistroController extends Controller
         if (!$vehiculo) {
             return redirect()->route('dashboard');
         }
-        if(Avaluo::where('id_vehiculo', $vehiculo->id)->exists()) {
-            return redirect()->route('dashboard');
-        }
-       
+
         $hasInspeccion = Inspeccion::where('id_vehiculo', $vehiculo->id)->exists();
         $hasSistema = Sistema::where('id_vehiculo', $vehiculo->id)->exists();
 
+        $hasImagenes = VehiculoImagen::where('id_vehiculo', $vehiculo->id)->exists();
+        
+        if(Avaluo::where('id_vehiculo', $vehiculo->id)->exists() &&  $hasImagenes) {
+            
+            return redirect()->route('dashboard');
+        }else{
+             return redirect()->route('imagenes.vehiculo', $vehiculo->id);
+        }
+        
         if (!$hasInspeccion && !$hasSistema) {
             
             return Inertia::render('Registro/create/condiciones_generales', [

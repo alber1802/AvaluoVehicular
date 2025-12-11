@@ -78,46 +78,76 @@ class AvaluoSeeder extends Seeder
 
         // 6. Insertar todos los componentes de 'sistemas'
         $sistemas = [
+            // Motor
+            ['nombre_sistema' => 'Motor', 'componente' => 'Motor', 'estado' => 'B', 'observaciones' => ''],
             ['nombre_sistema' => 'Motor', 'componente' => 'Presión compresión prom.', 'estado' => 'RR', 'observaciones' => 'No tiene aceite'],
-            ['nombre_sistema' => 'Motor', 'componente' => 'CORREA ALIMENTADOR', 'estado' => 'RC', 'observaciones' => ''],
-            ['nombre_sistema' => 'Refrigeracion', 'componente' => 'Radiador', 'estado' => 'R', 'observaciones' => ''],
-            ['nombre_sistema' => 'Refrigeracion', 'componente' => 'Mangueras de radiador', 'estado' => 'B', 'observaciones' => ''],
-            ['nombre_sistema' => 'Refrigeracion', 'componente' => 'Correas de ventilador', 'estado' => 'RC', 'observaciones' => ''],
-            ['nombre_sistema' => 'Refrigeracion', 'componente' => 'Bomba de agua-tapa radiador', 'estado' => 'RC', 'observaciones' => ''],
-            ['nombre_sistema' => 'Electrico', 'componente' => 'Bateria', 'estado' => 'R', 'observaciones' => ''],
-            ['nombre_sistema' => 'Electrico', 'componente' => 'Motor de arranque', 'estado' => 'R', 'observaciones' => ''],
-            ['nombre_sistema' => 'Electrico', 'componente' => 'Alternador', 'estado' => 'RC', 'observaciones' => 'Adaptado'],
-            ['nombre_sistema' => 'Electrico', 'componente' => 'Caja de fusibles', 'estado' => 'R', 'observaciones' => ''],
-            ['nombre_sistema' => 'Electrico', 'componente' => 'Tablero de instrumentos', 'estado' => 'R', 'observaciones' => 'Velocimetro alterado'],
-            ['nombre_sistema' => 'Direccion', 'componente' => 'Cremallera', 'estado' => 'RR', 'observaciones' => ''],
-            ['nombre_sistema' => 'Direccion', 'componente' => 'Bomba de aceite', 'estado' => 'RR', 'observaciones' => ''],
-            ['nombre_sistema' => 'Suspension', 'componente' => 'Amortiguadores', 'estado' => 'RR', 'observaciones' => ''],
-            ['nombre_sistema' => 'Suspension', 'componente' => 'Muelles/ ballestas', 'estado' => 'RR', 'observaciones' => ''],
-            ['nombre_sistema' => 'Suspension', 'componente' => 'Espir./rotulas/muñes. tras.', 'estado' => 'RR', 'observaciones' => 'Tijera/ requiere cambio de buje'],
-            ['nombre_sistema' => 'Transmision', 'componente' => 'Caja', 'estado' => 'RC', 'observaciones' => ''],
-            ['nombre_sistema' => 'Transmision', 'componente' => 'Aceite', 'estado' => 'RC', 'observaciones' => ''],
-            ['nombre_sistema' => 'Frenos', 'componente' => 'Bomba', 'estado' => 'RR', 'observaciones' => ''],
-            ['nombre_sistema' => 'Frenos', 'componente' => 'Discos/delantero', 'estado' => 'R', 'observaciones' => ''],
-            ['nombre_sistema' => 'Frenos', 'componente' => 'Balatas/delantera', 'estado' => 'R', 'observaciones' => ''],
-            ['nombre_sistema' => 'Frenos', 'componente' => 'Tambores/posterior', 'estado' => 'R', 'observaciones' => ''],
-            ['nombre_sistema' => 'Frenos', 'componente' => 'Balatas/posterior', 'estado' => 'R', 'observaciones' => ''],
+            ['nombre_sistema' => 'Motor', 'componente' => 'Aceite y filtro de aceite', 'estado' => 'R', 'observaciones' => ''],
+            ['nombre_sistema' => 'Motor', 'componente' => 'Turboalimentador', 'estado' => 'NO', 'observaciones' => ''],
+            
+            // Refrigeración
+            ['nombre_sistema' => 'Refrigeración', 'componente' => 'Mangueras de radiador', 'estado' => 'B', 'observaciones' => ''],
+            ['nombre_sistema' => 'Refrigeración', 'componente' => 'Correas de ventilador', 'estado' => 'RC', 'observaciones' => ''],
+            ['nombre_sistema' => 'Refrigeración', 'componente' => 'Ventilador y tapa radiador', 'estado' => 'RC', 'observaciones' => ''],
+            
+            // Eléctrico
+            ['nombre_sistema' => 'Eléctrico', 'componente' => 'Batería', 'estado' => 'R', 'observaciones' => ''],
+            ['nombre_sistema' => 'Eléctrico', 'componente' => 'Motor de arranque', 'estado' => 'R', 'observaciones' => ''],
+            ['nombre_sistema' => 'Eléctrico', 'componente' => 'Alternador', 'estado' => 'RC', 'observaciones' => 'Adaptado'],
+            ['nombre_sistema' => 'Eléctrico', 'componente' => 'Caja de fusibles', 'estado' => 'R', 'observaciones' => ''],
+            ['nombre_sistema' => 'Eléctrico', 'componente' => 'Tablero de instrumentos', 'estado' => 'R', 'observaciones' => 'Velocimetro alterado'],
+            
+            // Direccionamiento
+            ['nombre_sistema' => 'Direccionamiento', 'componente' => 'Hidraulica', 'estado' => 'RR', 'observaciones' => ''],
+            ['nombre_sistema' => 'Direccionamiento', 'componente' => 'Electrica', 'estado' => 'NO', 'observaciones' => ''],
+            ['nombre_sistema' => 'Direccionamiento', 'componente' => 'Mecanica', 'estado' => 'SI', 'observaciones' => ''],
+            ['nombre_sistema' => 'Direccionamiento', 'componente' => 'Muñones de dirección', 'estado' => 'RR', 'observaciones' => ''],
+            ['nombre_sistema' => 'Direccionamiento', 'componente' => 'Fugas de aceite', 'estado' => 'NO', 'observaciones' => ''],
+            
+            // Suspensión
+            ['nombre_sistema' => 'Suspensión', 'componente' => 'Amortiguadores', 'estado' => 'RR', 'observaciones' => ''],
+            ['nombre_sistema' => 'Suspensión', 'componente' => 'Muñones de suspensión', 'estado' => 'RR', 'observaciones' => ''],
+            ['nombre_sistema' => 'Suspensión', 'componente' => 'Espiral y/o muelles tras.', 'estado' => 'RR', 'observaciones' => 'Tijera/ requiere cambio de buje'],
+            
+            // Transmisión
+            ['nombre_sistema' => 'Transmisión', 'componente' => 'Mecanica', 'estado' => 'SI', 'observaciones' => ''],
+            ['nombre_sistema' => 'Transmisión', 'componente' => 'Automatica', 'estado' => 'NO', 'observaciones' => ''],
+            ['nombre_sistema' => 'Transmisión', 'componente' => 'Secuencial', 'estado' => 'NO', 'observaciones' => ''],
+            ['nombre_sistema' => 'Transmisión', 'componente' => 'Aceite', 'estado' => 'RC', 'observaciones' => ''],
+            
+            // Frenos
+            ['nombre_sistema' => 'Frenos', 'componente' => 'Disco posterior', 'estado' => 'R', 'observaciones' => ''],
+            ['nombre_sistema' => 'Frenos', 'componente' => 'Discos delanteros', 'estado' => 'R', 'observaciones' => ''],
+            ['nombre_sistema' => 'Frenos', 'componente' => 'Balatas traseras', 'estado' => 'R', 'observaciones' => ''],
             ['nombre_sistema' => 'Frenos', 'componente' => 'Freno de mano', 'estado' => 'RR', 'observaciones' => ''],
+            
+            // Chasis
+            ['nombre_sistema' => 'Chasis', 'componente' => 'Compacto', 'estado' => 'NO', 'observaciones' => ''],
             ['nombre_sistema' => 'Chasis', 'componente' => 'Bastidor', 'estado' => 'R', 'observaciones' => ''],
-            ['nombre_sistema' => 'Carroceria', 'componente' => 'Pintura', 'estado' => 'R', 'observaciones' => ''],
-            ['nombre_sistema' => 'Carroceria', 'componente' => 'Parachoque/delantero', 'estado' => 'RR', 'observaciones' => ''],
-            ['nombre_sistema' => 'Carroceria', 'componente' => 'Guiñadores', 'estado' => 'R', 'observaciones' => 'No tiene'],
-            ['nombre_sistema' => 'Carroceria', 'componente' => 'Stop', 'estado' => 'RR', 'observaciones' => 'No funciona'],
-            ['nombre_sistema' => 'Carroceria', 'componente' => 'Luces de parada (stop)', 'estado' => 'RR', 'observaciones' => 'No funciona'],
-            ['nombre_sistema' => 'Carroceria', 'componente' => 'Faroles del.', 'estado' => 'RR', 'observaciones' => 'No tiene'],
-            ['nombre_sistema' => 'Carroceria', 'componente' => 'Alarma de retroceso', 'estado' => 'RR', 'observaciones' => 'No tiene'],
-            ['nombre_sistema' => 'Carroceria', 'componente' => 'Cinturones de seguridad', 'estado' => 'RR', 'observaciones' => 'No tiene'],
-            ['nombre_sistema' => 'Carroceria', 'componente' => 'Espejos retrovisores later.', 'estado' => 'R', 'observaciones' => ''],
-            ['nombre_sistema' => 'Carroceria', 'componente' => 'Chapa de puerta', 'estado' => 'R', 'observaciones' => 'No funciona'],
-            ['nombre_sistema' => 'Carroceria', 'componente' => 'Limpia parabrisas', 'estado' => 'R', 'observaciones' => ''],
-            ['nombre_sistema' => 'Carroceria', 'componente' => 'Vidrios (laterales)', 'estado' => 'RC', 'observaciones' => 'Vidrio lateral derecho delantero dañado'],
-            ['nombre_sistema' => 'Carroceria', 'componente' => 'Parabrisas y vidrios lat.', 'estado' => 'R', 'observaciones' => ''],
-            ['nombre_sistema' => 'Llantas', 'componente' => 'Llantas', 'estado' => 'RC', 'observaciones' => ''],
-            ['nombre_sistema' => 'Llantas', 'componente' => 'Llanta de repuesto', 'estado' => 'R', 'observaciones' => 'No tiene'],
+            
+            // Carrocería
+            ['nombre_sistema' => 'Carrocería', 'componente' => 'Faroles delanteros', 'estado' => 'RR', 'observaciones' => 'No tiene'],
+            ['nombre_sistema' => 'Carrocería', 'componente' => 'Guiñadores', 'estado' => 'R', 'observaciones' => 'No tiene'],
+            ['nombre_sistema' => 'Carrocería', 'componente' => 'Bocina', 'estado' => 'B', 'observaciones' => ''],
+            ['nombre_sistema' => 'Carrocería', 'componente' => 'Luces de parada (stop)', 'estado' => 'RR', 'observaciones' => 'No funciona'],
+            ['nombre_sistema' => 'Carrocería', 'componente' => 'Luz de retro', 'estado' => 'RR', 'observaciones' => ''],
+            ['nombre_sistema' => 'Carrocería', 'componente' => 'Alarma de retroceso', 'estado' => 'RR', 'observaciones' => 'No tiene'],
+            ['nombre_sistema' => 'Carrocería', 'componente' => 'Cinturones de seguridad', 'estado' => 'RR', 'observaciones' => 'No tiene'],
+            ['nombre_sistema' => 'Carrocería', 'componente' => 'Espejos retrovisores later.', 'estado' => 'R', 'observaciones' => ''],
+            ['nombre_sistema' => 'Carrocería', 'componente' => 'Luces de emergencia', 'estado' => 'B', 'observaciones' => ''],
+            ['nombre_sistema' => 'Carrocería', 'componente' => 'Limpia parabrisas', 'estado' => 'R', 'observaciones' => ''],
+            ['nombre_sistema' => 'Carrocería', 'componente' => 'Tapicería interior', 'estado' => 'R', 'observaciones' => ''],
+            ['nombre_sistema' => 'Carrocería', 'componente' => 'Parabrisas y vidrios lat.', 'estado' => 'R', 'observaciones' => ''],
+            
+            // Aire acondicionado y otros
+            ['nombre_sistema' => 'Aire acondicionado y otros', 'componente' => 'Aire acondicionado', 'estado' => 'NO', 'observaciones' => ''],
+            ['nombre_sistema' => 'Aire acondicionado y otros', 'componente' => 'Calefacción', 'estado' => 'R', 'observaciones' => 'Requiere revisión'],
+            ['nombre_sistema' => 'Aire acondicionado y otros', 'componente' => 'Radio', 'estado' => 'B', 'observaciones' => ''],
+            ['nombre_sistema' => 'Aire acondicionado y otros', 'componente' => 'Llantas', 'estado' => 'RC', 'observaciones' => ''],
+            ['nombre_sistema' => 'Aire acondicionado y otros', 'componente' => 'Llanta de repuesto', 'estado' => 'R', 'observaciones' => 'No tiene'],
+            
+            // Herramientas
+            ['nombre_sistema' => 'Herramientas', 'componente' => 'Llave de ruedas y barrote', 'estado' => 'NO', 'observaciones' => ''],
+            ['nombre_sistema' => 'Herramientas', 'componente' => 'Gato hidráulico', 'estado' => 'NO', 'observaciones' => ''],
         ];
 
         foreach ($sistemas as $sistema) {
@@ -150,74 +180,95 @@ class AvaluoSeeder extends Seeder
 
         // 8. Insertar todos los factores de depreciación en la tabla 'inspeccion'
         $inspecciones = [
-            ['nombre' => 'MOTOR ENCENDIDO', 'caracteristica' => 'Falla de encendido inicial', 'tiene' => false, 'valoracion' => 0.025],
-            ['nombre' => 'MOTOR ENCENDIDO', 'caracteristica' => 'Bujía partida', 'tiene' => false, 'valoracion' => 0.025],
-            ['nombre' => 'MOTOR ENCENDIDO', 'caracteristica' => 'Bobina partida', 'tiene' => true, 'valoracion' => 0.025],
-            ['nombre' => 'MOTOR ENCENDIDO', 'caracteristica' => 'Se suelta el acelerador', 'tiene' => false, 'valoracion' => 0.025],
-            ['nombre' => 'MOTOR ENCENDIDO', 'caracteristica' => 'Falla de aceleración', 'tiene' => false, 'valoracion' => 0.025],
-            ['nombre' => 'MOTOR CONDUCCION', 'caracteristica' => 'Encendido adelantado/atrasado', 'tiene' => false, 'valoracion' => 0.02],
-            ['nombre' => 'MOTOR CONDUCCION', 'caracteristica' => 'Pérdida de potencia', 'tiene' => false, 'valoracion' => 0.02],
-            ['nombre' => 'MOTOR CONDUCCION', 'caracteristica' => 'Humo negro', 'tiene' => false, 'valoracion' => 0.02],
-            ['nombre' => 'MARCHA EN VACIO', 'caracteristica' => 'Embrague defectuoso', 'tiene' => false, 'valoracion' => 0.02],
-            ['nombre' => 'MARCHA EN VACIO', 'caracteristica' => 'Marcha en vacío anormal', 'tiene' => false, 'valoracion' => 0.02],
-            ['nombre' => 'MARCHA EN VACIO', 'caracteristica' => 'Marcha en vacío inestable', 'tiene' => false, 'valoracion' => 0.02],
-            ['nombre' => 'MARCHA EN VACIO', 'caracteristica' => 'Oscilaciones', 'tiene' => true, 'valoracion' => 0.02],
-            ['nombre' => 'Indicador CHECK ENGINE en el tablero', 'caracteristica' => 'Siempre encendida', 'tiene' => false, 'valoracion' => 0.02],
-            ['nombre' => 'Indicador CHECK ENGINE en el tablero', 'caracteristica' => 'Ocasionalmente encendida', 'tiene' => false, 'valoracion' => 0.02],
-            ['nombre' => 'Indicador CHECK ENGINE en el tablero', 'caracteristica' => 'Apagada', 'tiene' => false, 'valoracion' => 0.015],
-            ['nombre' => 'TRANSMISIÓN', 'caracteristica' => 'Patina el embrague', 'tiene' => true, 'valoracion' => 0.015],
-            ['nombre' => 'TRANSMISIÓN', 'caracteristica' => 'Pedal de embrague atascado', 'tiene' => true, 'valoracion' => 0.015],
-            ['nombre' => 'TRANSMISIÓN', 'caracteristica' => 'Vibración al partir', 'tiene' => true, 'valoracion' => 0.015],
-            ['nombre' => 'TRANSMISIÓN', 'caracteristica' => 'No entra los cambios', 'tiene' => true, 'valoracion' => 0.015],
-            ['nombre' => 'TRANSMISIÓN', 'caracteristica' => 'Se suelta la marcha', 'tiene' => true, 'valoracion' => 0.015],
-            ['nombre' => 'TRANSMISIÓN', 'caracteristica' => 'Sonidos en los cambios', 'tiene' => true, 'valoracion' => 0.015],
-            ['nombre' => 'TRANSMISIÓN', 'caracteristica' => 'Sonidos en el diferencial', 'tiene' => true, 'valoracion' => 0.015],
-            ['nombre' => 'TRANSMISIÓN', 'caracteristica' => 'Sonidos en las ruedas al curvar', 'tiene' => true, 'valoracion' => 0.015],
-            ['nombre' => 'TRANSMISIÓN', 'caracteristica' => 'Fugas de aceite', 'tiene' => false, 'valoracion' => 0.015],
-            ['nombre' => 'FRENOS', 'caracteristica' => 'Sonidos al frenar', 'tiene' => true, 'valoracion' => 0.025],
-            ['nombre' => 'FRENOS', 'caracteristica' => 'Frenos defectuosos', 'tiene' => false, 'valoracion' => 0.025],
-            ['nombre' => 'FRENOS', 'caracteristica' => 'No funciona freno de mano', 'tiene' => false, 'valoracion' => 0.025],
-            ['nombre' => 'FRENOS', 'caracteristica' => 'Fugas de líquido', 'tiene' => false, 'valoracion' => 0.025],
-            ['nombre' => 'SUSPENSIÓN Y CARROCERIA', 'caracteristica' => 'Sonidos o golpeteo', 'tiene' => false, 'valoracion' => 0.02],
-            ['nombre' => 'SUSPENSIÓN Y CARROCERIA', 'caracteristica' => 'Rebotes', 'tiene' => false, 'valoracion' => 0.02],
-            ['nombre' => 'SUSPENSIÓN Y CARROCERIA', 'caracteristica' => 'Suspensión floja', 'tiene' => false, 'valoracion' => 0.02],
-            ['nombre' => 'SUSPENSIÓN Y CARROCERIA', 'caracteristica' => 'Tiende a ir al lado', 'tiene' => false, 'valoracion' => 0.0225],
-            ['nombre' => 'DIRECCIÓN', 'caracteristica' => 'Duro al curvar', 'tiene' => false, 'valoracion' => 0.0225],
-            ['nombre' => 'DIRECCIÓN', 'caracteristica' => 'No responde efectivamente', 'tiene' => false, 'valoracion' => 0.0225],
-            ['nombre' => 'DIRECCIÓN', 'caracteristica' => 'Mala distribución', 'tiene' => false, 'valoracion' => 0.0225],
-            ['nombre' => 'DIRECCIÓN', 'caracteristica' => 'Fugas de aceite', 'tiene' => false, 'valoracion' => 0.0225],
-            ['nombre' => 'ELECTRICIDAD', 'caracteristica' => 'Fallan luces delanteras', 'tiene' => true, 'valoracion' => 0.01],
-            ['nombre' => 'ELECTRICIDAD', 'caracteristica' => 'Fallan luces direccionales', 'tiene' => true, 'valoracion' => 0.01],
-            ['nombre' => 'ELECTRICIDAD', 'caracteristica' => 'Fallan luces de freno', 'tiene' => true, 'valoracion' => 0.01],
-            ['nombre' => 'ELECTRICIDAD', 'caracteristica' => 'Fallan luces de retro', 'tiene' => true, 'valoracion' => 0.01],
-            ['nombre' => 'ELECTRICIDAD', 'caracteristica' => 'Fallan luces de salón', 'tiene' => true, 'valoracion' => 0.01],
-            ['nombre' => 'ELECTRICIDAD', 'caracteristica' => 'Fallan luces de tablero', 'tiene' => true, 'valoracion' => 0.01],
-            ['nombre' => 'ELECTRICIDAD', 'caracteristica' => 'Falla instrumentos del tablero', 'tiene' => true, 'valoracion' => 0.01],
-            ['nombre' => 'ELECTRICIDAD', 'caracteristica' => 'Descarga de batería', 'tiene' => true, 'valoracion' => 0.01],
-            ['nombre' => 'ELECTRICIDAD', 'caracteristica' => 'Falla bocina', 'tiene' => true, 'valoracion' => 0.01],
-            ['nombre' => 'ELECTRICIDAD', 'caracteristica' => 'Falla limpiaparabrisas', 'tiene' => false, 'valoracion' => 0.01],
-            ['nombre' => 'APARIENCIA INTERIOR EXTERIOR', 'caracteristica' => 'Tablero', 'tiene' => true, 'valoracion' => 0.015],
-            ['nombre' => 'APARIENCIA INTERIOR EXTERIOR', 'caracteristica' => 'Motor', 'tiene' => true, 'valoracion' => 0.015],
-            ['nombre' => 'APARIENCIA INTERIOR EXTERIOR', 'caracteristica' => 'Caja de cambios', 'tiene' => true, 'valoracion' => 0.015],
-            ['nombre' => 'APARIENCIA INTERIOR EXTERIOR', 'caracteristica' => 'Diferencial', 'tiene' => true, 'valoracion' => 0.015],
-            ['nombre' => 'APARIENCIA INTERIOR EXTERIOR', 'caracteristica' => 'Engrasado', 'tiene' => true, 'valoracion' => 0.015],
-            ['nombre' => 'APARIENCIA INTERIOR EXTERIOR', 'caracteristica' => 'Lavado', 'tiene' => true, 'valoracion' => 0.015],
-            ['nombre' => 'ACCESORIOS Y ADICIONALES', 'caracteristica' => 'Llave de ruedas', 'tiene' => false, 'valoracion' => 0.005],
-            ['nombre' => 'ACCESORIOS Y ADICIONALES', 'caracteristica' => 'Retrovisores', 'tiene' => false, 'valoracion' => 0.005],
-            ['nombre' => 'ACCESORIOS Y ADICIONALES', 'caracteristica' => 'Llanta de emergencia', 'tiene' => false, 'valoracion' => 0.005],
-            ['nombre' => 'ACCESORIOS Y ADICIONALES', 'caracteristica' => 'Espejos', 'tiene' => false, 'valoracion' => 0.005],
-            ['nombre' => 'ACCESORIOS Y ADICIONALES', 'caracteristica' => 'Antena', 'tiene' => false, 'valoracion' => 0.005],
-            ['nombre' => 'ACCESORIOS Y ADICIONALES', 'caracteristica' => 'Equipo radio', 'tiene' => false, 'valoracion' => 0.005],
-            ['nombre' => 'ACCESORIOS Y ADICIONALES', 'caracteristica' => 'Tapa de gasolina', 'tiene' => false, 'valoracion' => 0.005],
-            ['nombre' => 'ACCESORIOS Y ADICIONALES', 'caracteristica' => 'Gata', 'tiene' => false, 'valoracion' => 0.005],
-            ['nombre' => 'ACCESORIOS Y ADICIONALES', 'caracteristica' => 'Cinturones', 'tiene' => false, 'valoracion' => 0.005],
-            ['nombre' => 'ACCESORIOS Y ADICIONALES', 'caracteristica' => 'Radio', 'tiene' => false, 'valoracion' => 0.005],
-            ['nombre' => 'ACCESORIOS Y ADICIONALES', 'caracteristica' => 'Encendedor', 'tiene' => false, 'valoracion' => 0.005],
-            ['nombre' => 'ACCESORIOS Y ADICIONALES', 'caracteristica' => 'Ceniceros', 'tiene' => false, 'valoracion' => 0.005],
-            ['nombre' => 'ACCESORIOS Y ADICIONALES', 'caracteristica' => 'Extintor', 'tiene' => true, 'valoracion' => 0.005],
-            ['nombre' => 'ACCESORIOS Y ADICIONALES', 'caracteristica' => 'Herramientas', 'tiene' => true, 'valoracion' => 0.005],
-            ['nombre' => 'ACCESORIOS Y ADICIONALES', 'caracteristica' => 'Tapa cubos', 'tiene' => true, 'valoracion' => 0.005],
-            ['nombre' => 'ACCESORIOS Y ADICIONALES', 'caracteristica' => 'Parabrisas', 'tiene' => true, 'valoracion' => 0.005],
+            // Motor Encendido
+            ['nombre' => 'Motor Encendido', 'caracteristica' => 'Falla de encendido inicial', 'tiene' => false, 'valoracion' => 0.0250],
+            ['nombre' => 'Motor Encendido', 'caracteristica' => 'Mala partida', 'tiene' => false, 'valoracion' => 0.0250],
+            ['nombre' => 'Motor Encendido', 'caracteristica' => 'Demora partida', 'tiene' => false, 'valoracion' => 0.0250],
+            ['nombre' => 'Motor Encendido', 'caracteristica' => 'El motor se detiene al encender', 'tiene' => false, 'valoracion' => 0.0250],
+            ['nombre' => 'Motor Encendido', 'caracteristica' => 'Se suelta el acelerador', 'tiene' => false, 'valoracion' => 0.0250],
+            
+            // Motor Conducción
+            ['nombre' => 'Motor Conducción', 'caracteristica' => 'Falla al acelerar', 'tiene' => false, 'valoracion' => 0.0200],
+            ['nombre' => 'Motor Conducción', 'caracteristica' => 'Encendido adelantado/atrasado', 'tiene' => false, 'valoracion' => 0.0200],
+            ['nombre' => 'Motor Conducción', 'caracteristica' => 'Pérdida de potencia', 'tiene' => false, 'valoracion' => 0.0200],
+            ['nombre' => 'Motor Conducción', 'caracteristica' => 'Humo negro', 'tiene' => false, 'valoracion' => 0.0200],
+            ['nombre' => 'Motor Conducción', 'caracteristica' => 'Embrague defectuoso', 'tiene' => false, 'valoracion' => 0.0200],
+            
+            // Marcha en Vacío
+            ['nombre' => 'Marcha en Vacío', 'caracteristica' => 'Marcha en vacío anormal', 'tiene' => false, 'valoracion' => 0.0200],
+            ['nombre' => 'Marcha en Vacío', 'caracteristica' => 'Marcha en vacío inestable', 'tiene' => false, 'valoracion' => 0.0200],
+            ['nombre' => 'Marcha en Vacío', 'caracteristica' => 'Oscilaciónes', 'tiene' => false, 'valoracion' => 0.0200],
+            
+            // Indicador CHECK ENGINE en el tablero
+            ['nombre' => 'Indicador CHECK ENGINE en el tablero', 'caracteristica' => 'No se enciende', 'tiene' => false, 'valoracion' => 0.0200],
+            ['nombre' => 'Indicador CHECK ENGINE en el tablero', 'caracteristica' => 'Siempre encendida', 'tiene' => false, 'valoracion' => 0.0200],
+            ['nombre' => 'Indicador CHECK ENGINE en el tablero', 'caracteristica' => 'Ocasionalmente encendida', 'tiene' => false, 'valoracion' => 0.0200],
+            
+            // Transmisión
+            ['nombre' => 'Transmisión', 'caracteristica' => 'Patina el embrague', 'tiene' => false, 'valoracion' => 0.0150],
+            ['nombre' => 'Transmisión', 'caracteristica' => 'Pedal de embrague atascado', 'tiene' => false, 'valoracion' => 0.0150],
+            ['nombre' => 'Transmisión', 'caracteristica' => 'Vibración al partir', 'tiene' => false, 'valoracion' => 0.0150],
+            ['nombre' => 'Transmisión', 'caracteristica' => 'No entra los cambios', 'tiene' => false, 'valoracion' => 0.0150],
+            ['nombre' => 'Transmisión', 'caracteristica' => 'Se suelta la marcha', 'tiene' => false, 'valoracion' => 0.0150],
+            ['nombre' => 'Transmisión', 'caracteristica' => 'Sonidos en los cambios', 'tiene' => false, 'valoracion' => 0.0150],
+            ['nombre' => 'Transmisión', 'caracteristica' => 'Sonido en el diferencial', 'tiene' => false, 'valoracion' => 0.0150],
+            ['nombre' => 'Transmisión', 'caracteristica' => 'Fugas de aceite', 'tiene' => false, 'valoracion' => 0.0150],
+            ['nombre' => 'Transmisión', 'caracteristica' => 'Sonidos en las ruedas al curvar', 'tiene' => false, 'valoracion' => 0.0150],
+            
+            // Frenos
+            ['nombre' => 'Frenos', 'caracteristica' => 'Sonidos al frenar', 'tiene' => false, 'valoracion' => 0.0250],
+            ['nombre' => 'Frenos', 'caracteristica' => 'Frenos defectuosos', 'tiene' => false, 'valoracion' => 0.0250],
+            ['nombre' => 'Frenos', 'caracteristica' => 'No funciona freno de mano', 'tiene' => false, 'valoracion' => 0.0250],
+            ['nombre' => 'Frenos', 'caracteristica' => 'Fuga de líquido', 'tiene' => false, 'valoracion' => 0.0250],
+            
+            // Suspensión y Carrocería
+            ['nombre' => 'Suspensión y Carrocería', 'caracteristica' => 'Sonidos o golpeteo', 'tiene' => false, 'valoracion' => 0.0200],
+            ['nombre' => 'Suspensión y Carrocería', 'caracteristica' => 'Rebotes', 'tiene' => false, 'valoracion' => 0.0200],
+            ['nombre' => 'Suspensión y Carrocería', 'caracteristica' => 'Suspensión floja', 'tiene' => false, 'valoracion' => 0.0200],
+            
+            // Dirección
+            ['nombre' => 'Dirección', 'caracteristica' => 'Tiende a ir al lado', 'tiene' => false, 'valoracion' => 0.0225],
+            ['nombre' => 'Dirección', 'caracteristica' => 'Suena al curvar', 'tiene' => false, 'valoracion' => 0.0225],
+            ['nombre' => 'Dirección', 'caracteristica' => 'No responde efectivamente', 'tiene' => false, 'valoracion' => 0.0225],
+            ['nombre' => 'Dirección', 'caracteristica' => 'Mala distribución', 'tiene' => false, 'valoracion' => 0.0225],
+            
+            // Electricidad
+            ['nombre' => 'Electricidad', 'caracteristica' => 'Fallan luces delanteras', 'tiene' => false, 'valoracion' => 0.0100],
+            ['nombre' => 'Electricidad', 'caracteristica' => 'Fallan luces direccionales', 'tiene' => false, 'valoracion' => 0.0100],
+            ['nombre' => 'Electricidad', 'caracteristica' => 'Fallan luces de freno', 'tiene' => false, 'valoracion' => 0.0100],
+            ['nombre' => 'Electricidad', 'caracteristica' => 'Fallan luces de retro', 'tiene' => false, 'valoracion' => 0.0100],
+            ['nombre' => 'Electricidad', 'caracteristica' => 'Fallan luces de salón', 'tiene' => false, 'valoracion' => 0.0100],
+            ['nombre' => 'Electricidad', 'caracteristica' => 'Fallan luces de tablero', 'tiene' => false, 'valoracion' => 0.0100],
+            ['nombre' => 'Electricidad', 'caracteristica' => 'Fallan instrumentos del tablero', 'tiene' => false, 'valoracion' => 0.0100],
+            ['nombre' => 'Electricidad', 'caracteristica' => 'Descarga de batería', 'tiene' => false, 'valoracion' => 0.0100],
+            ['nombre' => 'Electricidad', 'caracteristica' => 'Falla bocina', 'tiene' => false, 'valoracion' => 0.0100],
+            ['nombre' => 'Electricidad', 'caracteristica' => 'Fallan limpiaparabrisas', 'tiene' => false, 'valoracion' => 0.0100],
+            
+            // Apariencia Interior y Exterior
+            ['nombre' => 'Apariencia Interior y Exterior', 'caracteristica' => 'Tablero', 'tiene' => false, 'valoracion' => 0.0150],
+            ['nombre' => 'Apariencia Interior y Exterior', 'caracteristica' => 'Motor', 'tiene' => false, 'valoracion' => 0.0150],
+            ['nombre' => 'Apariencia Interior y Exterior', 'caracteristica' => 'Caja de cambios', 'tiene' => false, 'valoracion' => 0.0150],
+            ['nombre' => 'Apariencia Interior y Exterior', 'caracteristica' => 'Diferencial', 'tiene' => false, 'valoracion' => 0.0150],
+            ['nombre' => 'Apariencia Interior y Exterior', 'caracteristica' => 'Engrasado', 'tiene' => false, 'valoracion' => 0.0150],
+            ['nombre' => 'Apariencia Interior y Exterior', 'caracteristica' => 'Lavado', 'tiene' => false, 'valoracion' => 0.0150],
+            
+            // Accesorios Adicionales
+            ['nombre' => 'Accesorios Adicionales', 'caracteristica' => 'Llave de ruedas', 'tiene' => false, 'valoracion' => 0.0050],
+            ['nombre' => 'Accesorios Adicionales', 'caracteristica' => 'Retrovisores', 'tiene' => false, 'valoracion' => 0.0050],
+            ['nombre' => 'Accesorios Adicionales', 'caracteristica' => 'Alarma de emergencia', 'tiene' => false, 'valoracion' => 0.0050],
+            ['nombre' => 'Accesorios Adicionales', 'caracteristica' => 'Espejos', 'tiene' => false, 'valoracion' => 0.0050],
+            ['nombre' => 'Accesorios Adicionales', 'caracteristica' => 'Antena', 'tiene' => false, 'valoracion' => 0.0050],
+            ['nombre' => 'Accesorios Adicionales', 'caracteristica' => 'Perillas radio', 'tiene' => false, 'valoracion' => 0.0050],
+            ['nombre' => 'Accesorios Adicionales', 'caracteristica' => 'Tapa de gasolina', 'tiene' => false, 'valoracion' => 0.0050],
+            ['nombre' => 'Accesorios Adicionales', 'caracteristica' => 'Gata', 'tiene' => false, 'valoracion' => 0.0050],
+            ['nombre' => 'Accesorios Adicionales', 'caracteristica' => 'Rayones', 'tiene' => false, 'valoracion' => 0.0050],
+            ['nombre' => 'Accesorios Adicionales', 'caracteristica' => 'Radio', 'tiene' => false, 'valoracion' => 0.0050],
+            ['nombre' => 'Accesorios Adicionales', 'caracteristica' => 'Encendedor', 'tiene' => false, 'valoracion' => 0.0050],
+            ['nombre' => 'Accesorios Adicionales', 'caracteristica' => 'Tapacubos', 'tiene' => false, 'valoracion' => 0.0050],
+            ['nombre' => 'Accesorios Adicionales', 'caracteristica' => 'Extintor', 'tiene' => false, 'valoracion' => 0.0050],
+            ['nombre' => 'Accesorios Adicionales', 'caracteristica' => 'Herramientas', 'tiene' => false, 'valoracion' => 0.0050],
+            ['nombre' => 'Accesorios Adicionales', 'caracteristica' => 'Abolladuras', 'tiene' => false, 'valoracion' => 0.0050],
+            ['nombre' => 'Accesorios Adicionales', 'caracteristica' => 'Parabrisas', 'tiene' => false, 'valoracion' => 0.0050],
         ];
 
         foreach ($inspecciones as $inspeccion) {

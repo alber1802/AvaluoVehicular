@@ -60,7 +60,7 @@ export default function EditSeleccion({ id }: { id: number }) {
                         </Link>
 
                         {/* Actualizar Imágenes del Vehículo */}
-                        <Link href={route('imagenes.vehiculo', { id })}>
+                        <Link href={route('imagenes.vehiculo.edit', { id })}>
                             <div className="group cursor-pointer rounded-lg border-2 border-[#e2e8f0] bg-[#ffffff] p-8 shadow-sm transition-all duration-300 hover:border-[#00AEEF] hover:shadow-lg dark:border-[#20384b] dark:bg-[#1a2c3a] dark:hover:border-[#00AEEF]">
                                 <div className="flex flex-col items-center space-y-4 text-center">
                                     <div className="rounded-full bg-[#00AEEF]/10 p-6 transition-all duration-300 group-hover:bg-[#00AEEF]/20">
@@ -80,7 +80,7 @@ export default function EditSeleccion({ id }: { id: number }) {
                         </Link>
 
                         {/* Actualizar Evaluación por Inspección */}
-                        <Link href={route('evaluacion.inspeccion', { id })}>
+                        <Link href={route('evaluacion.inspeccion.edit', { id })}>
                             <div className="group cursor-pointer rounded-lg border-2 border-[#e2e8f0] bg-[#ffffff] p-8 shadow-sm transition-all duration-300 hover:border-[#00AEEF] hover:shadow-lg dark:border-[#20384b] dark:bg-[#1a2c3a] dark:hover:border-[#00AEEF]">
                                 <div className="flex flex-col items-center space-y-4 text-center">
                                     <div className="rounded-full bg-[#00AEEF]/10 p-6 transition-all duration-300 group-hover:bg-[#00AEEF]/20">
@@ -100,7 +100,7 @@ export default function EditSeleccion({ id }: { id: number }) {
                         </Link>
 
                         {/* Actualizar Evaluación por Condiciones Mecánicas */}
-                        <Link href={route('evaluacion.mecanica', { id })}>
+                        <Link href={route('evaluacion.mecanica.edit', { id })}>
                             <div className="group cursor-pointer rounded-lg border-2 border-[#e2e8f0] bg-[#ffffff] p-8 shadow-sm transition-all duration-300 hover:border-[#00AEEF] hover:shadow-lg dark:border-[#20384b] dark:bg-[#1a2c3a] dark:hover:border-[#00AEEF]">
                                 <div className="flex flex-col items-center space-y-4 text-center">
                                     <div className="rounded-full bg-[#00AEEF]/10 p-6 transition-all duration-300 group-hover:bg-[#00AEEF]/20">
