@@ -45,7 +45,7 @@ class DashboardController extends Controller
         // Base query for vehicles, applying user-specific filter if not admin
         $baseQuery = Vehiculo::with('imagenes', 'marca', 'avaluo');
         if (!$isAdmin) {
-            $baseQuery->where('user_id', $userId);
+            $baseQuery->where('id_evaluador', $userId);
         }
 
         // Apply text search
@@ -81,16 +81,16 @@ class DashboardController extends Controller
             $valoracion = Avaluo::sum('final_estimacion');
         } else {
             // Non-admin user sees only their own reports
-            $count_vehiculosHoy = Vehiculo::where('user_id', $userId)->whereDate('created_at', now()->toDateString())->count();
-            $comparacionAyer = Vehiculo::where('user_id', $userId)->whereDate('created_at', now()->subDay()->toDateString())->count();
-            $count_vehiculos = Vehiculo::where('user_id', $userId)->count();
+            $count_vehiculosHoy = Vehiculo::where('id_evaluador', $userId)->whereDate('created_at', now()->toDateString())->count();
+            $comparacionAyer = Vehiculo::where('id_evaluador', $userId)->whereDate('created_at', now()->subDay()->toDateString())->count();
+            $count_vehiculos = Vehiculo::where('id_evaluador', $userId)->count();
 
             // Avaluos related to the user's vehicles
             $count_avaluos = Avaluo::whereHas('vehiculo', function ($q) use ($userId) {
-                $q->where('user_id', $userId);
+                $q->where('id_evaluador', $userId);
             })->count();
             $valoracion = Avaluo::whereHas('vehiculo', function ($q) use ($userId) {
-                $q->where('user_id', $userId);
+                $q->where('id_evaluador', $userId);
             })->sum('final_estimacion');
         }
 

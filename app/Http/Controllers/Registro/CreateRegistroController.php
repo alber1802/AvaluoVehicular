@@ -13,6 +13,7 @@ use App\Models\Sistema;
 use App\Models\Avaluo;
 use App\Models\VehiculoImagen;
 use App\Models\CondicionGeneral;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 use Inertia\Response;
 
@@ -21,6 +22,7 @@ use App\Http\Requests\Registro\UpdateVehiculoRequest;
 
 class CreateRegistroController extends Controller
 {
+    use AuthorizesRequests;
     
     public function index()
     {
@@ -33,8 +35,13 @@ class CreateRegistroController extends Controller
     }
 
     public function seleccionar($id){
-        
 
+        $vehiculo = Vehiculo::findOrFail($id);
+
+        if(Avaluo::where('id_vehiculo', $vehiculo->id)->exists()){
+            
+            return redirect()->route('dashboard');
+        }
         //hacer validacion para cuando recrese el usuario y ya haya podiver mejor algun registro
         return Inertia::render('Registro/create/condiciones_generales', [
             'id' => $id,
@@ -87,11 +94,9 @@ class CreateRegistroController extends Controller
      */
     public function show(string $id)
     {
-        $vehiculo = Vehiculo::find($id);
+        $vehiculo = Vehiculo::findOrFail($id); // Busca un vehículo por su ID; si no lo encuentra, lanza una excepción 404.
 
-        if (!$vehiculo) {
-            return redirect()->route('dashboard');
-        }
+        $this->authorize('view', $vehiculo);
 
         $hasInspeccion = Inspeccion::where('id_vehiculo', $vehiculo->id)->exists();
         $hasSistema = Sistema::where('id_vehiculo', $vehiculo->id)->exists();
@@ -124,6 +129,11 @@ class CreateRegistroController extends Controller
     }
     public function seleccionarEditar($id){
 
+        $vehiculo = Vehiculo::findOrFail($id);
+        
+        // Verificar autorización usando la Policy
+        $this->authorize('view', $vehiculo);
+
         return  Inertia::render('Registro/update/EditSeleccion', [
             'id' => $id,
         ]);
@@ -135,12 +145,13 @@ class CreateRegistroController extends Controller
      */
     public function edit($id)
     {
-        $vehiculo = Vehiculo::where('id', $id)->with('marca')->first();
+        $vehiculo = Vehiculo::findOrFail($id);
+        
+        // Verificar autorización usando la Policy
+        $this->authorize('view', $vehiculo);
         $condicionGeneral = CondicionGeneral::where('id_vehiculo', $vehiculo->id)->first();
         $marcas = MarcaVehiculo::all();
-        if(!$vehiculo){
-            return redirect()->route('dashboard');
-        }
+       
          return Inertia::render('Registro/update/EditDatosVehiculo', [
             'vehiculo' => $vehiculo,
             'condicionGeneral' => $condicionGeneral,
@@ -153,11 +164,10 @@ class CreateRegistroController extends Controller
      */ 
     public function update(UpdateVehiculoRequest $request, string $id)
     {
-        $vehiculo = Vehiculo::find($id);
-
-        if (!$vehiculo) {
-            return redirect()->route('dashboard');
-        }
+        $vehiculo = Vehiculo::findOrFail($id);
+        
+        // Verificar autorización usando la Policy
+        $this->authorize('update', $vehiculo);
 
         // Prepare estado_operativo as comma-separated string
         $estadoOperativo = is_array($request->estado_operativo) 
@@ -194,7 +204,7 @@ class CreateRegistroController extends Controller
             ]);
         }
 
-        return redirect()->route('dashboard')->with('success', 'Vehículo actualizado correctamente');
+        return redirect()->route('resultados.avaluo', $vehiculo->id)->with('success', 'Vehículo actualizado correctamente');
     }
 
     /**

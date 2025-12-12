@@ -11,18 +11,22 @@ use App\Models\Registro;
 use App\Models\Inspeccion;
 use App\Models\Vehiculo;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 use App\Http\Requests\Registro\InspeccionRequest;
 
 class InspeccionController extends Controller
 {
+    use AuthorizesRequests;
     /**
      * Display a listing of the resource.
      */
     public function index($id)
     {
-        //dd($id);
-        if(Inspeccion::where('id_vehiculo', $id)->exists() || !Vehiculo::where('id', $id)->exists()) {
+        $vehiculo = Vehiculo::findOrFail($id);
+        $this->authorize('view', $vehiculo);
+
+        if(Inspeccion::where('id_vehiculo', $id)->exists()) {
             return redirect()->route('resultados.avaluo.continuar', $id)->with('success', 'Ya se ha realizado la evaluación por Inspección para este vehículo.');
         } else {    
          return Inertia::render('Registro/create/evaluacion_inspeccion', [
@@ -86,9 +90,13 @@ class InspeccionController extends Controller
      * Show the form for editing the specified resource.
      */
     public function edit($id)
-    {
+    {   
+        $vehiculo = Vehiculo::findOrFail($id);
+        
+        // Verificar autorización usando la Policy
+        $this->authorize('view', $vehiculo);
 
-        $inspecciones = Inspeccion::where('id_vehiculo', $id)->get();
+        $inspecciones = Inspeccion::where('id_vehiculo', $vehiculo->id)->get();
 
         if($inspecciones){
               return Inertia::render('Registro/update/EditInspeccion', [
@@ -105,6 +113,11 @@ class InspeccionController extends Controller
     */
     public function update(InspeccionRequest $request, $id)
     {
+        $vehiculo = Vehiculo::findOrFail($id);
+        
+        // Verificar autorización usando la Policy
+        $this->authorize('update', $vehiculo);
+        
         $data = $request->input('data');
 
         foreach ($data as $item) {
@@ -136,7 +149,7 @@ class InspeccionController extends Controller
             }
         }
 
-        return back()->with('success','Se ha actualizado la evaluación por Inspección para este vehículo.');
+         return redirect()->route('resultados.avaluo', $vehiculo->id)->with('success', 'Vehículo actualizado correctamente');
     }
 
     /**

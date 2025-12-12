@@ -11,18 +11,25 @@ use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use App\Models\VehiculoImagen;
 use App\Models\Vehiculo;
-use LaravelLang\Publisher\Console\Update;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 
 
 
 class ImagenesController extends Controller
 {
+    use AuthorizesRequests;
     
     public function index($id)
     {
-        if(Vehiculo::where('id', $id)->exists()) {
-            if(!VehiculoImagen::where('id_vehiculo', $id)->exists()) {
+
+       $vehiculo = Vehiculo::findOrFail($id);
+
+         // Verificar autorización usando la Policy
+        $this->authorize('view', $vehiculo);
+       
+        if(!$vehiculo){
+            if(!VehiculoImagen::where('id_vehiculo', $vehiculo->id)->exists()) {
                     return Inertia::render('Registro/create/imagenes_avaluo'
                     , compact('id')
                 );
@@ -84,11 +91,16 @@ class ImagenesController extends Controller
     }
     public function edit($id){
 
-        $imagenes = VehiculoImagen::where('id_vehiculo', $id)->get();
+        $vehiculo = Vehiculo::findOrFail($id);
+        
+        // Verificar autorización usando la Policy
+        $this->authorize('view', $vehiculo);
+
+        $imagenes = VehiculoImagen::where('id_vehiculo', $vehiculo->id)->get();
 
         if($imagenes){
             return Inertia::render('Registro/update/EditImagenes', [
-                'id' => $id,
+                'id' => $vehiculo->id,
                 'imagenes' => $imagenes,
             ]);
         }
@@ -98,8 +110,12 @@ class ImagenesController extends Controller
 
     public function update(UpdateImagenRequest $request, $id){
 
-        // 1. Obtener todas las imágenes existentes del vehículo
-        $imagenesExistentes = VehiculoImagen::where('id_vehiculo', $id)->get();
+        $vehiculo = Vehiculo::findOrFail($id);
+        
+        // Verificar autorización usando la Policy
+        $this->authorize('update', $vehiculo);
+
+        $imagenesExistentes = VehiculoImagen::where('id_vehiculo', $vehiculo->id)->get();
         $datosValidados = $request->validated();
         
         // 2. Extraer los IDs de las imágenes que se están enviando (las que se mantienen)

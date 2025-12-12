@@ -10,6 +10,7 @@ use Inertia\Response;
 
 use App\Models\Sistema;
 use App\Models\Vehiculo;
+use Illuminate\Support\Facades\Auth;
 
 
 
@@ -90,12 +91,23 @@ class MecanicaController extends Controller
      */
     public function edit($id)
     {
-        $evaluacion_mecanicas = Sistema::where('id_vehiculo', $id)->get();
-       // dd($evaluacion_mecanicas);
+        $Auth = Auth::user();
+
+        if($Auth->role == 'admin'){
+            $vehiculo = Vehiculo::where('id', $id)->first();
+        }else{
+            $vehiculo = Vehiculo::where('id', $id)->where('id_evaluador', $Auth->id)->first();
+        }
+       
+        if(!$vehiculo){
+            return redirect()->route('dashboard');
+        }
+
+        $evaluacion_mecanicas = Sistema::where('id_vehiculo', $vehiculo->id)->get();
 
         if($evaluacion_mecanicas){
                 return Inertia::render('Registro/update/EditMecanica', [
-                'id' => $id,
+                'id' => $vehiculo->id,
                 'evaluacion_mecanica' => $evaluacion_mecanicas,
             ]);
         }
@@ -108,14 +120,20 @@ class MecanicaController extends Controller
      */
     public function update(MecanicaRequest $request,  $id)
     {
-        if(!Vehiculo::where('id', $id)->exists()){
-            return redirect()->route('resultados.avaluo.continuar', $id)->with('success', 'El vehículo no existe.');
+         $Auth = Auth::user();
+
+        if($Auth->role == 'admin'){
+            $vehiculo = Vehiculo::where('id', $id)->first();
+        }else{
+            $vehiculo = Vehiculo::where('id', $id)->where('id_evaluador', $Auth->id)->first();
+        }
+       
+        if(!$vehiculo){
+            return redirect()->route('dashboard');
         }
         // Los datos ya vienen validados por MecanicaRequest
         $datosValidados = $request->validated();
 
-        //dd($datosValidados);
-        
         // Array para almacenar todos los registros a insertar
      
         
