@@ -12,6 +12,7 @@ use App\Models\VehiculoImagen;
 use App\Models\CondicionGeneral;
 use App\Models\MarcaVehiculo;
 use App\Models\Avaluo;
+use App\Models\Archivo;
 
 
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -31,14 +32,15 @@ class AvaluoController extends Controller
         $this->authorize('view', $vehiculo);
 
         $marca = MarcaVehiculo::where('id', $vehiculo->id_marca)->first();
-        $inspeccion = Inspeccion::where('id_vehiculo', $id)->where('tiene', 1)->get();
-        $condicionGeneral = CondicionGeneral::where('id_vehiculo', $id)->first();
-        $imagenes = VehiculoImagen::where('id_vehiculo', $id)->get();
+        $inspeccion = Inspeccion::where('id_vehiculo', $vehiculo->id)->where('tiene', 1)->get();
+        $condicionGeneral = CondicionGeneral::where('id_vehiculo', $vehiculo->id)->first();
+        $imagenes = VehiculoImagen::where('id_vehiculo', $vehiculo->id)->get();
+        $archivos = Archivo::where('id_vehiculo', $vehiculo->id)->first();
 
         
-        $factor_c = $this->evaluar_inspeccion($id );
-        $factor_a = $this->DepreciacionModelo($id);
-        $factor_b = $this->DepreciacionKilometraje($id);
+        $factor_c = $this->evaluar_inspeccion($vehiculo->id );
+        $factor_a = $this->DepreciacionModelo($vehiculo->id);
+        $factor_b = $this->DepreciacionKilometraje($vehiculo->id);
 
         $p = $vehiculo->precio_referencial;
 
@@ -54,7 +56,7 @@ class AvaluoController extends Controller
 
 
         $avaluo = Avaluo::updateOrCreate(
-            ['id_vehiculo' => $id],
+            ['id_vehiculo' => $vehiculo->id],
             [
                 'factor_reposicion' => $factorReposicion,
                 'final_estimacion' => $valorFinal,
@@ -77,6 +79,7 @@ class AvaluoController extends Controller
             'factorInspeccion' => $factor_c,
             'valorResidual' => $valorResidualVehiuculo,
             'marca' => $marca,
+            'archivos' => $archivos,
         ]);
     }
 

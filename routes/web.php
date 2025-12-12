@@ -11,6 +11,7 @@ use App\Http\Controllers\Registro\ImagenesController;
 use App\Http\Controllers\User\UserRegistroController;
 use App\Http\Controllers\Reciclaje\ResourceReciclajeController;
 use  App\Http\Controllers\Registro\AvaluoController;
+use App\Http\Controllers\ArchivoControler;
 
 
 Route::get('/', function () {
@@ -86,6 +87,10 @@ Route::prefix('registro')->middleware(['auth', 'verified'])->group(function () {
     Route::get('/resultados/avaluo/continuar/{id}', [CreateRegistroController::class,'show'])->name('resultados.avaluo.continuar');
 });
 
+//aca dan las lista de los archivos pdf que se generen
+Route::prefix('archivos')->middleware(['auth', 'verified'])->group(function () {
+    Route::get('/generarPdf/{id}', [ArchivoControler::class, 'generarPdf'])->name('archivos.generarPdf');
+});
 
 Route::prefix('usuarios')->middleware(['auth', 'verified'])->group(function () {
 
@@ -111,7 +116,8 @@ Route::prefix('depreciacion')->middleware(['auth', 'verified'])->group(function 
 
     
 });
-
+//vista de pudra R
+//Route::get('/pdf/{id}', [ArchivoControler::class, 'vista'])->name('pdf.vista');
 
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';

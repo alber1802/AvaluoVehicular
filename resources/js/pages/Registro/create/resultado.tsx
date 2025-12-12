@@ -1,7 +1,7 @@
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
 import { type BreadcrumbItem } from '@/types';
-import { Head } from '@inertiajs/react';
+import { Head, router } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, ImageIcon } from 'lucide-react';
 import { useState } from 'react';
@@ -11,6 +11,8 @@ import VehicleIdentificationCard from '../components/VehicleIdentificationCard';
 import ConditionsCard from '../components/ConditionsCard';
 import DepreciacionCard from '../components/DepreciacionCard';
 import ImagenesModal from '../components/modals/ImagenesModal';
+import { route } from 'ziggy-js';
+
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -79,6 +81,7 @@ interface ResultadoProps {
     vehiculo: Vehiculo;
     condicionGeneral: CondicionGeneral;
     inspeccion: Inspeccion[];
+    archivos: Archivo;
     imagenes: VehiculoImagen[];
     valorFinal: number;
     factorReposicion: number;
@@ -87,6 +90,13 @@ interface ResultadoProps {
     factorInspeccion: number;
     valorResidual: number;
     marca: Marca;
+}
+interface Archivo {
+    id: number;
+    id_vehiculo: number;
+    nombre: string;
+    url: string;
+    fecha: string;
 }
 
 export default function Resultado({
@@ -100,12 +110,13 @@ export default function Resultado({
     factorKilometraje,
     factorInspeccion,
     valorResidual,
-    marca
+    marca,
+    archivos
 }: ResultadoProps) {
     const [isImagenesModalOpen, setIsImagenesModalOpen] = useState(false);
 
     const handlePrint = () => {
-        //window.print();
+        router.get(route('archivos.generarPdf', vehiculo.id));
     };
 
 
@@ -152,12 +163,12 @@ export default function Resultado({
                             </Button>
                         )}
 
-                        {imagenes.length > 0 && (
+                        {imagenes.length > 0 && archivos.url != null && (
                             <Button
                                 onClick={handlePrint}
                                 className="w-full flex-shrink-0 flex-grow-0 items-center gap-2 bg-[#00AEEF] hover:bg-[#00AEEF]/90 md:order-3 md:w-auto"
                             >
-                                Imprimir Reporte
+                                ver reporte PDF
                             </Button>
                         )}
                     </div>

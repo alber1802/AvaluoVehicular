@@ -55,7 +55,6 @@ class InspeccionController extends Controller
         $data = $request->input('data');
 
         $inspecciones = [];
-        $suma = 0;
 
         foreach ($data as $item) {
             $inspecciones[] = [
@@ -68,7 +67,7 @@ class InspeccionController extends Controller
                 'created_at'    => now(),
                 'updated_at'    => now(),
             ];
-            $suma += $item['valoracion'];
+            
         }
 
         // Inserta múltiples registros
