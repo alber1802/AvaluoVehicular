@@ -95,6 +95,7 @@ class ArchivoControler extends Controller
             if($archivo->url != null) {
                 Storage::disk('public')->delete($archivo->url);            
             }
+            Storage::disk('public')->put($rutaPdf, $pdf->output());
 
             $archivo->update([
                 'url' => $rutaPdf,
@@ -103,8 +104,9 @@ class ArchivoControler extends Controller
                 'updated_at' => now(),
             ]);
 
-            Storage::disk('public')->put($rutaPdf, $pdf->output());
+           
         }else {
+            Storage::disk('public')->put($rutaPdf, $pdf->output());
              Archivo::create([
                  'id_vehiculo' => $id,
                  'url' => $rutaPdf,
@@ -113,8 +115,6 @@ class ArchivoControler extends Controller
                  'created_at' => now(),
                  'updated_at' => now(),
              ]);   
-
-             Storage::disk('public')->put($rutaPdf, $pdf->output());
         }
        
         return back()->with('success','Reporte generado exitosamente '.$nombreArchivo);

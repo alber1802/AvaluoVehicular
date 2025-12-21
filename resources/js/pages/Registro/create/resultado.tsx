@@ -3,7 +3,7 @@ import { dashboard } from '@/routes';
 import { type BreadcrumbItem } from '@/types';
 import { Head, router } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, ImageIcon } from 'lucide-react';
+import { ArrowLeft, ImageIcon, FileText } from 'lucide-react';
 import { useState } from 'react';
 import ResultadoHeader from '../components/ResultadoHeader';
 import VehicleInfoCard from '../components/VehicleInfoCard';
@@ -11,6 +11,7 @@ import VehicleIdentificationCard from '../components/VehicleIdentificationCard';
 import ConditionsCard from '../components/ConditionsCard';
 import DepreciacionCard from '../components/DepreciacionCard';
 import ImagenesModal from '../components/modals/ImagenesModal';
+import PdfModal from '../components/modals/PdfModal';
 import { route } from 'ziggy-js';
 
 
@@ -114,6 +115,7 @@ export default function Resultado({
     archivos
 }: ResultadoProps) {
     const [isImagenesModalOpen, setIsImagenesModalOpen] = useState(false);
+    const [isPdfModalOpen, setIsPdfModalOpen] = useState(false);
 
     const handlePrint = () => {
         router.get(route('archivos.generarPdf', vehiculo.id));
@@ -126,6 +128,10 @@ export default function Resultado({
 
     const handleImagenes = () => {
         setIsImagenesModalOpen(true);
+    };
+
+    const handleVerPdf = () => {
+        setIsPdfModalOpen(true);
     };
 
     return (
@@ -163,13 +169,27 @@ export default function Resultado({
                             </Button>
                         )}
 
-                        {imagenes.length > 0 && archivos.url != null && (
-                            <Button
-                                onClick={handlePrint}
-                                className="w-full flex-shrink-0 flex-grow-0 items-center gap-2 bg-[#00AEEF] hover:bg-[#00AEEF]/90 md:order-3 md:w-auto"
-                            >
-                                ver reporte PDF
-                            </Button>
+                        {imagenes.length > 0 && (
+                            <>
+                                {archivos?.url && (
+                                    <Button
+                                        variant="outline"
+                                        onClick={handleVerPdf}
+                                        className="w-full flex-shrink-0 flex-grow-0 items-center gap-2 border-[#e2e8f0] text-[#1e293b] hover:bg-[#f8fafc] dark:border-[#20384b] dark:text-white/90 dark:hover:bg-[#0f1a23] md:order-3 md:w-auto"
+                                    >
+                                        <FileText className="h-4 w-4" />
+                                        Ver PDF
+                                    </Button>
+                                )}
+                                {!archivos?.url && (
+                                    <Button
+                                        onClick={handlePrint}
+                                        className="w-full flex-shrink-0 flex-grow-0 items-center gap-2 bg-[#00AEEF] hover:bg-[#00AEEF]/90 md:order-4 md:w-auto"
+                                    >
+                                        generar pdf
+                                    </Button>)
+                                }
+                            </>
                         )}
                     </div>
 
@@ -247,6 +267,16 @@ export default function Resultado({
                 onClose={() => setIsImagenesModalOpen(false)}
                 imagenes={imagenes}
             />
+
+            {/* Modal de PDF */}
+            {archivos?.url != null && (
+                <PdfModal
+                    isOpen={isPdfModalOpen}
+                    onClose={() => setIsPdfModalOpen(false)}
+                    pdfUrl={`/storage/${archivos.url}`}
+                    vehiculoId={vehiculo.id}
+                />
+            )}
         </AppLayout>
     );
 }

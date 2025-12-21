@@ -37,4 +37,6 @@ class Avaluo extends Model
     {
         return $this->belongsTo(Vehiculo::class, 'id_vehiculo');
     }
+
+    
 }

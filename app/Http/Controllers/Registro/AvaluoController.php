@@ -18,6 +18,7 @@ use App\Models\Archivo;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 
+
 class AvaluoController extends Controller 
 {   
      use AuthorizesRequests;
@@ -54,7 +55,6 @@ class AvaluoController extends Controller
 
         
 
-
         $avaluo = Avaluo::updateOrCreate(
             ['id_vehiculo' => $vehiculo->id],
             [
@@ -66,6 +66,7 @@ class AvaluoController extends Controller
                 'depre_inspeccion' => $factor_c,
             ]
         );
+
 
         return Inertia::render('Registro/create/resultado', [
             'vehiculo' => $vehiculo,
