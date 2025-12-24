@@ -18,6 +18,7 @@ import {
 import { type User } from '../types';
 
 interface UserTableRowProps {
+    auth: { user: User };
     user: User;
     onView: (user: User) => void;
     onEdit: (user: User) => void;
@@ -29,6 +30,7 @@ interface UserTableRowProps {
 
 export function UserTableRow({
     user,
+    auth,
     onView,
     onEdit,
     onDelete,
@@ -54,7 +56,7 @@ export function UserTableRow({
                 </div>
             </td>
             <td className="px-6 py-4 text-[#64748b] dark:text-white/70">
-                {user.phone || 'N/A'}
+                {user.phone || 'Sin identificar'}
             </td>
             <td className="px-6 py-4">
                 <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#00AEEF]/10 text-[#00AEEF]">
@@ -66,13 +68,12 @@ export function UserTableRow({
             </td>
             <td className="px-6 py-4">
                 <span
-                    className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                        user.is_active
-                            ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
-                            : 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
-                    }`}
+                    className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${!user.is_suspended
+                        ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
+                        : 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
+                        }`}
                 >
-                    {user.is_active ? 'Activo' : 'Inactivo'}
+                    {user.is_suspended ? 'Suspendido' : 'Activo'}
                 </span>
             </td>
             <td className="px-6 py-4">
@@ -106,13 +107,15 @@ export function UserTableRow({
                                 <Edit className="w-4 h-4 mr-2" />
                                 Editar
                             </DropdownMenuItem>
-                            <DropdownMenuItem
-                                onClick={() => onChangeRole(user)}
-                                className="cursor-pointer text-[#1e293b] dark:text-white/90"
-                            >
-                                <Shield className="w-4 h-4 mr-2" />
-                                Cambiar Rol
-                            </DropdownMenuItem>
+                            {auth.user.id !== user.id && (
+                                <DropdownMenuItem
+                                    onClick={() => onChangeRole(user)}
+                                    className="cursor-pointer text-[#1e293b] dark:text-white/90"
+                                >
+                                    <Shield className="w-4 h-4 mr-2" />
+                                    Cambiar Rol
+                                </DropdownMenuItem>
+                            )}
                             <DropdownMenuItem
                                 onClick={() => onChangePassword(user)}
                                 className="cursor-pointer text-[#1e293b] dark:text-white/90"
@@ -121,20 +124,24 @@ export function UserTableRow({
                                 Cambiar Contraseña
                             </DropdownMenuItem>
                             <DropdownMenuSeparator className="bg-[#e2e8f0] dark:bg-[#20384b]" />
-                            <DropdownMenuItem
-                                onClick={() => onSuspend(user)}
-                                className="cursor-pointer text-orange-600 dark:text-orange-400"
-                            >
-                                <Pause className="w-4 h-4 mr-2" />
-                                {user.is_active ? 'Suspender' : 'Activar'}
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                                onClick={() => onDelete(user)}
-                                className="cursor-pointer text-red-600 dark:text-red-400"
-                            >
-                                <Trash2 className="w-4 h-4 mr-2" />
-                                Eliminar
-                            </DropdownMenuItem>
+                            {auth.user.id !== user.id && (
+                                <DropdownMenuItem
+                                    onClick={() => onSuspend(user)}
+                                    className="cursor-pointer text-orange-600 dark:text-orange-400"
+                                >
+                                    <Pause className="w-4 h-4 mr-2" />
+                                    {user.is_suspended ? 'Activar' : 'Suspender'}
+                                </DropdownMenuItem>
+                            )}
+                            {auth.user.id !== user.id && (
+                                <DropdownMenuItem
+                                    onClick={() => onDelete(user)}
+                                    className="cursor-pointer text-red-600 dark:text-red-400"
+                                >
+                                    <Trash2 className="w-4 h-4 mr-2" />
+                                    Eliminar
+                                </DropdownMenuItem>
+                            )}
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>

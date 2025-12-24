@@ -4,6 +4,7 @@ import {
     DialogHeader,
     DialogTitle,
     DialogFooter,
+    DialogDescription,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
@@ -20,25 +21,18 @@ interface ChangeRoleModalProps {
 
 const roles = [
     {
-        value: 'Administrador',
+        value: 'admin',
         label: 'Administrador',
         description: 'Acceso completo al sistema',
         color: 'text-purple-600 dark:text-purple-400',
         bgColor: 'bg-purple-100 dark:bg-purple-900/30',
     },
     {
-        value: 'Evaluador',
+        value: 'evaluador',
         label: 'Evaluador',
         description: 'Puede realizar avalúos de vehículos',
         color: 'text-blue-600 dark:text-blue-400',
         bgColor: 'bg-blue-100 dark:bg-blue-900/30',
-    },
-    {
-        value: 'Usuario',
-        label: 'Simple Usuario',
-        description: 'Acceso limitado de solo lectura',
-        color: 'text-gray-600 dark:text-gray-400',
-        bgColor: 'bg-gray-100 dark:bg-gray-900/30',
     },
 ];
 
@@ -92,6 +86,9 @@ export function ChangeRoleModal({
                         </div>
                     </div>
                 </DialogHeader>
+                <DialogDescription className="sr-only">
+                    Muestra el formulario para cambiar el rol de un usuario
+                </DialogDescription>
 
                 <form onSubmit={handleSubmit} className="space-y-4 mt-4">
                     <div className="space-y-2">
@@ -104,11 +101,10 @@ export function ChangeRoleModal({
                                     key={role.value}
                                     type="button"
                                     onClick={() => setSelectedRole(role.value)}
-                                    className={`w-full flex items-start gap-3 p-4 rounded-lg border-2 transition-all ${
-                                        selectedRole === role.value
-                                            ? 'border-[#00AEEF] bg-[#00AEEF]/5'
-                                            : 'border-[#e2e8f0] dark:border-[#20384b] hover:border-[#00AEEF]/50'
-                                    }`}
+                                    className={`w-full flex items-start gap-3 p-4 rounded-lg border-2 transition-all ${selectedRole === role.value
+                                        ? 'border-[#00AEEF] bg-[#00AEEF]/5'
+                                        : 'border-[#e2e8f0] dark:border-[#20384b] hover:border-[#00AEEF]/50'
+                                        }`}
                                 >
                                     <div
                                         className={`w-10 h-10 rounded-full ${role.bgColor} flex items-center justify-center flex-shrink-0`}

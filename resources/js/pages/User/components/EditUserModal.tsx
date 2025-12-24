@@ -4,6 +4,7 @@ import {
     DialogHeader,
     DialogTitle,
     DialogFooter,
+    DialogDescription,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -25,12 +26,12 @@ interface EditUserModalProps {
             role: string;
         },
     ) => void;
+    auth: { user: User };
 }
 
 const roles = [
-    { value: 'Administrador', label: 'Administrador' },
-    { value: 'Evaluador', label: 'Evaluador' },
-    { value: 'Usuario', label: 'Simple Usuario' },
+    { value: 'admin', label: 'Administrador' },
+    { value: 'evaluador', label: 'Evaluador' },
 ];
 
 export function EditUserModal({
@@ -38,19 +39,19 @@ export function EditUserModal({
     isOpen,
     onClose,
     onConfirm,
+    auth,
 }: EditUserModalProps) {
     const [formData, setFormData] = useState({
         name: '',
         email: '',
         phone: '',
-        role: 'Usuario',
+        role: 'Evaluador',
     });
     const [errors, setErrors] = useState<{
         name?: string;
         email?: string;
         phone?: string;
     }>({});
-
     // Cargar datos del usuario cuando se abre el modal
     useEffect(() => {
         if (user && isOpen) {
@@ -82,7 +83,7 @@ export function EditUserModal({
         }
 
         // Validar teléfono (opcional pero si se ingresa debe ser válido)
-        if (formData.phone && !/^\+?[\d\s-]{10,}$/.test(formData.phone)) {
+        if (formData.phone && !/^\+?[\d\s-]{8,}$/.test(formData.phone)) {
             newErrors.phone = 'Teléfono inválido';
         }
 
@@ -143,6 +144,9 @@ export function EditUserModal({
                         </div>
                     </div>
                 </DialogHeader>
+                <DialogDescription className="sr-only">
+                    Muestra el formulario para editar un usuario
+                </DialogDescription>
 
                 <form onSubmit={handleSubmit} className="space-y-4 mt-4">
                     {/* Avatar y nombre actual */}
@@ -231,26 +235,28 @@ export function EditUserModal({
                         </div>
 
                         {/* Rol */}
-                        <div className="space-y-2">
-                            <Label
-                                htmlFor="edit-role"
-                                className="text-[#1e293b] dark:text-white/90"
-                            >
-                                Rol <span className="text-red-500">*</span>
-                            </Label>
-                            <select
-                                id="edit-role"
-                                value={formData.role}
-                                onChange={(e) => handleInputChange('role', e.target.value)}
-                                className="w-full h-10 px-3 rounded-md border border-[#e2e8f0] dark:border-[#20384b] bg-white dark:bg-[#0f1a23] text-[#1e293b] dark:text-white/90 focus:outline-none focus:ring-2 focus:ring-[#00AEEF] focus:border-transparent"
-                            >
-                                {roles.map((role) => (
-                                    <option key={role.value} value={role.value}>
-                                        {role.label}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
+                        {user.id !== auth.user.id && (
+                            <div className="space-y-2">
+                                <Label
+                                    htmlFor="edit-role"
+                                    className="text-[#1e293b] dark:text-white/90"
+                                >
+                                    Rol <span className="text-red-500">*</span>
+                                </Label>
+                                <select
+                                    id="edit-role"
+                                    value={formData.role}
+                                    onChange={(e) => handleInputChange('role', e.target.value)}
+                                    className="w-full h-10 px-3 rounded-md border border-[#e2e8f0] dark:border-[#20384b] bg-white dark:bg-[#0f1a23] text-[#1e293b] dark:text-white/90 focus:outline-none focus:ring-2 focus:ring-[#00AEEF] focus:border-transparent"
+                                >
+                                    {roles.map((role) => (
+                                        <option key={role.value} value={role.value}>
+                                            {role.label}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                        )}
                     </div>
 
                     <div className="bg-[#00AEEF]/10 border border-[#00AEEF]/20 rounded-lg p-3">

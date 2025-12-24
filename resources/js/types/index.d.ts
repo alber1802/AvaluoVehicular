@@ -21,6 +21,7 @@ export interface NavItem {
     href: NonNullable<InertiaLinkProps['href']>;
     icon?: LucideIcon | ComponentType<SVGProps<SVGSVGElement>> | null;
     isActive?: boolean;
+    roles?: string[];
 }
 
 export interface SharedData {
@@ -34,6 +35,7 @@ export interface SharedData {
 export interface User {
     id: number;
     name: string;
+    role: 'admin' | 'usuario' | 'evaluador';
     email: string;
     avatar?: string;
     email_verified_at: string | null;

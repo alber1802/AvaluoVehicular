@@ -4,6 +4,7 @@ import {
     DialogHeader,
     DialogTitle,
     DialogFooter,
+    DialogDescription,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -88,6 +89,9 @@ export function ChangePasswordModal({
                         </div>
                     </div>
                 </DialogHeader>
+                <DialogDescription className="sr-only">
+                    Muestra el formulario para cambiar la contraseña
+                </DialogDescription>
 
                 <form onSubmit={handleSubmit} className="space-y-4 mt-4">
                     <div className="space-y-2">

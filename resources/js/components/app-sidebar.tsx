@@ -27,21 +27,25 @@ const mainNavItems: NavItem[] = [
         title: 'Escritorio',
         href: dashboard(),
         icon: LayoutGrid,
+        roles: ['admin', 'evaluador', 'usuario'],
     },
     {
         title: 'Usuarios',
         href: usuariosListado(),
         icon: Users,
+        roles: ['admin'],
     },
     {
         title: 'Reciclaje',
         href: reciclajeListado(),
         icon: RecycleIcon,
+        roles: ['admin', 'evaluador'],
     },
     {
         title: 'Depreciación',
         href: consultar(),
         icon: ChartBarIcon,
+        roles: ['admin', 'evaluador', 'usuario'],
     },
 ];
 

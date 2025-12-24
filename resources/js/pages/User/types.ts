@@ -5,6 +5,7 @@ export interface User {
     phone?: string;
     role: string;
     is_active: boolean;
+    is_suspended: boolean;
     created_at: string;
     updated_at: string;
 }

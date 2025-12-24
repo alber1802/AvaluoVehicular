@@ -27,6 +27,17 @@ class DatabaseSeeder extends Seeder
                 'email_verified_at' => now(),
             ]
         );
+        User::firstOrCreate(
+            [
+                'name' => 'Evaluador',
+                'phone' => '12345678',
+                'email' => 'evaluador@admin.com',
+                'role' => 'evaluador',
+                'is_active' => true,
+                'password' => Hash::make('12345678'),
+                'email_verified_at' => now(),
+            ]
+        );
 
         // Ejecutar el seeder de avalúo
         $this->call([

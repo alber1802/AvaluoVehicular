@@ -3,6 +3,7 @@ import {
     DialogContent,
     DialogHeader,
     DialogTitle,
+    DialogDescription,
 } from '@/components/ui/dialog';
 import { Mail, Phone, Calendar, Shield, CheckCircle, XCircle } from 'lucide-react';
 import { type User } from '../types';
@@ -24,6 +25,9 @@ export function UserDetailModal({ user, isOpen, onClose }: UserDetailModalProps)
                         Detalles del Usuario
                     </DialogTitle>
                 </DialogHeader>
+                <DialogDescription className="sr-only">
+                    muestra los detalles del usuario
+                </DialogDescription>
                 <div className="space-y-6">
                     {/* Header con foto de perfil */}
                     <div className="flex items-center gap-4 p-4 bg-[#f8fafc] dark:bg-[#0f1a23] rounded-lg">

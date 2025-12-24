@@ -95,6 +95,13 @@ Route::prefix('archivos')->middleware(['auth', 'verified'])->group(function () {
 Route::prefix('usuarios')->middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/listado', [UserRegistroController::class, 'index'])->name('usuarios.listado');
+    Route::post('/crear', [UserRegistroController::class, 'store'])->name('usuarios.store');
+    Route::post('/actualizar/{id}', [UserRegistroController::class, 'update'])->name('usuarios.update');
+    Route::post('/cambiar-password/{id}', [UserRegistroController::class, 'changePassword'])->name('usuarios.changePassword');
+    Route::post('/cambiar-rol/{id}', [UserRegistroController::class, 'changeRole'])->name('usuarios.changeRole');
+    Route::post('/suspend/{id}', [UserRegistroController::class, 'changeSuspension'])->name('usuarios.suspend');
+    Route::delete('/eliminar/{id}', [UserRegistroController::class, 'destroy'])->name('usuarios.destroy');
+   
 
     
 });
