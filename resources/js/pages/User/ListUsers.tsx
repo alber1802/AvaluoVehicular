@@ -1,11 +1,11 @@
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
 import { type BreadcrumbItem } from '@/types';
-import { Head, useForm, router } from '@inertiajs/react';
+import { Head, useForm, router, usePage } from '@inertiajs/react';
 import { route } from 'ziggy-js';
 import { Button } from '@/components/ui/button';
 import { UserPlus } from 'lucide-react';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { SearchBar } from './components/SearchBar';
 import { UserTableRow } from './components/UserTableRow';
 import { UserDetailModal } from './components/UserDetailModal';
@@ -15,6 +15,7 @@ import { ChangeRoleModal } from './components/ChangeRoleModal';
 import { CreateUserModal } from './components/CreateUserModal';
 import { EditUserModal } from './components/EditUserModal';
 import { type User } from './types';
+import Toast from '@/components/Toast';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -164,8 +165,32 @@ export default function ListUsers({ users, auth }: ListUsersProps) {
         });
     };
 
+    const { flash } = usePage<{ flash: { success?: string; error?: string } }>().props;
+    const [showToast, setShowToast] = useState(false);
+    const [toastMessage, setToastMessage] = useState('');
+    const [toastType, setToastType] = useState<'success' | 'error' | 'warning' | 'info'>('success');
+    useEffect(() => {
+        if (flash?.success) {
+            setToastMessage(flash.success);
+            setToastType('success');
+            setShowToast(true);
+        }
+        if (flash?.error) {
+            setToastMessage(flash.error);
+            setToastType('error');
+            setShowToast(true);
+        }
+    }, [flash]);
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
+            {showToast && (
+                <Toast
+                    message={toastMessage}
+                    type={toastType}
+                    onClose={() => setShowToast(false)}
+                />
+            )}
             <Head title="Lista de Usuarios del Sistema" />
 
             <div className="space-y-6 m-1 lg:m-10">

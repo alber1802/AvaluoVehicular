@@ -195,11 +195,7 @@ class ImagenesController extends Controller
 
     //se tiene que enviar un id para ver que datos se estan manejando 
 
-    public function viewResultados(){
 
-
-        return Inertia::render('Registro/create/ViewResultado');
-    }
 
 
     //se tiene que enviar un id para ver que datos se estan manejando 

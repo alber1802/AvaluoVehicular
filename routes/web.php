@@ -60,7 +60,7 @@ Route::prefix('registro')->middleware(['auth', 'verified'])->group(function () {
     Route::post('/imagenes/vehiculo/store/{id}', [ImagenesController::class, 'store'])->name('imagenes.vehiculo.store');
 
     //decargar la imagen 
-    Route::get('/imagenes/vehiculo/download/{id}', [ImagenesController::class, 'descargarImagen'])->name('imagenes.vehiculo.download');
+   // Route::get('/imagenes/vehiculo/download/{id}', [ImagenesController::class, 'descargarImagen'])->name('imagenes.vehiculo.download');
     Route::get('/imagenes/vehiculo/edit/{id}', [ImagenesController::class, 'edit'])->name('imagenes.vehiculo.edit');
     Route::post('/imagenes/vehiculo/update/{id}', [ImagenesController::class, 'update'])->name('imagenes.vehiculo.update');
 

@@ -85,7 +85,7 @@ class CreateRegistroController extends Controller
         CondicionGeneral::create($condicionGeneral);
 
 
-        return redirect()->route('registro.seleccionar', $vehiculo->id);
+        return redirect()->route('registro.seleccionar', $vehiculo->id)->with('success', 'Vehiculo creado exitosamente');
         
     }
    
@@ -106,8 +106,6 @@ class CreateRegistroController extends Controller
         if(Avaluo::where('id_vehiculo', $vehiculo->id)->exists() &&  $hasImagenes) {
             
             return redirect()->route('dashboard');
-        }else{
-             return redirect()->route('imagenes.vehiculo', $vehiculo->id);
         }
         
         if (!$hasInspeccion && !$hasSistema) {

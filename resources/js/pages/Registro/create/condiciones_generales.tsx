@@ -6,6 +6,10 @@ import { route } from 'ziggy-js';
 import { Link } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
 import { ClipboardCheck, Wrench } from 'lucide-react';
+import Toast from '@/components/Toast';
+import { useEffect, useState } from 'react';
+import { usePage } from '@inertiajs/react';
+
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -19,8 +23,34 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function CondicionesGenerales({ id }: { id: number }) {
+
+    const { flash } = usePage<{ flash: { success?: string; error?: string } }>().props;
+
+    const [showToast, setShowToast] = useState(false);
+    const [toastMessage, setToastMessage] = useState('');
+    const [toastType, setToastType] = useState<'success' | 'error' | 'warning' | 'info'>('success');
+
+    useEffect(() => {
+        if (flash?.success) {
+            setToastMessage(flash.success);
+            setToastType('success');
+            setShowToast(true);
+        }
+        if (flash?.error) {
+            setToastMessage(flash.error);
+            setToastType('error');
+            setShowToast(true);
+        }
+    }, [flash]);
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
+            {showToast && (
+                <Toast
+                    message={toastMessage}
+                    type={toastType}
+                    onClose={() => setShowToast(false)}
+                />
+            )}
             <Head title="Elección de Método de Evaluación" />
 
             <div className="flex min-h-[calc(100vh-200px)] items-center justify-center">

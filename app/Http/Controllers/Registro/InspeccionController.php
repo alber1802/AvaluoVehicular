@@ -34,15 +34,6 @@ class InspeccionController extends Controller
         ]);
         }
     }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
     /**
      * Store a newly created resource in storage.
      */
@@ -73,18 +64,8 @@ class InspeccionController extends Controller
         // Inserta múltiples registros
         Inspeccion::insert($inspecciones);
 
-        return redirect()->route('resultados.avaluo.continuar', $id);
+        return redirect()->route('resultados.avaluo.continuar', $id)->with('success' , 'Se Creo correstamente la Inspeccion');
     }
-
-
-    /**
-     * Display the specified resource.
-     */
-    public function show($id)
-    {
-        
-    }
-
     /**
      * Show the form for editing the specified resource.
      */

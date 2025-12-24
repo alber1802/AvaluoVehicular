@@ -1,10 +1,10 @@
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
 import { type BreadcrumbItem } from '@/types';
-import { Head, router } from '@inertiajs/react';
+import { Head, router, usePage } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, ImageIcon, FileText } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ResultadoHeader from '../components/ResultadoHeader';
 import VehicleInfoCard from '../components/VehicleInfoCard';
 import VehicleIdentificationCard from '../components/VehicleIdentificationCard';
@@ -13,6 +13,7 @@ import DepreciacionCard from '../components/DepreciacionCard';
 import ImagenesModal from '../components/modals/ImagenesModal';
 import PdfModal from '../components/modals/PdfModal';
 import { route } from 'ziggy-js';
+import Toast from '@/components/Toast';
 
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -134,9 +135,35 @@ export default function Resultado({
         setIsPdfModalOpen(true);
     };
 
+    //para el Toast 
+    const { flash } = usePage<{ flash: { success?: string; error?: string } }>().props;
+    const [showToast, setShowToast] = useState(false);
+    const [toastMessage, setToastMessage] = useState('');
+    const [toastType, setToastType] = useState<'success' | 'error' | 'warning' | 'info'>('success');
+
+    useEffect(() => {
+        if (flash?.success) {
+            setToastMessage(flash.success);
+            setToastType('success');
+            setShowToast(true);
+        }
+        if (flash?.error) {
+            setToastMessage(flash.error);
+            setToastType('error');
+            setShowToast(true);
+        }
+    }, [flash]);
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Resultado de Evaluación" />
+            {showToast && (
+                <Toast
+                    message={toastMessage}
+                    type={toastType}
+                    onClose={() => setShowToast(false)}
+                />
+            )}
 
             <div className="h-full w-full">
                 <div className="rounded-lg border border-[#e2e8f0] bg-[#ffffff] p-6 shadow-sm dark:border-[#20384b] dark:bg-[#1a2c3a]">

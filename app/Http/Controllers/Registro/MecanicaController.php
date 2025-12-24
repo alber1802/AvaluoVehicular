@@ -29,15 +29,6 @@ class MecanicaController extends Controller
             ]);
         }
     }
-
-    /**
-     * Ruta para la evaluacion mecanica 
-     */
-    public function create()
-    {
-        //
-    }
-
     /**
      * Ruta para la evaluacion mecanica 
      */
@@ -78,13 +69,6 @@ class MecanicaController extends Controller
         return redirect()->route('resultados.avaluo.continuar', $id)->with('success', 'Evaluación mecánica guardada correctamente.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
 
     /**
      * Show the form for editing the specified resource.
