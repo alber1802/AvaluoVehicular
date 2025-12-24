@@ -29,6 +29,7 @@ return new class extends Migration
             $table->string('kilometraje', 50);
             $table->decimal('precio_referencial', 10, 2);
             $table->foreignId('id_evaluador')->constrained('users')->onDelete('cascade');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

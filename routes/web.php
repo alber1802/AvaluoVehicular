@@ -85,6 +85,8 @@ Route::prefix('registro')->middleware(['auth', 'verified'])->group(function () {
 
     //ruta para continuar avaluo 
     Route::get('/resultados/avaluo/continuar/{id}', [CreateRegistroController::class,'show'])->name('resultados.avaluo.continuar');
+
+ 
 });
 
 //aca dan las lista de los archivos pdf que se generen
@@ -109,6 +111,10 @@ Route::prefix('usuarios')->middleware(['auth', 'verified'])->group(function () {
 Route::prefix('reciclaje')->middleware(['auth', 'verified'])->group(function () {
     Route::get('/listado', [ResourceReciclajeController::class, 'index'])->name('reciclaje.index');
 
+    Route::get('/restore/{id}', [ResourceReciclajeController::class, 'restore'])->withTrashed()->name('reciclaje.restore');
+    Route::delete('/forceDelete/{id}', [ResourceReciclajeController::class, 'forceDelete'])->withTrashed()->name('reciclaje.forceDelete');
+    Route::delete('/destroy/{id}', [ResourceReciclajeController::class, 'destroy'])->name('reciclaje.destroy');
+   
     
 });
 

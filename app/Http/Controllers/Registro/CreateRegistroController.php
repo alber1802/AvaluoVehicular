@@ -14,6 +14,7 @@ use App\Models\Avaluo;
 use App\Models\VehiculoImagen;
 use App\Models\CondicionGeneral;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Facades\Storage;
 
 use Inertia\Response;
 
@@ -208,17 +209,6 @@ class CreateRegistroController extends Controller
     /**
      * Elimina el recurso especificado del almacenamiento.
      */
-    public function destroy($id)
-    {
-        $condicionGeneral = CondicionGeneral::find($id);
-        $vehiculo = Vehiculo::find($id);
-        
-        // if ($vehiculo) {
-        //     $vehiculo->Insepdelete();
-        // }
-        // if ($condicionGeneral) {
-        //     $condicionGeneral->delete();
-        // }
-        return redirect()->route('dashboard')->with('success', 'Vehículo eliminado correctamente');
-    }
+   
+
 }

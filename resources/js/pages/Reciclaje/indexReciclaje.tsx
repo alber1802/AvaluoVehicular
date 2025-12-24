@@ -1,14 +1,16 @@
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
 import { index as reciclaje } from '@/routes/reciclaje';
-import { type BreadcrumbItem } from '@/types';
-import { Head } from '@inertiajs/react';
+import { type BreadcrumbItem, type User } from '@/types';
+import { Head, router } from '@inertiajs/react';
 import { useState, useMemo } from 'react';
 import { AlertTriangle, Trash2, RotateCcw } from 'lucide-react';
 import { SearchBar } from './components/SearchBar';
 import { AvaluoTableRow } from './components/AvaluoTableRow';
 import { DeleteConfirmDialog } from './components/DeleteConfirmDialog';
 import { type AvaluoEliminado } from './types';
+
+import { route } from 'ziggy-js';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -21,94 +23,61 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-// Datos de ejemplo - Reemplazar con datos reales del backend
-const mockAvaluos: AvaluoEliminado[] = [
-    {
-        id: 1,
-        entidad: 'Empresa ABC S.A.',
-        marca: 'Toyota',
-        modelo: 'Corolla',
-        ano_fabricacion: '2018',
-        placa: 'ABC-123',
-        fecha_evaluacion: '2024-10-15T10:30:00Z',
-        deleted_at: '2024-11-15T14:20:00Z',
-        dias_restantes: 24,
-    },
-    {
-        id: 2,
-        entidad: 'Transportes XYZ Ltda.',
-        marca: 'Chevrolet',
-        modelo: 'Spark',
-        ano_fabricacion: '2020',
-        placa: 'XYZ-456',
-        fecha_evaluacion: '2024-09-20T09:15:00Z',
-        deleted_at: '2024-11-10T11:30:00Z',
-        dias_restantes: 19,
-    },
-    {
-        id: 3,
-        entidad: 'Comercial DEF',
-        marca: 'Mazda',
-        modelo: '3',
-        ano_fabricacion: '2019',
-        placa: 'DEF-789',
-        fecha_evaluacion: '2024-08-05T16:45:00Z',
-        deleted_at: '2024-11-18T08:10:00Z',
-        dias_restantes: 27,
-    },
-    {
-        id: 4,
-        entidad: 'Servicios GHI S.A.S.',
-        marca: 'Nissan',
-        modelo: 'Sentra',
-        ano_fabricacion: '2017',
-        placa: 'GHI-012',
-        fecha_evaluacion: '2024-07-12T13:20:00Z',
-        deleted_at: '2024-11-20T15:45:00Z',
-        dias_restantes: 29,
-    },
-    {
-        id: 5,
-        entidad: 'Logística JKL',
-        marca: 'Renault',
-        modelo: 'Logan',
-        ano_fabricacion: '2021',
-        placa: 'JKL-345',
-        fecha_evaluacion: '2024-11-01T10:00:00Z',
-        deleted_at: '2024-11-16T12:00:00Z',
-        dias_restantes: 25,
-    },
-];
+interface Usuario {
+    id: number;
+    name: string;
+}
 
-export default function ReciclajeIndex() {
+interface Props {
+    vehiculos: AvaluoEliminado[];
+    usuarios: Usuario[];
+    auth: { user: User };
+}
+
+// Datos de ejemplo - Reemplazar con datos reales del backend
+
+export default function ReciclajeIndex({ vehiculos, usuarios = [], auth }: Props) {
     const [searchQuery, setSearchQuery] = useState('');
+    const [diasFilter, setDiasFilter] = useState('all');
+    const [usuarioFilter, setUsuarioFilter] = useState('all');
     const [selectedAvaluo, setSelectedAvaluo] = useState<AvaluoEliminado | null>(null);
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
-    // Filtrar avalúos según búsqueda
+    // Filtrar avalúos según búsqueda y filtros
     const filteredAvaluos = useMemo(() => {
-        if (!searchQuery.trim()) return mockAvaluos;
+        let result = vehiculos;
 
-        const query = searchQuery.toLowerCase();
-        return mockAvaluos.filter(
-            (avaluo) =>
-                avaluo.entidad.toLowerCase().includes(query) ||
-                avaluo.marca.toLowerCase().includes(query) ||
-                avaluo.modelo.toLowerCase().includes(query) ||
-                avaluo.placa?.toLowerCase().includes(query) ||
-                avaluo.ano_fabricacion.includes(query),
-        );
-    }, [searchQuery]);
+        // Filtro por búsqueda de texto
+        if (searchQuery.trim()) {
+            const query = searchQuery.toLowerCase();
+            result = result.filter(
+                (avaluo) =>
+                    avaluo.entidad?.toLowerCase().includes(query) ||
+                    avaluo.marca?.toLowerCase().includes(query) ||
+                    avaluo.modelo?.toLowerCase().includes(query) ||
+                    avaluo.placa?.toLowerCase().includes(query) ||
+                    String(avaluo.año_fabricacion || '').toLowerCase().includes(query),
+            );
+        }
 
-    // Handlers
-    const handleViewAvaluo = (avaluo: AvaluoEliminado) => {
-        console.log('Ver avalúo:', avaluo);
-        // TODO: Implementar vista detallada del avalúo
-    };
+        // Filtro por días restantes
+        if (diasFilter !== 'all') {
+            const maxDias = parseInt(diasFilter);
+            result = result.filter((avaluo) => avaluo.dias_restantes <= maxDias);
+        }
+
+        // Filtro por usuario (solo para admin)
+        if (usuarioFilter !== 'all') {
+            const userId = parseInt(usuarioFilter);
+            result = result.filter((avaluo) => avaluo.id_evaluador === userId);
+        }
+
+        return result;
+    }, [searchQuery, diasFilter, usuarioFilter, vehiculos]);
+
 
     const handleRestoreAvaluo = (avaluo: AvaluoEliminado) => {
-        console.log('Restaurar avalúo:', avaluo);
-        // TODO: Implementar lógica de restauración con backend
+        router.get(route('reciclaje.restore', { id: avaluo.id }));
     };
 
     const handleDeleteAvaluo = (avaluo: AvaluoEliminado) => {
@@ -118,8 +87,8 @@ export default function ReciclajeIndex() {
 
     const handleConfirmDelete = () => {
         if (selectedAvaluo) {
-            console.log('Eliminar permanentemente avalúo:', selectedAvaluo);
-            // TODO: Implementar lógica de eliminación permanente con backend
+
+            router.delete(route('reciclaje.forceDelete', { id: selectedAvaluo.id }));
             setIsDeleteDialogOpen(false);
             setSelectedAvaluo(null);
         }
@@ -163,7 +132,16 @@ export default function ReciclajeIndex() {
 
                 {/* Search Bar */}
                 <div className="bg-white dark:bg-[#1a2c3a] rounded-lg border border-[#e2e8f0] dark:border-[#20384b] p-4">
-                    <SearchBar value={searchQuery} onChange={setSearchQuery} />
+                    <SearchBar
+                        value={searchQuery}
+                        onChange={setSearchQuery}
+                        diasFilter={diasFilter}
+                        onDiasFilterChange={setDiasFilter}
+                        usuarioFilter={usuarioFilter}
+                        onUsuarioFilterChange={setUsuarioFilter}
+                        usuarios={usuarios}
+                        isAdmin={auth.user.role === 'admin'}
+                    />
                 </div>
 
                 {/* Stats Cards */}
@@ -173,7 +151,7 @@ export default function ReciclajeIndex() {
                             Total Eliminados
                         </p>
                         <p className="text-2xl font-bold text-[#1e293b] dark:text-white/90 mt-1">
-                            {mockAvaluos.length}
+                            {vehiculos.length}
                         </p>
                     </div>
                     <div className="bg-white dark:bg-[#1a2c3a] rounded-lg border border-[#e2e8f0] dark:border-[#20384b] p-4">
@@ -181,7 +159,7 @@ export default function ReciclajeIndex() {
                             Eliminación Próxima (≤7 días)
                         </p>
                         <p className="text-2xl font-bold text-red-600 dark:text-red-400 mt-1">
-                            {mockAvaluos.filter((a) => a.dias_restantes <= 7).length}
+                            {vehiculos.filter((a) => a.dias_restantes <= 7).length}
                         </p>
                     </div>
                     <div className="bg-white dark:bg-[#1a2c3a] rounded-lg border border-[#e2e8f0] dark:border-[#20384b] p-4">
@@ -189,7 +167,7 @@ export default function ReciclajeIndex() {
                             Advertencia (≤15 días)
                         </p>
                         <p className="text-2xl font-bold text-orange-600 dark:text-orange-400 mt-1">
-                            {mockAvaluos.filter((a) => a.dias_restantes > 7 && a.dias_restantes <= 15).length}
+                            {vehiculos.filter((a) => a.dias_restantes > 7 && a.dias_restantes <= 15).length}
                         </p>
                     </div>
                     <div className="bg-white dark:bg-[#1a2c3a] rounded-lg border border-[#e2e8f0] dark:border-[#20384b] p-4">
@@ -237,7 +215,7 @@ export default function ReciclajeIndex() {
                                         <AvaluoTableRow
                                             key={avaluo.id}
                                             avaluo={avaluo}
-                                            onView={handleViewAvaluo}
+                                            auth={auth}
                                             onRestore={handleRestoreAvaluo}
                                             onDelete={handleDeleteAvaluo}
                                         />

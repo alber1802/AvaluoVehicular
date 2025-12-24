@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('url');
             $table->string('comentario')->nullable();
             $table->date('fecha')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

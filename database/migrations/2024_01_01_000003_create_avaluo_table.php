@@ -20,6 +20,7 @@ return new class extends Migration
             $table->decimal('depre_modelo', 5, 4); // porcentaje no mayor a 1
             $table->decimal('depre_kilometraje', 5, 4); // porcentaje no mayor a 1
             $table->decimal('depre_inspeccion', 5, 4); // porcentaje no mayor a 1
+            $table->softDeletes();
             $table->timestamps();
         });
     }

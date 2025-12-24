@@ -3,9 +3,11 @@ export interface AvaluoEliminado {
     entidad: string;
     marca: string;
     modelo: string;
-    ano_fabricacion: string;
+    año_fabricacion: string;
     placa: string;
     fecha_evaluacion: string;
     deleted_at: string;
     dias_restantes: number;
+    id_evaluador: number;
+    evaluador_nombre: string;
 }

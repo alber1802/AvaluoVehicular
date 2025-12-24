@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('estado_operativo', 100); // Ej: Operable, En reparación, etc.
             $table->string('estado_general', 100); // Ej: Bueno, Regular, Malo
             $table->text('observaciones')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

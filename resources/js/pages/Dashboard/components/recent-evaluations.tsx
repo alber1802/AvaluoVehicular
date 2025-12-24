@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Eye, Pencil, ArrowRight } from 'lucide-react';
+import { Eye, Pencil, ArrowRight, CookingPot, MoveRight } from 'lucide-react';
 import { Pagination } from './pagination';
 import { useState } from 'react';
 import { route } from 'ziggy-js';
@@ -34,6 +34,10 @@ export function RecentEvaluations({ vehiculos }: any) {
 
     const EditVehiculo = (id: number) => {
         router.get(route('resultados.avaluo.seleccionarEditar', { id: id }));
+    };
+
+    const DeleteVehiculo = (id: number) => {
+        router.delete(route('reciclaje.destroy', { id }));
     };
 
     const ContinueEvaluation = (id: number) => {
@@ -103,24 +107,41 @@ export function RecentEvaluations({ vehiculos }: any) {
                                     </td>
                                     <td className="py-4">
                                         {evaluation.value === 'No evaluado' ? (
-                                            <Button
-                                                variant="ghost"
-                                                onClick={() => ContinueEvaluation(evaluation.id)}
-                                                size="sm"
-                                                className="bg-[#00AEEF] text-white hover:bg-[#00AEEF]/90 dark:bg-[#00AEEF] 
-                                                dark:hover:bg-[#00AEEF]/90"
-                                            >
-                                                Continuar
-                                                <ArrowRight className="ml-1 h-4 w-4" />
-                                            </Button>
+                                            <div className="flex gap-2 space-x-2">
+                                                <Button
+                                                    variant="ghost"
+                                                    onClick={() => ContinueEvaluation(evaluation.id)}
+
+                                                    className="h-10 w-10 text-[#64748b] hover:bg-[#00AEEF]/10
+                                                        hover:text-[#00AEEF] dark:text-white/70 
+                                                        dark:hover:bg-[#00AEEF]/20 dark:hover:text-[#00AEEF]"
+                                                >
+                                                    Cont..
+                                                    {/* <MoveRight className="ml-1 h-4 w-4" /> */}
+                                                    {/* <ArrowRight className="ml-1 h-4 w-4" /> */}
+                                                </Button>
+
+                                                <Button
+                                                    variant="ghost"
+                                                    onClick={() => DeleteVehiculo(evaluation.id)}
+                                                    size="icon"
+                                                    className="h-8 w-8 text-[#64748b] hover:bg-[#00AEEF]/10 hover:text-
+                                                    [#00AEEF] dark:text-white/70 dark:hover:bg-[#00AEEF]/20 
+                                                    dark:hover:text-[#00AEEF]"
+                                                >
+                                                    <CookingPot className="h-4 w-4" />
+                                                </Button>
+                                            </div>
+
                                         ) : (
                                             <div className="flex gap-2">
                                                 <Button
                                                     variant="ghost"
                                                     size="icon"
                                                     onClick={() => ViewVehiculo(evaluation.id)}
-                                                    className="h-8 w-8 text-[#64748b] hover:bg-[#00AEEF]/10 hover:text-[#00AEEF] 
-                                                    dark:text-white/70 dark:hover:bg-[#00AEEF]/20 dark:hover:text-[#00AEEF]"
+                                                    className="h-8 w-8 text-[#64748b] hover:bg-[#00AEEF]/10
+                                                     hover:text-[#00AEEF] dark:text-white/70 
+                                                     dark:hover:bg-[#00AEEF]/20 dark:hover:text-[#00AEEF]"
                                                 >
                                                     <Eye className="h-4 w-4" />
                                                 </Button>
@@ -128,9 +149,21 @@ export function RecentEvaluations({ vehiculos }: any) {
                                                     variant="ghost"
                                                     onClick={() => EditVehiculo(evaluation.id)}
                                                     size="icon"
-                                                    className="h-8 w-8 text-[#64748b] hover:bg-[#00AEEF]/10 hover:text-[#00AEEF] dark:text-white/70 dark:hover:bg-[#00AEEF]/20 dark:hover:text-[#00AEEF]"
+                                                    className="h-8 w-8 text-[#64748b] hover:bg-[#00AEEF]/10 
+                                                    hover:text-[#00AEEF] dark:text-white/70 dark:hover:bg-
+                                                    [#00AEEF]/20 dark:hover:text-[#00AEEF]"
                                                 >
                                                     <Pencil className="h-4 w-4" />
+                                                </Button>
+                                                <Button
+                                                    variant="ghost"
+                                                    onClick={() => DeleteVehiculo(evaluation.id)}
+                                                    size="icon"
+                                                    className="h-8 w-8 text-[#64748b] hover:bg-[#00AEEF]/10 hover:text-
+                                                    [#00AEEF] dark:text-white/70 dark:hover:bg-[#00AEEF]/20 
+                                                    dark:hover:text-[#00AEEF]"
+                                                >
+                                                    <CookingPot className="h-4 w-4" />
                                                 </Button>
                                             </div>
                                         )}

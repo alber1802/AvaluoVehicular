@@ -6,25 +6,27 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { type User } from '@/types';
 import {
     MoreVertical,
     Trash2,
     RotateCcw,
     Eye,
     Clock,
+    GripHorizontal,
 } from 'lucide-react';
 import { type AvaluoEliminado } from '../types';
 
 interface AvaluoTableRowProps {
     avaluo: AvaluoEliminado;
-    onView: (avaluo: AvaluoEliminado) => void;
+    auth: { user: User };
     onRestore: (avaluo: AvaluoEliminado) => void;
     onDelete: (avaluo: AvaluoEliminado) => void;
 }
 
 export function AvaluoTableRow({
     avaluo,
-    onView,
+    auth,
     onRestore,
     onDelete,
 }: AvaluoTableRowProps) {
@@ -63,7 +65,7 @@ export function AvaluoTableRow({
                 </div>
             </td>
             <td className="px-6 py-4 text-[#64748b] dark:text-white/70">
-                {avaluo.ano_fabricacion}
+                {avaluo.año_fabricacion}
             </td>
             <td className="px-6 py-4">
                 <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#00AEEF]/10 text-[#00AEEF]">
@@ -85,14 +87,6 @@ export function AvaluoTableRow({
             </td>
             <td className="px-6 py-4">
                 <div className="flex items-center gap-2">
-                    <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => onView(avaluo)}
-                        className="text-[#00AEEF] hover:text-[#00AEEF] hover:bg-[#00AEEF]/10"
-                    >
-                        <Eye className="w-4 h-4" />
-                    </Button>
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button
@@ -100,7 +94,7 @@ export function AvaluoTableRow({
                                 size="sm"
                                 className="text-[#64748b] dark:text-white/70"
                             >
-                                <MoreVertical className="w-4 h-4" />
+                                <GripHorizontal className="w-4 h-4" />
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent
@@ -115,13 +109,15 @@ export function AvaluoTableRow({
                                 Restaurar
                             </DropdownMenuItem>
                             <DropdownMenuSeparator className="bg-[#e2e8f0] dark:bg-[#20384b]" />
-                            <DropdownMenuItem
-                                onClick={() => onDelete(avaluo)}
-                                className="cursor-pointer text-red-600 dark:text-red-400"
-                            >
-                                <Trash2 className="w-4 h-4 mr-2" />
-                                Eliminar Permanentemente
-                            </DropdownMenuItem>
+                            {auth.user.role === 'admin' && (
+                                <DropdownMenuItem
+                                    onClick={() => onDelete(avaluo)}
+                                    className="cursor-pointer text-red-600 dark:text-red-400"
+                                >
+                                    <Trash2 className="w-4 h-4 mr-2" />
+                                    Eliminar Permanentemente
+                                </DropdownMenuItem>
+                            )}
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>

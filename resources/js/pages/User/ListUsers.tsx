@@ -241,7 +241,7 @@ export default function ListUsers({ users, auth }: ListUsersProps) {
                             Usuarios Suspendidos
                         </p>
                         <p className="text-2xl font-bold text-red-600 dark:text-red-400 mt-1">
-                            {users.filter((u) => !u.is_suspended).length}
+                            {users.filter((u) => u.is_suspended).length}
                         </p>
                     </div>
                     {/* <div className="bg-white dark:bg-[#1a2c3a] rounded-lg border border-[#e2e8f0] dark:border-[#20384b] p-4">

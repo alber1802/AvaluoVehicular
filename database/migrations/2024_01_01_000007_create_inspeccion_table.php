@@ -19,6 +19,7 @@ return new class extends Migration
             $table->boolean('tiene');
             $table->decimal('valoracion', 5, 4)->nullable(); // porcentaje por ejemplo 0.025
             $table->string('observaciones')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

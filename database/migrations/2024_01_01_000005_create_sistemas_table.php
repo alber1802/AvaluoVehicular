@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('componente', 100); // Ej: Alternador, Tablero, Amortiguadores
             $table->string('estado', 5)->nullable(); // B, R, RC, RR, RRe
             $table->text('observaciones')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
