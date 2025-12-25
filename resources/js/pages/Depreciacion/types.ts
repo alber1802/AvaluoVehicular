@@ -1,7 +1,7 @@
 export interface MarcaDepreciacion {
-    id: string;
-    marca: string;
-    factor_k: number;
+    id: number;
+    nombre: string;
+    tasa_k: number;
     valor_residual: number;
 }
 

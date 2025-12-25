@@ -1,9 +1,8 @@
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
-import { consultar } from '@/routes/depreciacion';
 import { type BreadcrumbItem } from '@/types';
-import { Head, router } from '@inertiajs/react';
-import { useState, useMemo } from 'react';
+import { Head, router, usePage } from '@inertiajs/react';
+import { useState, useMemo, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -32,20 +31,17 @@ import {
     Legend,
     ResponsiveContainer,
 } from 'recharts';
-import { Plus, Trash2, Download, TrendingDown, Calculator, AlertCircle, Edit, Percent } from 'lucide-react';
+import { Plus, Trash2, Download, TrendingDown, Calculator, Edit, Percent } from 'lucide-react';
 import { type MarcaDepreciacion, type DepreciacionAnual } from './types';
 import { CreateMarcaModal } from './components/CreateMarcaModal';
 import { EditMarcaModal } from './components/EditMarcaModal';
 import { DeleteMarcaDialog } from './components/DeleteMarcaDialog';
+import Toast from '@/components/Toast';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Dashboard',
         href: dashboard().url,
-    },
-    {
-        title: 'Depreciación',
-        href: consultar().url,
     },
     {
         title: 'Depreciación por Marca',
@@ -57,23 +53,11 @@ interface DepreMarcaVehiculoProps {
     marcas?: MarcaDepreciacion[];
 }
 
-// Datos de prueba de marcas
-const marcasPrueba: MarcaDepreciacion[] = [
-    { id: '1', marca: 'Toyota', factor_k: 0.05, valor_residual: 0.107 },
-    { id: '2', marca: 'Chevrolet', factor_k: 0.08, valor_residual: 0.107 },
-    { id: '3', marca: 'Nissan', factor_k: 0.06, valor_residual: 0.107 },
-    { id: '4', marca: 'Mazda', factor_k: 0.07, valor_residual: 0.107 },
-    { id: '5', marca: 'Honda', factor_k: 0.04, valor_residual: 0.107 },
-    { id: '6', marca: 'Hyundai', factor_k: 0.09, valor_residual: 0.107 },
-    { id: '7', marca: 'Kia', factor_k: 0.04, valor_residual: 0.107 },
-    { id: '8', marca: 'Ford', factor_k: 0.07, valor_residual: 0.107 },
-];
-
-export default function DepreMarcaVehiculo({ marcas: marcasIniciales = marcasPrueba }: DepreMarcaVehiculoProps) {
+export default function DepreMarcaVehiculo({ marcas: marcasIniciales = [] }: DepreMarcaVehiculoProps) {
     const [marcas, setMarcas] = useState<MarcaDepreciacion[]>(marcasIniciales);
     const [anoActual, setAnoActual] = useState<number>(new Date().getFullYear());
     const [anoModelo, setAnoModelo] = useState<number>(2020);
-    const [marcaSeleccionada, setMarcaSeleccionada] = useState<string | null>(null);
+    const [marcaSeleccionada, setMarcaSeleccionada] = useState<number | null>(null);
     const [mostrarResultados, setMostrarResultados] = useState(false);
 
     // Estados para modales
@@ -95,13 +79,13 @@ export default function DepreMarcaVehiculo({ marcas: marcasIniciales = marcasPru
 
         while (anoActualCalculo <= anoActual) {
             const antiguedad = anoActualCalculo - anoModelo;
-            const factor_a = Math.max(1 - marca.factor_k * antiguedad, marca.valor_residual);
+            const factor_a = Math.max(1 - marca.tasa_k * antiguedad, marca.valor_residual);
 
             resultados.push({
                 ano_actual: anoActualCalculo,
                 antiguedad,
                 ano_modelo: anoModelo,
-                factor_k: marca.factor_k,
+                factor_k: marca.tasa_k,
                 valor_residual: marca.valor_residual,
                 factor_a: parseFloat(factor_a.toFixed(4)),
             });
@@ -123,7 +107,7 @@ export default function DepreMarcaVehiculo({ marcas: marcasIniciales = marcasPru
         if (!marca) return null;
 
         const antiguedad = anoActual - anoModelo;
-        const depreciacion = antiguedad * marca.factor_k * 100;
+        const depreciacion = antiguedad * marca.tasa_k * 100;
 
         return {
             porcentaje: Math.min(depreciacion, (1 - marca.valor_residual) * 100).toFixed(2),
@@ -131,44 +115,40 @@ export default function DepreMarcaVehiculo({ marcas: marcasIniciales = marcasPru
         };
     }, [calcularDepreciacion, marcaSeleccionada, marcas, anoActual, anoModelo]);
 
-    // Handlers para modales
-    const handleCreateMarca = (data: { marca: string; factor_k: number; valor_residual: number }) => {
-        // TODO: Enviar al backend
-        console.log('Crear marca:', data);
-        // router.post('/depreciacion/marcas', data);
-
-        // Simulación temporal
-        const nuevaMarca: MarcaDepreciacion = {
-            id: Date.now().toString(),
-            ...data,
-        };
-        setMarcas([...marcas, nuevaMarca]);
+    // Handlers para modales - Conectados al backend
+    const handleCreateMarca = (data: { nombre: string; tasa_k: number; valor_residual: number }) => {
+        router.post('/depreciacion/crear', data, {
+            preserveScroll: true,
+            onSuccess: () => {
+                setIsCreateModalOpen(false);
+            },
+        });
     };
 
-    const handleEditMarca = (id: string, data: { marca: string; factor_k: number; valor_residual: number }) => {
-        // TODO: Enviar al backend
-        console.log('Editar marca:', id, data);
-        // router.put(`/depreciacion/marcas/${id}`, data);
-
-        // Simulación temporal
-        setMarcas(marcas.map((m) => (m.id === id ? { ...m, ...data } : m)));
+    const handleEditMarca = (id: number, data: { nombre: string; tasa_k: number; valor_residual: number }) => {
+        router.post(`/depreciacion/actualizar/${id}`, data, {
+            preserveScroll: true,
+            onSuccess: () => {
+                setIsEditModalOpen(false);
+                setMarcaParaEditar(null);
+            },
+        });
     };
 
     const handleDeleteMarca = () => {
         if (!marcaParaEliminar) return;
 
-        // TODO: Enviar al backend
-        console.log('Eliminar marca:', marcaParaEliminar.id);
-        // router.delete(`/depreciacion/marcas/${marcaParaEliminar.id}`);
-
-        // Simulación temporal
-        setMarcas(marcas.filter((m) => m.id !== marcaParaEliminar.id));
-        if (marcaSeleccionada === marcaParaEliminar.id) {
-            setMarcaSeleccionada(null);
-            setMostrarResultados(false);
-        }
-        setIsDeleteDialogOpen(false);
-        setMarcaParaEliminar(null);
+        router.delete(`/depreciacion/eliminar/${marcaParaEliminar.id}`, {
+            preserveScroll: true,
+            onSuccess: () => {
+                if (marcaSeleccionada === marcaParaEliminar.id) {
+                    setMarcaSeleccionada(null);
+                    setMostrarResultados(false);
+                }
+                setIsDeleteDialogOpen(false);
+                setMarcaParaEliminar(null);
+            },
+        });
     };
 
     const abrirModalEditar = (marca: MarcaDepreciacion) => {
@@ -183,11 +163,9 @@ export default function DepreMarcaVehiculo({ marcas: marcasIniciales = marcasPru
 
     const generarTabla = () => {
         if (!marcaSeleccionada) {
-            // alert('Por favor seleccione una marca');
             return;
         }
         if (anoModelo > anoActual) {
-            // alert('El año de modelo no puede ser mayor al año actual');
             return;
         }
         setMostrarResultados(true);
@@ -218,8 +196,38 @@ export default function DepreMarcaVehiculo({ marcas: marcasIniciales = marcasPru
         a.click();
     };
 
+    const { flash } = usePage<{ flash: { success?: string; error?: string } }>().props;
+
+    // Estados para controlar el Toast
+    const [showToast, setShowToast] = useState(false);
+    const [toastMessage, setToastMessage] = useState('');
+    const [toastType, setToastType] = useState<'success' | 'error' | 'warning' | 'info'>('success');
+
+    // Detectar cuando llega un flash message
+    useEffect(() => {
+        if (flash?.success) {
+            setToastMessage(flash.success);
+            setToastType('success');
+            setShowToast(true);
+        }
+        if (flash?.error) {
+            setToastMessage(flash.error);
+            setToastType('error');
+            setShowToast(true);
+        }
+
+    }, [flash]);
+
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
+            {showToast && (
+                <Toast
+                    message={toastMessage}
+                    type={toastType}
+                    onClose={() => setShowToast(false)}
+                />
+            )}
             <Head title="Depreciación por Marca de Vehículo" />
 
             <div className="space-y-6 m-1 lg:m-10">
@@ -258,7 +266,7 @@ export default function DepreMarcaVehiculo({ marcas: marcasIniciales = marcasPru
                             <TableHeader>
                                 <TableRow className="bg-[#f8fafc] dark:bg-[#0f1a23] border-b border-[#e2e8f0] dark:border-[#20384b]">
                                     <TableHead className="text-[#64748b] dark:text-white/70">Marca</TableHead>
-                                    <TableHead className="text-[#64748b] dark:text-white/70">Factor K</TableHead>
+                                    <TableHead className="text-[#64748b] dark:text-white/70">Tasa K</TableHead>
                                     <TableHead className="text-[#64748b] dark:text-white/70">Valor Residual</TableHead>
                                     <TableHead className="text-[#64748b] dark:text-white/70">Acciones</TableHead>
                                 </TableRow>
@@ -271,13 +279,13 @@ export default function DepreMarcaVehiculo({ marcas: marcasIniciales = marcasPru
                                             className="border-b border-[#e2e8f0] dark:border-[#20384b] hover:bg-[#f8fafc] dark:hover:bg-[#1a2c3a]"
                                         >
                                             <TableCell className="font-medium text-[#1e293b] dark:text-white/90">
-                                                {marca.marca}
+                                                {marca.nombre}
                                             </TableCell>
                                             <TableCell className="text-[#64748b] dark:text-white/70">
-                                                {marca.factor_k.toFixed(2)}
+                                                {marca.tasa_k}
                                             </TableCell>
                                             <TableCell className="text-[#64748b] dark:text-white/70">
-                                                {marca.valor_residual.toFixed(3)}
+                                                {marca.valor_residual}
                                             </TableCell>
                                             <TableCell>
                                                 <div className="flex items-center gap-2">
@@ -327,14 +335,17 @@ export default function DepreMarcaVehiculo({ marcas: marcasIniciales = marcasPru
                             <Label htmlFor="marca" className="text-[#1e293b] dark:text-white/90">
                                 Seleccionar Marca <span className="text-red-500">*</span>
                             </Label>
-                            <Select value={marcaSeleccionada || ''} onValueChange={setMarcaSeleccionada}>
+                            <Select
+                                value={marcaSeleccionada?.toString() || ''}
+                                onValueChange={(value) => setMarcaSeleccionada(Number(value))}
+                            >
                                 <SelectTrigger className="bg-white dark:bg-[#0f1a23] border-[#e2e8f0] dark:border-[#20384b]">
                                     <SelectValue placeholder="Seleccione una marca" />
                                 </SelectTrigger>
                                 <SelectContent>
                                     {marcas.map((marca) => (
-                                        <SelectItem key={marca.id} value={marca.id}>
-                                            {marca.marca}
+                                        <SelectItem key={marca.id} value={marca.id.toString()}>
+                                            {marca.nombre}
                                         </SelectItem>
                                     ))}
                                 </SelectContent>
@@ -422,7 +433,7 @@ export default function DepreMarcaVehiculo({ marcas: marcasIniciales = marcasPru
                                         <TableHead className="text-[#64748b] dark:text-white/70">Año Actual</TableHead>
                                         <TableHead className="text-[#64748b] dark:text-white/70">Antigüedad</TableHead>
                                         <TableHead className="text-[#64748b] dark:text-white/70">Año Modelo</TableHead>
-                                        <TableHead className="text-[#64748b] dark:text-white/70">Factor K</TableHead>
+                                        <TableHead className="text-[#64748b] dark:text-white/70">Tasa K</TableHead>
                                         <TableHead className="text-[#64748b] dark:text-white/70">Valor Residual</TableHead>
                                         <TableHead className="text-[#64748b] dark:text-white/70">Factor A</TableHead>
                                     </TableRow>
@@ -443,10 +454,10 @@ export default function DepreMarcaVehiculo({ marcas: marcasIniciales = marcasPru
                                                 {dep.ano_modelo}
                                             </TableCell>
                                             <TableCell className="text-[#64748b] dark:text-white/70">
-                                                {dep.factor_k.toFixed(2)}
+                                                {dep.factor_k}
                                             </TableCell>
                                             <TableCell className="text-[#64748b] dark:text-white/70">
-                                                {dep.valor_residual.toFixed(3)}
+                                                {dep.valor_residual}
                                             </TableCell>
                                             <TableCell className="font-semibold text-[#00AEEF]">
                                                 {dep.factor_a.toFixed(4)}
@@ -485,7 +496,6 @@ export default function DepreMarcaVehiculo({ marcas: marcasIniciales = marcasPru
                                     />
                                     <Tooltip
                                         contentStyle={{
-                                            //backgroundColor: '#ffffff',
                                             color: '#1e293b',
                                             border: '1px solid #e2e8f0',
                                             borderRadius: '8px',
@@ -532,7 +542,7 @@ export default function DepreMarcaVehiculo({ marcas: marcasIniciales = marcasPru
                     setMarcaParaEliminar(null);
                 }}
                 onConfirm={handleDeleteMarca}
-                marcaNombre={marcaParaEliminar?.marca || null}
+                marcaNombre={marcaParaEliminar?.nombre || null}
             />
         </AppLayout>
     );

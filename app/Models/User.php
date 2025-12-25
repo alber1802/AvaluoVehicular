@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
 {
@@ -54,5 +55,14 @@ class User extends Authenticatable
             'password' => 'hashed',
             'two_factor_confirmed_at' => 'datetime',
         ];
+    }
+    public function marcas(): HasMany
+    {
+        return $this->hasMany(MarcaVehiculo::class, 'user_id');
+    }
+    
+    public function vehiculos(): HasMany
+    {
+        return $this->hasMany(Vehiculo::class, 'id_evaluador');
     }
 }

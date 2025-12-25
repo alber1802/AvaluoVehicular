@@ -16,18 +16,18 @@ interface EditMarcaModalProps {
     marca: MarcaDepreciacion | null;
     isOpen: boolean;
     onClose: () => void;
-    onConfirm: (id: string, data: { marca: string; factor_k: number; valor_residual: number }) => void;
+    onConfirm: (id: number, data: { nombre: string; tasa_k: number; valor_residual: number }) => void;
 }
 
 export function EditMarcaModal({ marca, isOpen, onClose, onConfirm }: EditMarcaModalProps) {
     const [formData, setFormData] = useState({
-        marca: '',
-        factor_k: 0.04,
+        nombre: '',
+        tasa_k: 0.04,
         valor_residual: 0.107,
     });
     const [errors, setErrors] = useState<{
-        marca?: string;
-        factor_k?: string;
+        nombre?: string;
+        tasa_k?: string;
         valor_residual?: string;
     }>({});
 
@@ -35,8 +35,8 @@ export function EditMarcaModal({ marca, isOpen, onClose, onConfirm }: EditMarcaM
     useEffect(() => {
         if (marca && isOpen) {
             setFormData({
-                marca: marca.marca,
-                factor_k: marca.factor_k,
+                nombre: marca.nombre,
+                tasa_k: marca.tasa_k,
                 valor_residual: marca.valor_residual,
             });
             setErrors({});
@@ -46,18 +46,18 @@ export function EditMarcaModal({ marca, isOpen, onClose, onConfirm }: EditMarcaM
     const validateForm = () => {
         const newErrors: typeof errors = {};
 
-        // Validar marca
-        if (!formData.marca.trim()) {
-            newErrors.marca = 'El nombre de la marca es requerido';
-        } else if (formData.marca.trim().length < 2) {
-            newErrors.marca = 'El nombre debe tener al menos 2 caracteres';
+        // Validar nombre
+        if (!formData.nombre.trim()) {
+            newErrors.nombre = 'El nombre de la marca es requerido';
+        } else if (formData.nombre.trim().length < 2) {
+            newErrors.nombre = 'El nombre debe tener al menos 2 caracteres';
         }
 
-        // Validar factor_k según Ley 843 Art. 60
-        if (formData.factor_k < 0.08) {
-            newErrors.factor_k = 'El Factor K no puede ser menor a 0.08 (Ley 843 Art. 60)';
-        } else if (formData.factor_k > 0.04) {
-            newErrors.factor_k = 'El Factor K no puede ser mayor a 0.04 (Ley 843 Art. 60)';
+        // Validar tasa_k según Ley 843 Art. 60
+        if (formData.tasa_k < 0.04) {
+            newErrors.tasa_k = 'La Tasa K no puede ser menor a 0.04 (Ley 843 Art. 60)';
+        } else if (formData.tasa_k > 0.08) {
+            newErrors.tasa_k = 'La Tasa K no puede ser mayor a 0.08 (Ley 843 Art. 60)';
         }
 
         // Validar valor_residual según Ley 843 Art. 60
@@ -76,8 +76,8 @@ export function EditMarcaModal({ marca, isOpen, onClose, onConfirm }: EditMarcaM
 
         if (validateForm() && marca) {
             onConfirm(marca.id, {
-                marca: formData.marca.trim(),
-                factor_k: formData.factor_k,
+                nombre: formData.nombre.trim(),
+                tasa_k: formData.tasa_k,
                 valor_residual: formData.valor_residual,
             });
             handleClose();
@@ -86,8 +86,8 @@ export function EditMarcaModal({ marca, isOpen, onClose, onConfirm }: EditMarcaM
 
     const handleClose = () => {
         setFormData({
-            marca: '',
-            factor_k: 0.04,
+            nombre: '',
+            tasa_k: 0.04,
             valor_residual: 0.107,
         });
         setErrors({});
@@ -132,7 +132,7 @@ export function EditMarcaModal({ marca, isOpen, onClose, onConfirm }: EditMarcaM
                                     Restricciones según Ley 843 - Artículo 60
                                 </p>
                                 <ul className="text-xs text-orange-800 dark:text-orange-400 mt-1 space-y-0.5">
-                                    <li>• Factor K: Entre 0.08 y 0.04</li>
+                                    <li>• Tasa K: Entre 0.04 y 0.08</li>
                                     <li>• Valor Residual: Entre 0.107 y 0.20</li>
                                 </ul>
                             </div>
@@ -140,41 +140,41 @@ export function EditMarcaModal({ marca, isOpen, onClose, onConfirm }: EditMarcaM
                     </div>
 
                     <div className="grid grid-cols-1 gap-4">
-                        {/* Marca */}
+                        {/* Nombre */}
                         <div className="space-y-2">
-                            <Label htmlFor="edit-marca" className="text-[#1e293b] dark:text-white/90">
+                            <Label htmlFor="edit-nombre" className="text-[#1e293b] dark:text-white/90">
                                 Nombre de la Marca <span className="text-red-500">*</span>
                             </Label>
                             <Input
-                                id="edit-marca"
+                                id="edit-nombre"
                                 type="text"
-                                value={formData.marca}
-                                onChange={(e) => handleInputChange('marca', e.target.value)}
+                                value={formData.nombre}
+                                onChange={(e) => handleInputChange('nombre', e.target.value)}
                                 placeholder="Ej: Toyota, Chevrolet, Nissan"
                                 className="bg-white dark:bg-[#0f1a23] border-[#e2e8f0] dark:border-[#20384b] text-[#1e293b] dark:text-white/90"
                             />
-                            {errors.marca && (
-                                <p className="text-sm text-red-600 dark:text-red-400">{errors.marca}</p>
+                            {errors.nombre && (
+                                <p className="text-sm text-red-600 dark:text-red-400">{errors.nombre}</p>
                             )}
                         </div>
 
-                        {/* Factor K */}
+                        {/* Tasa K */}
                         <div className="space-y-2">
-                            <Label htmlFor="edit-factor_k" className="text-[#1e293b] dark:text-white/90">
-                                Factor K (Tasa de Depreciación Anual) <span className="text-red-500">*</span>
+                            <Label htmlFor="edit-tasa_k" className="text-[#1e293b] dark:text-white/90">
+                                Tasa K (Tasa de Depreciación Anual) <span className="text-red-500">*</span>
                             </Label>
                             <Input
-                                id="edit-factor_k"
+                                id="edit-tasa_k"
                                 type="number"
                                 step="0.01"
                                 min="0.04"
                                 max="0.08"
-                                value={formData.factor_k}
-                                onChange={(e) => handleInputChange('factor_k', parseFloat(e.target.value))}
+                                value={formData.tasa_k}
+                                onChange={(e) => handleInputChange('tasa_k', parseFloat(e.target.value))}
                                 className="bg-white dark:bg-[#0f1a23] border-[#e2e8f0] dark:border-[#20384b] text-[#1e293b] dark:text-white/90"
                             />
-                            {errors.factor_k && (
-                                <p className="text-sm text-red-600 dark:text-red-400">{errors.factor_k}</p>
+                            {errors.tasa_k && (
+                                <p className="text-sm text-red-600 dark:text-red-400">{errors.tasa_k}</p>
                             )}
                             <p className="text-xs text-[#64748b] dark:text-white/60">
                                 Valor decimal entre 0.04 y 0.08

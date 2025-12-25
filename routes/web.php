@@ -11,6 +11,7 @@ use App\Http\Controllers\Registro\ImagenesController;
 use App\Http\Controllers\User\UserRegistroController;
 use App\Http\Controllers\Reciclaje\ResourceReciclajeController;
 use  App\Http\Controllers\Registro\AvaluoController;
+use App\Http\Controllers\MarcasController;
 use App\Http\Controllers\ArchivoControler;
 
 
@@ -121,13 +122,10 @@ Route::prefix('reciclaje')->middleware(['auth', 'verified'])->group(function () 
 
 Route::prefix('depreciacion')->middleware(['auth', 'verified'])->group(function () {
 
-    Route::get('/consultar', function () {
-
-        return Inertia::render('Depreciacion/DepreMarcaVehiculo');
-
-    })->name('depreciacion.consultar');
-
-    
+    Route::get('/consultar', [MarcasController::class, 'index'])->name('depreciacion.consultar');
+    Route::post('/crear', [MarcasController::class, 'store'])->name('depreciacion.store');
+    Route::post('/actualizar/{id}', [MarcasController::class, 'update'])->name('depreciacion.update');
+    Route::delete('/eliminar/{id}', [MarcasController::class, 'destroy'])->name('depreciacion.destroy');
 });
 //vista de pudra R
 //Route::get('/pdf/{id}', [ArchivoControler::class, 'vista'])->name('pdf.vista');

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class MarcaVehiculo extends Model
 {
@@ -16,11 +17,12 @@ class MarcaVehiculo extends Model
         'nombre',
         'tasa_k',
         'valor_residual',
+        'user_id'
     ];
 
     protected $casts = [
-        'tasa_k' => 'decimal:2',
-        'valor_residual' => 'decimal:2',
+        'tasa_k' => 'decimal:3',
+        'valor_residual' => 'decimal:3',
     ];
 
     /**
@@ -29,5 +31,9 @@ class MarcaVehiculo extends Model
     public function vehiculos(): HasMany
     {
         return $this->hasMany(Vehiculo::class, 'id_marca');
+    }
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }

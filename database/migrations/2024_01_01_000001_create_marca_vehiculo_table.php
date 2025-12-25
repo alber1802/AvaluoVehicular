@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('nombre');
             $table->decimal('tasa_k', 8, 2); // 0.05 o 0.04
             $table->decimal('valor_residual', 8, 2);
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->timestamps();
         });
     }

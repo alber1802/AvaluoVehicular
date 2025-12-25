@@ -26,6 +26,7 @@ class AvaluoSeeder extends Seeder
             'nombre' => 'Toyota',
             'tasa_k' => 0.04,
             'valor_residual' => 0.10,
+            'user_id' => 1,
         ]);
 
         // 2. Insertar los datos principales del vehículo
