@@ -33,8 +33,11 @@ interface ListUsersProps {
     auth: { user: User };
 }
 
+type StatusFilter = 'all' | 'active' | 'suspended';
+
 export default function ListUsers({ users, auth }: ListUsersProps) {
     const [searchQuery, setSearchQuery] = useState('');
+    const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
     const [selectedUser, setSelectedUser] = useState<User | null>(null);
     const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
     const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] = useState(false);
@@ -55,19 +58,31 @@ export default function ListUsers({ users, auth }: ListUsersProps) {
         variant: 'danger',
     });
 
-    // Filtrar usuarios según búsqueda
+    // Filtrar usuarios según búsqueda y estado
     const filteredUsers = useMemo(() => {
-        if (!searchQuery.trim()) return users;
+        let result = users;
 
-        const query = searchQuery.toLowerCase();
-        return users.filter(
-            (user) =>
-                user.name.toLowerCase().includes(query) ||
-                user.email.toLowerCase().includes(query) ||
-                user.phone?.toLowerCase().includes(query) ||
-                user.role.toLowerCase().includes(query),
-        );
-    }, [searchQuery, users]);
+        // Filtro por estado
+        if (statusFilter === 'active') {
+            result = result.filter((user) => !user.is_suspended);
+        } else if (statusFilter === 'suspended') {
+            result = result.filter((user) => user.is_suspended);
+        }
+
+        // Filtro por búsqueda de texto
+        if (searchQuery.trim()) {
+            const query = searchQuery.toLowerCase();
+            result = result.filter(
+                (user) =>
+                    user.name.toLowerCase().includes(query) ||
+                    user.email.toLowerCase().includes(query) ||
+                    user.phone?.toLowerCase().includes(query) ||
+                    user.role.toLowerCase().includes(query),
+            );
+        }
+
+        return result;
+    }, [searchQuery, statusFilter, users]);
 
     // Handlers
     const handleViewUser = (user: User) => {
@@ -213,9 +228,14 @@ export default function ListUsers({ users, auth }: ListUsersProps) {
                     </Button>
                 </div>
 
-                {/* Search Bar */}
+                {/* Search Bar and Filters */}
                 <div className="bg-white dark:bg-[#1a2c3a] rounded-lg border border-[#e2e8f0] dark:border-[#20384b] p-4">
-                    <SearchBar value={searchQuery} onChange={setSearchQuery} />
+                    <SearchBar
+                        value={searchQuery}
+                        onChange={setSearchQuery}
+                        statusFilter={statusFilter}
+                        onStatusFilterChange={setStatusFilter}
+                    />
                 </div>
 
                 {/* Stats Cards */}

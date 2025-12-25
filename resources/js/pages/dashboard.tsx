@@ -51,7 +51,10 @@ export default function Dashboard(datos: any) {
                 <DashboardHeader
                     marcas={datos.marcas}
                     años_vehiculo={datos.años_vehiculo}
-                    filters={datos.filters} />
+                    usuarios={datos.usuarios}
+                    filters={datos.filters}
+                    isAdmin={datos.isAdmin}
+                />
 
                 <StatsCards
                     vehiculosHoy={datos.vehiculosHoy}

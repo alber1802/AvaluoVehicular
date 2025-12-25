@@ -67,6 +67,10 @@ export default function DepreMarcaVehiculo({ marcas: marcasIniciales = [] }: Dep
     const [marcaParaEditar, setMarcaParaEditar] = useState<MarcaDepreciacion | null>(null);
     const [marcaParaEliminar, setMarcaParaEliminar] = useState<MarcaDepreciacion | null>(null);
 
+    useEffect(() => {
+        setMarcas(marcasIniciales);
+    }, [marcasIniciales]);
+
     // Calcular depreciación
     const calcularDepreciacion = useMemo((): DepreciacionAnual[] => {
         if (!marcaSeleccionada) return [];

@@ -22,6 +22,8 @@ class DashboardController extends Controller
         $search = $request->get('search', '');
         $marca = $request->get('marca', '');
         $año = $request->get('año', '');
+        $estado = $request->get('estado', 'all'); // all, pendiente, completado
+        $evaluador = $request->get('evaluador', 'all');
         $page = $request->get('page', 1);
 
         $userId = Auth::id();
@@ -42,8 +44,11 @@ class DashboardController extends Controller
             ->orderBy('año_fabricacion', 'desc')
             ->get(); // Years are generally global filter options
 
+        // Obtener lista de usuarios (solo para admin)
+        $usuarios = $isAdmin ? User::select('id', 'name')->orderBy('name')->get() : collect();
+
         // Base query for vehicles, applying user-specific filter if not admin
-        $baseQuery = Vehiculo::with('imagenes', 'marca', 'avaluo');
+        $baseQuery = Vehiculo::with('imagenes', 'marca', 'avaluo', 'evaluador');
         if (!$isAdmin) {
             $baseQuery->where('id_evaluador', $userId);
         }
@@ -67,6 +72,19 @@ class DashboardController extends Controller
         // Filter by año
         if ($año && $año !== 'all') {
             $baseQuery->where('año_fabricacion', $año);
+        }
+
+        // Filter by estado (pendiente = sin avaluo ni imagenes)
+        if ($estado === 'pendiente') {
+            $baseQuery->where(function ($q) {
+                $q->whereDoesntHave('avaluo')
+                  ->whereDoesntHave('imagenes');
+            });
+        } 
+
+        // Filter by evaluador (solo para admin)
+        if ($isAdmin && $evaluador && $evaluador !== 'all') {
+            $baseQuery->where('id_evaluador', $evaluador);
         }
 
         // Paginate vehicles
@@ -108,10 +126,13 @@ class DashboardController extends Controller
             'avaluos' => $count_avaluos,
             'marcas' => $marcas,
             'años_vehiculo' => $años_vehiculo,
+            'usuarios' => $usuarios,
             'filters' => [
                 'search' => $search,
                 'marca' => $marca,
                 'año' => $año,
+                'estado' => $estado,
+                'evaluador' => $evaluador,
             ],
             'isAdmin' => $isAdmin, // Pass this to frontend if needed for UI differences
         ]);
