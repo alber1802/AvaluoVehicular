@@ -1,0 +1,519 @@
+/* Variables CSS - Locales para la página de bienvenida */
+.welcome-page {
+    --primary-blue: #007BFF;
+    --light-blue: #00C3FF;
+    --dark-blue: #0A2540;
+    --navy-blue: #000814;
+    --dark-gray: #1C1F26;
+    --light-gray: #E8F0FF;
+
+    /* Reset solo para esta página */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f9fafc;
+    color: var(--dark-gray);
+    line-height: 1.6;
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+.welcome-page *,
+.welcome-page *::before,
+.welcome-page *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.welcome-page .container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Header y Navegación */
+.welcome-header {
+    background: linear-gradient(135deg, var(--navy-blue) 0%, var(--dark-blue) 100%);
+    color: white;
+    padding: 1rem 0;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.welcome-header .header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.welcome-header .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: white;
+    text-decoration: none;
+}
+
+.welcome-header .logo svg {
+    color: var(--light-blue);
+    font-size: 2.2rem;
+    width: 2.2rem;
+    height: 2.2rem;
+}
+
+.welcome-header .logo span {
+    color: var(--light-blue);
+}
+
+.welcome-header nav ul {
+    display: flex;
+    list-style: none;
+    gap: 2rem;
+}
+
+.welcome-header nav a {
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: color 0.3s ease;
+    position: relative;
+}
+
+.welcome-header nav a:hover {
+    color: var(--light-blue);
+}
+
+.welcome-header nav a::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 3px;
+    background-color: var(--light-blue);
+    transition: width 0.3s ease;
+}
+
+.welcome-header nav a:hover::after {
+    width: 100%;
+}
+
+.welcome-header .mobile-toggle {
+    display: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: white;
+}
+
+/* Hero Section */
+.welcome-hero {
+    background: linear-gradient(rgba(10, 37, 64, 0.9), rgba(0, 8, 20, 0.9)), url('https://images.unsplash.com/photo-1486496572940-2bb2341fdbdf?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
+    background-size: cover;
+    background-position: center;
+    color: white;
+    padding: 10rem 0 6rem;
+    text-align: center;
+    margin-top: 70px;
+}
+
+.welcome-hero h1 {
+    font-size: 3.5rem;
+    margin-bottom: 1.5rem;
+    animation: welcomeFadeInDown 1s ease;
+}
+
+.welcome-hero p {
+    font-size: 1.3rem;
+    max-width: 700px;
+    margin: 0 auto 2.5rem;
+    animation: welcomeFadeInUp 1s ease 0.3s both;
+}
+
+.welcome-hero .hero-btn {
+    display: inline-block;
+    background: linear-gradient(to right, var(--primary-blue), var(--light-blue));
+    color: white;
+    padding: 1rem 2.5rem;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1.2rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    animation: welcomeFadeInUp 1s ease 0.6s both;
+}
+
+.welcome-hero .hero-btn:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 123, 255, 0.3);
+}
+
+/* Sección de Video */
+.welcome-video-section {
+    padding: 5rem 0;
+    background-color: var(--light-gray);
+}
+
+.welcome-page .section-title {
+    text-align: center;
+    margin-bottom: 3rem;
+    color: var(--dark-blue);
+    font-size: 2.5rem;
+    position: relative;
+}
+
+.welcome-page .section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 4px;
+    background: linear-gradient(to right, var(--primary-blue), var(--light-blue));
+    border-radius: 2px;
+}
+
+.welcome-video-section .video-container {
+    max-width: 900px;
+    margin: 0 auto;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+    position: relative;
+    animation: welcomeFadeInUp 1s ease;
+}
+
+.welcome-video-section .video-container video {
+    width: 100%;
+    display: block;
+}
+
+.welcome-video-section .video-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 8, 20, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.welcome-video-section .video-container:hover .video-overlay {
+    opacity: 1;
+}
+
+.welcome-video-section .play-btn {
+    background: rgba(0, 195, 255, 0.8);
+    color: white;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.8rem;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.welcome-video-section .play-btn svg {
+    width: 24px;
+    height: 24px;
+}
+
+.welcome-video-section .play-btn:hover {
+    background: rgba(0, 195, 255, 1);
+    transform: scale(1.1);
+}
+
+/* Servicios */
+.welcome-services {
+    padding: 5rem 0;
+    background-color: white;
+}
+
+.welcome-services .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.welcome-services .service-card {
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.welcome-services .service-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 123, 255, 0.15);
+}
+
+.welcome-services .service-icon {
+    background: linear-gradient(to right, var(--primary-blue), var(--light-blue));
+    color: white;
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2.5rem;
+}
+
+.welcome-services .service-icon svg {
+    width: 2.5rem;
+    height: 2.5rem;
+}
+
+.welcome-services .service-content {
+    padding: 2rem;
+}
+
+.welcome-services .service-content h3 {
+    color: var(--dark-blue);
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+
+/* Formulario de Contacto */
+.welcome-contact {
+    padding: 5rem 0;
+    background: linear-gradient(135deg, var(--navy-blue) 0%, var(--dark-blue) 100%);
+    color: white;
+}
+
+.welcome-contact .contact-form {
+    max-width: 600px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 2.5rem;
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+}
+
+.welcome-contact .form-group {
+    margin-bottom: 1.5rem;
+}
+
+.welcome-contact .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.welcome-contact .form-control {
+    width: 100%;
+    padding: 1rem;
+    border: none;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.9);
+    font-size: 1rem;
+    color: #333;
+}
+
+.welcome-contact .form-control:focus {
+    outline: 2px solid var(--light-blue);
+}
+
+.welcome-contact .submit-btn {
+    background: linear-gradient(to right, var(--primary-blue), var(--light-blue));
+    color: white;
+    border: none;
+    padding: 1rem 2.5rem;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    display: block;
+    width: 100%;
+}
+
+.welcome-contact .submit-btn:hover {
+    transform: translateY(-3px);
+}
+
+/* Footer */
+.welcome-footer {
+    background-color: var(--dark-gray);
+    color: white;
+    padding: 3rem 0 1.5rem;
+}
+
+.welcome-footer .footer-content {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.welcome-footer .footer-section {
+    flex: 1;
+    min-width: 250px;
+}
+
+.welcome-footer .footer-section h3 {
+    color: var(--light-blue);
+    margin-bottom: 1.5rem;
+    font-size: 1.3rem;
+}
+
+.welcome-footer .footer-section p,
+.welcome-footer .footer-section a {
+    color: #ccc;
+    margin-bottom: 0.8rem;
+    display: block;
+    text-decoration: none;
+}
+
+.welcome-footer .footer-section a:hover {
+    color: var(--light-blue);
+}
+
+.welcome-footer .social-icons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.welcome-footer .social-icons a {
+    background: rgba(255, 255, 255, 0.1);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background 0.3s ease;
+}
+
+.welcome-footer .social-icons a svg {
+    width: 18px;
+    height: 18px;
+    color: white;
+}
+
+.welcome-footer .social-icons a:hover {
+    background: var(--light-blue);
+}
+
+.welcome-footer .copyright {
+    text-align: center;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    color: #aaa;
+    font-size: 0.9rem;
+}
+
+/* Animaciones */
+@keyframes welcomeFadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes welcomeFadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .welcome-hero h1 {
+        font-size: 2.8rem;
+    }
+
+    .welcome-services .services-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .welcome-header .mobile-toggle {
+        display: block;
+    }
+
+    .welcome-header nav {
+        position: fixed;
+        top: 70px;
+        left: 0;
+        width: 100%;
+        background-color: var(--dark-blue);
+        padding: 1rem 0;
+        transform: translateY(-100%);
+        opacity: 0;
+        transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+
+    .welcome-header nav.active {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    .welcome-header nav ul {
+        flex-direction: column;
+        align-items: center;
+        gap: 1.5rem;
+    }
+
+    .welcome-hero {
+        padding: 8rem 0 4rem;
+    }
+
+    .welcome-hero h1 {
+        font-size: 2.3rem;
+    }
+
+    .welcome-hero p {
+        font-size: 1.1rem;
+    }
+
+    .welcome-page .section-title {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .welcome-hero h1 {
+        font-size: 2rem;
+    }
+
+    .welcome-hero .hero-btn {
+        padding: 0.8rem 1.8rem;
+        font-size: 1rem;
+    }
+
+    .welcome-video-section .video-container {
+        border-radius: 10px;
+    }
+
+    .welcome-contact .contact-form {
+        padding: 1.5rem;
+    }
+}
