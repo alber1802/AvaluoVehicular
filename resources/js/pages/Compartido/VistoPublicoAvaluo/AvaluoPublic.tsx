@@ -1,32 +1,17 @@
-import AppLayout from '@/layouts/app-layout';
-import { dashboard } from '@/routes';
-import { type BreadcrumbItem } from '@/types';
-import { Head, router, usePage } from '@inertiajs/react';
+import PublicLayout from '@/layouts/public/public-layout';
+import { Head } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, ImageIcon, FileText } from 'lucide-react';
-import { useEffect, useState } from 'react';
-import ResultadoHeader from '../components/ResultadoHeader';
-import VehicleInfoCard from '../components/VehicleInfoCard';
-import VehicleIdentificationCard from '../components/VehicleIdentificationCard';
-import ConditionsCard from '../components/ConditionsCard';
-import DepreciacionCard from '../components/DepreciacionCard';
-import ImagenesModal from '../components/modals/ImagenesModal';
-import PdfModal from '../components/modals/PdfModal';
-import { route } from 'ziggy-js';
-import Toast from '@/components/Toast';
+import { ImageIcon, FileText } from 'lucide-react';
+import { useState } from 'react';
+import ResultadoHeader from '@/pages/Registro/components/ResultadoHeader';
+import VehicleInfoCard from '@/pages/Registro/components/VehicleInfoCard';
+import VehicleIdentificationCard from '@/pages/Registro/components/VehicleIdentificationCard';
+import ConditionsCard from '@/pages/Registro/components/ConditionsCard';
+import DepreciacionCard from '@/pages/Registro/components/DepreciacionCard';
+import ImagenesModal from '@/pages/Registro/components/modals/ImagenesModal';
+import PdfModal from '@/pages/Registro/components/modals/PdfModal';
+
 import { type Vehiculo, type CondicionGeneral, type Inspeccion, type VehiculoImagen, type Marca, Archivo } from '@/types/avaluo';
-
-
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Dashboard',
-        href: dashboard().url,
-    },
-    {
-        title: 'Resultado',
-        href: '/registro/resultado',
-    },
-];
 
 interface ResultadoProps {
     vehiculo: Vehiculo;
@@ -60,15 +45,6 @@ export default function Resultado({
     const [isImagenesModalOpen, setIsImagenesModalOpen] = useState(false);
     const [isPdfModalOpen, setIsPdfModalOpen] = useState(false);
 
-    const handlePrint = () => {
-        router.get(route('archivos.generarPdf', vehiculo.id));
-    };
-
-
-    const handleVolver = () => {
-        window.location.href = '/dashboard';
-    };
-
     const handleImagenes = () => {
         setIsImagenesModalOpen(true);
     };
@@ -77,36 +53,9 @@ export default function Resultado({
         setIsPdfModalOpen(true);
     };
 
-    //para el Toast 
-    const { flash } = usePage<{ flash: { success?: string; error?: string } }>().props;
-    const [showToast, setShowToast] = useState(false);
-    const [toastMessage, setToastMessage] = useState('');
-    const [toastType, setToastType] = useState<'success' | 'error' | 'warning' | 'info'>('success');
-
-    useEffect(() => {
-        if (flash?.success) {
-            setToastMessage(flash.success);
-            setToastType('success');
-            setShowToast(true);
-        }
-        if (flash?.error) {
-            setToastMessage(flash.error);
-            setToastType('error');
-            setShowToast(true);
-        }
-    }, [flash]);
-
     return (
-        <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Resultado de Evaluación" />
-            {showToast && (
-                <Toast
-                    message={toastMessage}
-                    type={toastType}
-                    onClose={() => setShowToast(false)}
-                />
-            )}
-
+        <PublicLayout>
+            <Head title="Avalúo Público" />
             <div className="h-full w-full">
                 <div className="rounded-lg border border-[#e2e8f0] bg-[#ffffff] p-6 shadow-sm dark:border-[#20384b] dark:bg-[#1a2c3a]">
                     {/* Header */}
@@ -118,14 +67,6 @@ export default function Resultado({
 
                     {/* Botones de acción */}
                     <div className="mb-6 flex flex-col items-center gap-4 border-b border-[#e2e8f0] pb-4 print:hidden dark:border-[#20384b] md:flex-row md:justify-between">
-                        <Button
-                            variant="outline"
-                            onClick={handleVolver}
-                            className="w-full flex-shrink-0 flex-grow-0 items-center gap-2 border-[#e2e8f0] text-[#1e293b] hover:bg-[#f8fafc] dark:border-[#20384b] dark:text-white/90 dark:hover:bg-[#0f1a23] md:order-1 md:w-auto"
-                        >
-                            <ArrowLeft className="h-4 w-4" />
-                            Volver al Dashboard
-                        </Button>
 
                         {imagenes.length > 0 && (
                             <Button
@@ -150,14 +91,6 @@ export default function Resultado({
                                         Ver PDF
                                     </Button>
                                 )}
-                                {!archivos?.url && (
-                                    <Button
-                                        onClick={handlePrint}
-                                        className="w-full flex-shrink-0 flex-grow-0 items-center gap-2 bg-[#00AEEF] hover:bg-[#00AEEF]/90 md:order-4 md:w-auto"
-                                    >
-                                        generar pdf
-                                    </Button>)
-                                }
                             </>
                         )}
                     </div>
@@ -246,6 +179,6 @@ export default function Resultado({
                     vehiculoId={vehiculo.id}
                 />
             )}
-        </AppLayout>
+        </PublicLayout>
     );
 }

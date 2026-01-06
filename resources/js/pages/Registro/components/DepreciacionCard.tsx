@@ -90,7 +90,7 @@ export default function DepreciacionCard({
                     </div>
                     <div className="flex items-center justify-between rounded-lg bg-[#f8fafc] p-4 dark:bg-[#0f1a23]">
                         <p className="text-base text-[#1e293b] dark:text-white/90">Multiplicador</p>
-                        <p className="text-2xl font-bold text-[#00AEEF]">{factor_reposicion.toFixed(2)}</p>
+                        <p className="text-2xl font-bold text-[#00AEEF]">{factor_reposicion}</p>
                     </div>
                 </div>
 

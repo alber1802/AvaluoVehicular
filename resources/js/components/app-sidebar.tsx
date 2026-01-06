@@ -13,10 +13,11 @@ import {
 import { dashboard } from '@/routes';
 import { listado as usuariosListado } from '@/routes/usuarios';
 import { index as reciclajeListado } from '@/routes/reciclaje';
+import { index as shareIndex } from '@/routes/avaluo/share';
 import { consultar } from '@/routes/depreciacion';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid, Users } from 'lucide-react';
+import { Waypoints, LayoutGrid, Users } from 'lucide-react';
 import AppLogo from './app-logo';
 import { RecycleIcon, ChartBarIcon } from '@/components/icons';
 
@@ -27,7 +28,7 @@ const mainNavItems: NavItem[] = [
         title: 'Escritorio',
         href: dashboard(),
         icon: LayoutGrid,
-        roles: ['admin', 'evaluador', 'usuario'],
+        roles: ['admin', 'evaluador'],
     },
     {
         title: 'Usuarios',
@@ -45,7 +46,13 @@ const mainNavItems: NavItem[] = [
         title: 'Depreciación',
         href: consultar(),
         icon: ChartBarIcon,
-        roles: ['admin', 'evaluador', 'usuario'],
+        roles: ['admin', 'evaluador'],
+    },
+    {
+        title: 'Avaluos compartidos',
+        href: shareIndex(),
+        icon: Waypoints,
+        roles: ['admin', 'evaluador'],
     },
 ];
 

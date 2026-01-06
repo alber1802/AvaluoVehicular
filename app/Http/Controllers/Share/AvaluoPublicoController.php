@@ -1,44 +1,53 @@
 <?php
 
-namespace App\Http\Controllers\Registro;
+namespace App\Http\Controllers\Share;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Inertia\Inertia;
 
-use App\Models\Inspeccion;
-use App\Models\Vehiculo;
-use App\Models\VehiculoImagen;
-use App\Models\CondicionGeneral;
-use App\Models\MarcaVehiculo;
 use App\Models\Avaluo;
-use App\Models\Archivo;
+use App\Models\AvaluoCompartido;    
+use App\Models\Vehiculo;
+use App\Models\MarcaVehiculo;
+use App\Models\Inspeccion;
 
+use Inertia\Inertia;
+use Illuminate\Http\Request;
 
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-
-
-
-class AvaluoController extends Controller 
-{   
-     use AuthorizesRequests;
-    /**
-     * Display a listing of the resource.
-     */
-    public function index($id)
+class AvaluoPublicoController extends Controller
+{
+   
+    public function verPublico(string $token)
     {
-    
-        $vehiculo = Vehiculo::findOrFail($id);
+        $compartido = AvaluoCompartido::where('token', $token)->first();
 
-        $this->authorize('view', $vehiculo);
+        if (!$compartido) {
+            abort(404, 'Avalúo no encontrado o enlace inválido');
+        }
 
-        $marca = MarcaVehiculo::where('id', $vehiculo->id_marca)->first();
-        $inspeccion = Inspeccion::where('id_vehiculo', $vehiculo->id)->where('tiene', 1)->get();
-        $condicionGeneral = CondicionGeneral::where('id_vehiculo', $vehiculo->id)->first();
-        $imagenes = VehiculoImagen::where('id_vehiculo', $vehiculo->id)->get();
-        $archivos = Archivo::where('id_vehiculo', $vehiculo->id)->first();
+        if (!in_array($compartido->estado, ['activo', 'renovado'])) {
+            abort(403, 'Este enlace ya no está disponible');
+        }
+        if ($compartido->fecha_fin && $compartido->fecha_fin->isPast()) {
 
-        
+            if($compartido->estado === 'activo' || $compartido->estado === 'renovado')
+            {
+                $compartido->update(['estado' => 'vencido']);
+            }
+            abort(403, 'Este enlace ha expirado');
+        }
+
+        $compartido->increment('contador_vistas');
+
+        $avaluo = Avaluo::with([
+            'vehiculo.marca',
+            'vehiculo.imagenes',
+            'vehiculo.condicionGeneral',
+            'vehiculo.inspecciones',
+            'vehiculo.archivos'
+        ])->findOrFail($compartido->avaluo_id);
+
+        $vehiculo = $avaluo->vehiculo;
+
         $factor_c = $this->evaluar_inspeccion($vehiculo->id );
         $factor_a = $this->DepreciacionModelo($vehiculo->id);
         $factor_b = $this->DepreciacionKilometraje($vehiculo->id);
@@ -53,37 +62,22 @@ class AvaluoController extends Controller
 
         $valorFinal = max($valorAvaluo, $valorResidualVehiuculo);
 
-        
-
-        $avaluo = Avaluo::updateOrCreate(
-            ['id_vehiculo' => $vehiculo->id],
-            [
-                'factor_reposicion' => $factorReposicion,
-                'final_estimacion' => $valorFinal,
-                'moneda' => '$us',
-                'depre_modelo' => $factor_a,
-                'depre_kilometraje' => $factor_b,
-                'depre_inspeccion' => $factor_c,
-            ]
-        );
-
-
-        return Inertia::render('Registro/create/resultado', [
+        return Inertia::render('Compartido/VistoPublicoAvaluo/AvaluoPublic', [
             'vehiculo' => $vehiculo,
-            'inspeccion' => $inspeccion,
-            'condicionGeneral' => $condicionGeneral,
-            'imagenes' => $imagenes,
-            'marca' => $marca,
-            'archivos' => $archivos,
-            
+            'condicionGeneral' => $vehiculo->condicionGeneral,
+            'inspeccion' => $vehiculo->inspecciones,
+            'imagenes' => $vehiculo->imagenes,
+            'archivos' => $avaluo->archivo,
+            'marca' => $vehiculo->marca,
             'valorFinal' => $valorFinal,
             'factorReposicion' => $factorReposicion,
             'factorModelo' => $factor_a,
             'factorKilometraje' => $factor_b,
             'factorInspeccion' => $factor_c,
-            'valorResidual' => $valorResidualVehiuculo, 
+            'valorResidual' => $valorResidualVehiuculo,
         ]);
     }
+    
 
     public function evaluar_inspeccion($id)
     {
@@ -129,6 +123,4 @@ class AvaluoController extends Controller
         
         return $depreciacionKilometraje;
     }
-    
-  
 }

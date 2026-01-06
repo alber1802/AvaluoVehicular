@@ -198,11 +198,6 @@ class ImagenesController extends Controller
 
 
 
-    //se tiene que enviar un id para ver que datos se estan manejando 
-    public function editResultados(){
-        
-        //con el id 
-
-    }
+    
 
 }

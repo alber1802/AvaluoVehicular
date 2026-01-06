@@ -11,8 +11,11 @@ use App\Http\Controllers\Registro\ImagenesController;
 use App\Http\Controllers\User\UserRegistroController;
 use App\Http\Controllers\Reciclaje\ResourceReciclajeController;
 use  App\Http\Controllers\Registro\AvaluoController;
+use App\Http\Controllers\Share\ShareController;
+use App\Http\Controllers\Share\AvaluoPublicoController;
 use App\Http\Controllers\MarcasController;
 use App\Http\Controllers\ArchivoControler;
+
 
 
 Route::get('/', function () {
@@ -127,6 +130,19 @@ Route::prefix('depreciacion')->middleware(['auth', 'verified'])->group(function 
     Route::post('/actualizar/{id}', [MarcasController::class, 'update'])->name('depreciacion.update');
     Route::delete('/eliminar/{id}', [MarcasController::class, 'destroy'])->name('depreciacion.destroy');
 });
+
+Route::prefix('avaluo')->middleware(['auth', 'verified'])->group(function () {
+    Route::get('/share', [ShareController::class, 'index'])->name('avaluo.share.index');
+    Route::post('/share/{id}', [ShareController::class, 'store'])->name('avaluo.share.store');
+    Route::post('/share/update/{id}', [ShareController::class, 'update'])->name('avaluo.share.update');
+    Route::post('/share/renovar/{id}', [ShareController::class, 'renovar'])->name('avaluo.share.renovar');
+    Route::delete('/share/destroy/{id}', [ShareController::class, 'destroy'])->name('avaluo.share.destroy');
+    
+});
+
+// Ruta PÚBLICA - fuera de cualquier middleware de autenticación
+Route::get('/avaluo/publico/{token}', [AvaluoPublicoController::class, 'verPublico'])
+    ->name('avaluo.publico');
 //vista de pudra R
 //Route::get('/pdf/{id}', [ArchivoControler::class, 'vista'])->name('pdf.vista');
 

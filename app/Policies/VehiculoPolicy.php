@@ -4,6 +4,9 @@ namespace App\Policies;
 
 use App\Models\User;
 use App\Models\Vehiculo;
+use App\Models\Avaluo;
+use App\Models\AvaluoCompartido;
+
 use Illuminate\Auth\Access\Response;
 
 class VehiculoPolicy
@@ -25,6 +28,12 @@ class VehiculoPolicy
         if ($user->role === 'admin') {
             return true;
         }
+        $avaluo = Avaluo::where('id_vehiculo', $vehiculo->id)->first();
+        $avaluoCompartido = AvaluoCompartido::where('avaluo_id', $avaluo->id)->first();
+
+        if($avaluoCompartido->estado === 'activo' || $avaluoCompartido->estado === 'renovado') {
+            return true;
+        }
         
         // Evaluador solo puede ver sus propios vehículos
         return $vehiculo->id_evaluador === $user->id;
@@ -37,13 +46,25 @@ class VehiculoPolicy
     {
         return false;
     }
+    public function continuar(User $user, Vehiculo $vehiculo): bool
+    {
+        if ($user->role === 'admin') {
+            return true;
+        }
+
+        return  $vehiculo->id_evaluador === $user->id;
+    }
 
     /**
      * Determinar si el usuario puede actualizar el modelo.
      */
      public function update(User $user, Vehiculo $vehiculo): bool
     {
-        return $this->view($user, $vehiculo);
+        if ($user->role === 'admin') {
+            return true;
+        }
+
+        return  $vehiculo->id_evaluador === $user->id;
     }
 
     /**

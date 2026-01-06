@@ -1,84 +1,81 @@
-# name: Deploy Avaluo Vehicular
+name: Deploy Avaluo Vehicular
 
-# on:
-#   workflow_dispatch:
-#   push:
-#     branches:
-#       - master
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
 
-# jobs:
-#   deploy:
-#     name: Deploy Avaluo Vehicular via FTP
-#     runs-on: ubuntu-latest
+jobs:
+  deploy:
+    name: Deploy Avaluo Vehicular via FTP
+    runs-on: ubuntu-latest
 
-#     steps:
-#       - name: Get latest code
-#         uses: actions/checkout@v4
+    steps:
+      - name: Get latest code
+        uses: actions/checkout@v4
 
-#       # Setup PHP con extensiones necesarias
-#       - name: Setup PHP
-#         uses: shivammathur/setup-php@v2
-#         with:
-#           php-version: '8.2'
-#           extensions: mbstring, xml, ctype, json, bcmath, intl, zip, gd, dom, fileinfo, pdo, pdo_mysql, exif
-#           coverage: none
+      # Setup PHP con extensiones necesarias
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, xml, ctype, json, bcmath, intl, zip, gd, dom, fileinfo, pdo, pdo_mysql, exif
+          coverage: none
 
-#       # Instalar dependencias de Composer
-#       - name: Install Composer dependencies
-#         run: composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
+      # Instalar dependencias de Composer
+      - name: Install Composer dependencies
+        run: composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
 
-#       # Crear .env temporal para generar key y cachear config
-#       - name: Create temporary .env
-#         run: |
-#           cp .env.example .env
-#           php artisan key:generate
+      # Crear .env temporal para generar key y cachear config
+      - name: Create temporary .env
+        run: |
+          cp .env.example .env
+          php artisan key:generate
 
-#       # Crear directorios de storage necesarios
-#       - name: Create storage directories
-#         run: |
-#           mkdir -p storage/framework/{cache,sessions,views}
-#           mkdir -p storage/logs
-#           mkdir -p bootstrap/cache
+      # Crear directorios de storage necesarios
+      - name: Create storage directories
+        run: |
+          mkdir -p storage/framework/{cache,sessions,views}
+          mkdir -p storage/logs
+          mkdir -p bootstrap/cache
 
-#       # Cachear configuración de Laravel para producción
-#       - name: Cache Laravel config
-#         run: |
-#           php artisan config:cache
-#           php artisan route:cache
-#           php artisan view:cache
+      # Cachear configuración de Laravel para producción
+      - name: Cache Laravel config
+        run: |
+          php artisan config:cache
+          php artisan route:cache
+          php artisan view:cache
 
-#       # Setup Node.js (usando v22 para coincidir con desarrollo local)
-#       - name: Setup Node.js
-#         uses: actions/setup-node@v4
-#         with:
-#           node-version: '22'
-#           cache: 'npm'
+      # Setup Node.js (usando v22 para coincidir con desarrollo local)
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
 
-#       # Instalar dependencias de NPM
-#       - name: Install NPM dependencies
-#         run: npm install
+      # Instalar dependencias de NPM
+      - name: Install NPM dependencies
+        run: npm install
 
-#       # Compilar assets con Vite
-#       - name: Build assets
-#         run: npm run build
+      # Compilar assets con Vite
+      - name: Build assets
+        run: npm run build
 
-#       # Limpiar archivos innecesarios antes de subir
-#       - name: Clean up
-#         run: |
-#           rm -rf node_modules
-#           rm -rf tests
-#           rm -rf .git
-#           rm -rf .github
-#           rm .env
+      # Limpiar archivos innecesarios antes de subir  rm -rf node_modules
+      - name: Clean up
+        run: |
+          rm -rf tests
+          rm .env
 
-#       # Subir vía FTP a avaluo-vehicular-umsa.gt.tc
-#       - name: Deploy to avaluo-vehicular-umsa.gt.tc via FTP
-#         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-#         with:
-#           server: ftpupload.net
-#           username: ${{ secrets.FTP_USERNAME }}
-#           password: ${{ secrets.FTP_PASSWORD }}
-#           server-dir: /htdocs/
-#           timeout: 86400000
-#           log-level: standard
+      # Subir vía FTP a avaluo-vehicular-umsa.gt.tc
+      - name: Deploy to avaluo-vehicular-umsa.gt.tc via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ftpupload.net
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir: /htdocs/
+          timeout: 86400000
+          log-level: standard
           

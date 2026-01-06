@@ -97,7 +97,7 @@ class CreateRegistroController extends Controller
     {
         $vehiculo = Vehiculo::findOrFail($id); // Busca un vehículo por su ID; si no lo encuentra, lanza una excepción 404.
 
-        $this->authorize('view', $vehiculo);
+        $this->authorize('continuar', $vehiculo);
 
         $hasInspeccion = Inspeccion::where('id_vehiculo', $vehiculo->id)->exists();
         $hasSistema = Sistema::where('id_vehiculo', $vehiculo->id)->exists();
@@ -131,7 +131,7 @@ class CreateRegistroController extends Controller
         $vehiculo = Vehiculo::findOrFail($id);
         
         // Verificar autorización usando la Policy
-        $this->authorize('view', $vehiculo);
+        $this->authorize('continuar', $vehiculo);
 
         return  Inertia::render('Registro/update/EditSeleccion', [
             'id' => $id,
@@ -147,7 +147,7 @@ class CreateRegistroController extends Controller
         $vehiculo = Vehiculo::findOrFail($id);
         
         // Verificar autorización usando la Policy
-        $this->authorize('view', $vehiculo);
+        $this->authorize('update', $vehiculo);
         $condicionGeneral = CondicionGeneral::where('id_vehiculo', $vehiculo->id)->first();
         $marcas = MarcaVehiculo::all();
        

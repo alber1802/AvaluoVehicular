@@ -1,15 +1,27 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Eye, Pencil, ArrowRight, CookingPot, MoveRight } from 'lucide-react';
+import { Auth } from '@/types';
+import { Eye, Pencil, CookingPot, Share2 } from 'lucide-react';
 import { Pagination } from './pagination';
 import { useState } from 'react';
 import { route } from 'ziggy-js';
-import { Link } from '@inertiajs/react';
-import { Head, router } from '@inertiajs/react';
+import { router, usePage } from '@inertiajs/react';
+import { ShareEvaluationModal, type ShareUser, type ShareData } from './share-evaluation-modal';
 
+interface RecentEvaluationsProps {
+    vehiculos: any;
+    usuarios?: ShareUser[];
+    auth: Auth;
+}
 
+export function RecentEvaluations({ vehiculos, usuarios = [], auth }: RecentEvaluationsProps) {
+    // Obtener errores del backend
+    const { errors } = usePage().props as { errors: Record<string, string> };
 
-export function RecentEvaluations({ vehiculos }: any) {
+    // Estado para el modal de compartir
+    const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+    const [selectedEvaluation, setSelectedEvaluation] = useState<{ id: number; name: string } | null>(null);
+    const [isSharing, setIsSharing] = useState(false);
 
     // Acceder a los datos paginados correctamente
     const evaluations = vehiculos.data.map((vehiculo: any) => {
@@ -42,6 +54,41 @@ export function RecentEvaluations({ vehiculos }: any) {
 
     const ContinueEvaluation = (id: number) => {
         router.get(route('resultados.avaluo.continuar', { id }));
+    };
+
+    const ShareEvaluation = (id: number, vehicleName: string) => {
+        setSelectedEvaluation({ id, name: vehicleName });
+        setIsShareModalOpen(true);
+    };
+
+    // Función para manejar el compartir (envía al backend)
+    const handleShare = (data: ShareData) => {
+        if (!selectedEvaluation) return;
+
+        setIsSharing(true);
+
+        // Enviar todos los datos del formulario al backend
+        router.post(
+            route('avaluo.share.store', { id: selectedEvaluation.id }),
+            {
+                user_ids: data.user_ids,
+                fecha_inicio: data.fecha_inicio,
+                fecha_fin: data.fecha_fin,
+                motivo: data.motivo,
+                observaciones: data.observaciones,
+            },
+            {
+                preserveScroll: true,
+                onSuccess: () => {
+                    setIsShareModalOpen(false);
+                    setSelectedEvaluation(null);
+                    setIsSharing(false);
+                },
+                onError: () => {
+                    setIsSharing(false);
+                },
+            }
+        );
     };
 
     // Función para cambiar de página
@@ -117,8 +164,6 @@ export function RecentEvaluations({ vehiculos }: any) {
                                                         dark:hover:bg-[#00AEEF]/20 dark:hover:text-[#00AEEF]"
                                                 >
                                                     Cont..
-                                                    {/* <MoveRight className="ml-1 h-4 w-4" /> */}
-                                                    {/* <ArrowRight className="ml-1 h-4 w-4" /> */}
                                                 </Button>
 
                                                 <Button
@@ -165,6 +210,16 @@ export function RecentEvaluations({ vehiculos }: any) {
                                                 >
                                                     <CookingPot className="h-4 w-4" />
                                                 </Button>
+                                                <Button
+                                                    variant="ghost"
+                                                    onClick={() => ShareEvaluation(evaluation.id, evaluation.vehicle)}
+                                                    size="icon"
+                                                    className="h-8 w-8 text-[#64748b] hover:bg-[#00AEEF]/10 hover:text-
+                                                    [#00AEEF] dark:text-white/70 dark:hover:bg-[#00AEEF]/20 
+                                                    dark:hover:text-[#00AEEF]"
+                                                >
+                                                    <Share2 className="h-4 w-4" />
+                                                </Button>
                                             </div>
                                         )}
                                     </td>
@@ -181,6 +236,22 @@ export function RecentEvaluations({ vehiculos }: any) {
                     className="pt-4"
                 />
             </CardContent>
+
+            {/* Modal de compartir */}
+            <ShareEvaluationModal
+                isOpen={isShareModalOpen}
+                onClose={() => {
+                    setIsShareModalOpen(false);
+                    setSelectedEvaluation(null);
+                }}
+                auth={auth}
+                onShare={handleShare}
+                users={usuarios}
+                evaluationId={selectedEvaluation?.id || 0}
+                vehicleName={selectedEvaluation?.name}
+                isLoading={isSharing}
+                errors={errors}
+            />
         </Card>
     );
 }

@@ -65,4 +65,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(Vehiculo::class, 'id_evaluador');
     }
+
+    /**
+     * Relación con AvaluoCompartido
+     */
+    public function avaluosCompartidos(): HasMany
+    {
+        return $this->hasMany(AvaluoCompartido::class, 'user_id');
+    }
 }

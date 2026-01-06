@@ -1,6 +1,6 @@
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
-import { type BreadcrumbItem } from '@/types';
+import { type BreadcrumbItem, type Auth } from '@/types';
 import { Head } from '@inertiajs/react';
 import { DashboardHeader } from './Dashboard/components/dashboard-header';
 import { StatsCards } from './Dashboard/components/stats-cards';
@@ -17,6 +17,9 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function Dashboard(datos: any) {
+
+    const { auth } = usePage<{ auth: Auth }>().props;
+
     const { flash } = usePage<{ flash: { success?: string; error?: string } }>().props;
 
     const [showToast, setShowToast] = useState(false);
@@ -64,7 +67,9 @@ export default function Dashboard(datos: any) {
                     avaluos={datos.avaluos}
                 />
                 <RecentEvaluations
+                    auth={auth}
                     vehiculos={datos.vehiculos}
+                    usuarios={datos.usuarios}
                 />
             </div>
         </AppLayout>
